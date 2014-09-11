@@ -18,7 +18,7 @@ exports.create = function(req, res) {
     var connection = require('./db.js')();
     connection.connect();
 
-    connection.query('INSERT INTO users SET ??', [req.body],function(err, rows, fields) {
+    connection.query('INSERT INTO users SET ?', [req.body],function(err, rows, fields) {
         if (err) {
             if (err.errno===1062) {
                 //username taken
