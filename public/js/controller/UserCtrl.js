@@ -21,6 +21,7 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', 
             $scope.result = data;
         }).error(function(err) {
             console.log(err);
+            $scope.result = err;
         });
     };
 

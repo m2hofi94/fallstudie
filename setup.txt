@@ -1,0 +1,52 @@
+﻿# Benötigte Software:
+Nodejs: http://nodejs.org/
+Git: http://git-scm.com/downloads
+MySQL: http://dev.mysql.com/downloads/mysql/
+SourceTree: https://www.atlassian.com/software/sourcetree/overview (optional)
+
+# Ein Account bei GitHub:
+https://github.com
+
+# Benötigte Path-Variablen (Systemvariablen) überprüfen!
+C:\Program Files (x86)\Git\cmd;
+C:\Program Files\nodejs\;
+C:\Program Files (x86)\OpenVPN\bin;
+C:\Program Files (x86)\MySQL\MySQL Utilities 1.4.3\;
+C:\Users\***USERNAME***\AppData\Roaming\npm; //dieser Pfad muss ggf. angelegt werden (Fehler: ENOENT)
+
+# Git einrichten
+git config --global user.name "Max Mustermann"
+git config --global user.email "max@beispiel.de"
+
+# Source-Code holen
+git init
+git remote add origin https://github.com/m2hofi94/fallstudie.git
+git pull origin master
+
+# Abhängigkeiten installieren
+npm install -g bower
+npm install
+bower install
+
+# Datenbank credentials
+host     : 'localhost',
+user     : 'afs',
+password : 'EgDetVuWeHewitye',
+port: 3306,
+database: 'afs'
+
+# SQL einrichten
+create database afs;
+create table users (
+  id int not null auto_increment primary key,
+  email varchar(100) not null unique,
+  password varchar(100) not null,
+  created timestamp default now()
+);
+
+# Server starten
+npm server.js
+
+# Optional nodemon (startet den Server automatisch neu bei Änderungen)
+npm install -g nodemon
+nodemon

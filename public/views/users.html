@@ -1,6 +1,9 @@
 <div class="jumbotron">
     <h1 class="text-center">Users CRUD example</h1>
 </div>
+<alert data-ng-show="result.message" close="result.message=''">
+    <p>{{result.message}}</p>
+</alert>
 <div class="row">
     <div class="col-md-8 text-center">
         <button class="btn btn-primary btn-lg" data-ng-click="list()">List</button>
