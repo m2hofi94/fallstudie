@@ -11,6 +11,7 @@ module.exports = function(express) {
     router.get('/users/:userId', users.read);
     router.put('/users/:userId', users.update);
     router.delete('/users/:userId', users.delete);
+	router.post('/users', users.registrateUser);
 
     return router;
 };

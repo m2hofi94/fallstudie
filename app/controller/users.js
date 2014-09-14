@@ -64,3 +64,22 @@ exports.delete = function(req, res) {
 
     connection.end();
 };
+
+exports.registrateUser = function(req, res) {
+    var connection = require('./db.js')();
+    connection.connect();
+	
+	connection.query('INSERT INTO users SET ?', [req.body],function(err, rows, fields) {
+        if (err) {
+            if (err.errno===1062) {
+                //username taken
+                return res.status(400).jsonp({message: "Diese e-Mail ist bei uns bereits registriert"});
+            }
+            return res.status(500);
+        }
+      res.jsonp(rows);
+    });
+
+    connection.end();
+};
+

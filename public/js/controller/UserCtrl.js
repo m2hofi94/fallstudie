@@ -4,6 +4,9 @@
 angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', function($scope, Users) {
     $scope.result = {};
 
+	
+	
+	
     //************************CRUD-Example********************
 
     $scope.list = function() {
@@ -51,4 +54,21 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', 
             console.log(err);
         });
     };
+	
+	
+	//************************Signup**************************
+	$scope.registrateUser = function(){
+		Users.registrateUser($scope.user).success(function(data) {
+           console.log(data);
+           $scope.result = data;
+		   $scope.result.message = "Sie wurden erfolgreich registriert";
+		   location.href='#/login';
+		   
+        }).error(function(err) {
+          console.log(err);
+		  $scope.result = err;
+        });
+	};
+	
+	
 }]);

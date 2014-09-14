@@ -3,6 +3,11 @@
 angular.module('UserService', []).factory('Users', ['$http', function($http) {
 
 	return {
+		// registrate
+		registrateUser : function(userData) {
+			return $http.post('/api/users', userData);
+		},
+		
 		// call to get all nerds
 		list : function() {
 			return $http.get('/api/users');
