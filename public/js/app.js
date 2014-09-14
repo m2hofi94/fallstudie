@@ -29,6 +29,14 @@ angular.module('afsApp', [
                 templateUrl: 'views/users.html',
                 controller: 'UserCtrl'
             })
+			.when('/surveys', {
+				templateUrl: 'views/surveys.html',
+                controller: 'UserCtrl'
+			})
+			.when('/contact', {
+				templateUrl: 'views/contact.html',
+                controller: 'UserCtrl'
+			})
             .otherwise({
                 redirectTo: '/'
             });

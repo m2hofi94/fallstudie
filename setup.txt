@@ -51,3 +51,6 @@ npm server.js
 # Optional nodemon (startet den Server automatisch neu bei Änderungen)
 npm install -g nodemon
 nodemon
+
+#Für Passwort Verschlüsselung
+npm install password-hash

@@ -76,8 +76,7 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', 
 			console.log(data);
 			$scope.result = data;
 			$scope.result.message = "Login erfolgreich";
-			location.href='#/home'; 
-						
+			location.href='#/surveys'; 			
 		}).error(function(err) {
 			console.log(err);
 			$scope.result.message = "Sie konnten leider nicht eingeloggt werden";

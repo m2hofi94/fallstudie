@@ -1,6 +1,8 @@
 /*jslint node:true */
 'use strict';
 
+var passwordHash = require('password-hash');
+
 exports.list = function(req, res) {
     var connection = require('./db.js')();
     connection.connect();
@@ -17,6 +19,8 @@ exports.list = function(req, res) {
 exports.create = function(req, res) {
     var connection = require('./db.js')();
     connection.connect();
+	
+	req.body.password =  passwordHash.generate(req.body.password);
 
     connection.query('INSERT INTO users SET ?', [req.body],function(err, rows, fields) {
         if (err) {
@@ -29,7 +33,7 @@ exports.create = function(req, res) {
       res.jsonp(rows);
     });
 
-    connection.end();
+    connection.end();		
 };
 
 exports.read = function(req, res) {
@@ -71,12 +75,11 @@ exports.delete = function(req, res) {
 exports.login = function(req, res) {
     var connection = require('./db.js')();
     connection.connect();
-	console.log(req.body.email + ".." + req.body.password);
 	
-	connection.query('SELECT id FROM users WHERE email = ? AND password = ?', [req.body.email, req.body.password], function(err, rows, fields) {
+	connection.query('SELECT password FROM users WHERE email = ?', [req.body.email], function(err, rows, fields) {
 		if (err || rows.length === 0) {
 			return res.status(500);	
-        } else {
+		} else if(passwordHash.verify(req.body.password, rows[0].password)){
 			res.jsonp(rows);
 			return res.status(200);			
 		}
@@ -84,6 +87,9 @@ exports.login = function(req, res) {
 
     connection.end();
 };
+
+
+
 
 
 
