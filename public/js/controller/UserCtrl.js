@@ -4,9 +4,6 @@
 angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', function($scope, Users) {
     $scope.result = {};
 
-	
-	
-	
     //************************CRUD-Example********************
 
     $scope.list = function() {
@@ -57,18 +54,36 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', 
 	
 	
 	//************************Signup**************************
-	$scope.registrateUser = function(){
-		Users.registrateUser($scope.user).success(function(data) {
-           console.log(data);
-           $scope.result = data;
-		   $scope.result.message = "Sie wurden erfolgreich registriert";
-		   location.href='#/login';
-		   
-        }).error(function(err) {
-          console.log(err);
-		  $scope.result = err;
-        });
+	$scope.signUp = function(){
+		if($scope.user.password == $scope.passwordCheck){
+			Users.create($scope.user).success(function(data) {
+				console.log(data);
+				$scope.result = data;
+				$scope.result.message = "Sie wurden erfolgreich registriert";
+				location.href='#/login';		
+			}).error(function(err) {
+				console.log(err);
+				$scope.result = err;
+			});
+		}else {
+			$scope.result.message = "Die Passwörter müssen übereinstimmen";
+		}
 	};
+	
+	//************************Login***************************
+	$scope.login = function(){
+		Users.login($scope.loginData).success(function(data) {
+			console.log(data);
+			$scope.result = data;
+			$scope.result.message = "Login erfolgreich";
+			location.href='#/home'; 
+						
+		}).error(function(err) {
+			console.log(err);
+			$scope.result.message = "Sie konnten leider nicht eingeloggt werden";
+		});
+	};
+	
 	
 	
 }]);

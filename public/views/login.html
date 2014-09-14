@@ -1,23 +1,21 @@
 <div class="row">
     <div class="col-md-4 col-md-offset-4">
-		<!-- 
 		<alert data-ng-show="result.message" close="result.message=''">
 			<p>{{result.message}}</p>
 		</alert> 
-		-->
         <h1 class="page-header">Login</h1>
         <form>
 			
             <div class="form-group">
                 <label>E-Mail:</label>
-                <input class="form-control" type="email" placeholder="Geben Sie ihre e-Mail-Adresse ein" />
+                <input class="form-control" type="email" placeholder="Geben Sie ihre e-Mail-Adresse ein" data-ng-model="loginData.email" />
             </div>
             <div class="form-group">
                 <label>Passwort:</label>
-                <input class="form-control" type="password" placeholder="Passwort" />
+                <input class="form-control" type="password" placeholder="Passwort" data-ng-model="loginData.password" />
             </div>
             <div class="form-group text-center">
-                <button class="btn btn-primary" type="submit">Login</button> oder <a href="#/signup">registrieren.</a>
+                <button class="btn btn-primary" type="submit" data-ng-click="login()">Login</button> oder <a href="#/signup">registrieren.</a>
             </div>
         </form>
     </div>
