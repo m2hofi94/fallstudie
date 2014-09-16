@@ -2,96 +2,87 @@
 'use strict';
 
 var passwordHash = require('password-hash');
+var connection = require('./../config/db.js')(100);
 
-exports.list = function(req, res) {
-    var connection = require('./db.js')();
-    connection.connect();
+module.exports = function(passport) {
+    return {
+        list: function(req, res) {
+            connection.query('SELECT * FROM users', function(err, rows, fields) {
+              if (err) throw err;
 
-    connection.query('SELECT * FROM users', function(err, rows, fields) {
-      if (err) throw err;
+              res.jsonp(rows);
+            });
+        },
 
-      res.jsonp(rows);
-    });
+        create: function(req, res) {
+            req.body.password =  passwordHash.generate(req.body.password);
+            console.log(req.body);
 
-    connection.end();
+            connection.query('INSERT INTO users SET ?', [req.body],function(err, rows, fields) {
+                if (err) {
+                    if (err.errno===1062) {
+                        //username taken
+                        return res.status(400).jsonp({message: "Diese e-Mail ist bei uns bereits registriert"});
+                    }
+                    return res.status(500);
+                }
+              res.jsonp(rows);
+            });
+        },
+
+        read: function(req, res) {
+            connection.query('SELECT * FROM users WHERE id = ?', [req.params.userId],function(err, rows, fields) {
+                if (err) return res.status(500);
+                res.jsonp(rows);
+            });
+        },
+
+        update: function(req, res) {
+            connection.query('UPDATE users SET ? WHERE id= ?', [req.body, req.params.userId],function(err, rows, fields) {
+                if (err) return res.status(500);
+                res.jsonp(rows);
+            });
+        },
+
+        delete: function(req, res) {
+            connection.query('DELETE FROM users WHERE id = ?', [req.params.userId],function(err, rows, fields) {
+                if (err) return res.status(500);
+                res.jsonp(rows);
+            });
+        },
+
+        login: function(req, res, next) {
+            passport.authenticate('local-login', function(err, user, info) {
+                if (err) {return next(err);}
+
+                // Generate a JSON response reflecting authentication status
+                if (! user) {
+                  return res.send({ success : false, message : req.loginMessage });
+                }
+
+                //success, log-in user
+                req.login(user, function(err) {
+                    if (err) {return next(err);}
+                    return res.send({ success : true});
+                });
+          })(req, res, next);
+        },
+
+        signup: function(req, res, next) {
+            passport.authenticate('local-signup', function(err, user, info) {
+                if (err) {return next(err);}
+
+                // Generate a JSON response reflecting authentication status
+                if (! user) {
+                  return res.send({ success : false, message : req.signUpMessage });
+                }
+
+                //success, log-in user
+                req.login(user, function(err) {
+                    if (err) {return next(err);}
+                    return res.send({ success : true});
+                });
+          })(req, res, next);
+        },
+    };
 };
-
-exports.create = function(req, res) {
-    var connection = require('./db.js')();
-    connection.connect();
-	
-	req.body.password =  passwordHash.generate(req.body.password);
-
-    connection.query('INSERT INTO users SET ?', [req.body],function(err, rows, fields) {
-        if (err) {
-            if (err.errno===1062) {
-                //username taken
-                return res.status(400).jsonp({message: "Diese e-Mail ist bei uns bereits registriert"});
-            }
-            return res.status(500);
-        }
-      res.jsonp(rows);
-    });
-
-    connection.end();		
-};
-
-exports.read = function(req, res) {
-    var connection = require('./db.js')();
-    connection.connect();
-
-    connection.query('SELECT * FROM users WHERE id = ?', [req.params.userId],function(err, rows, fields) {
-        if (err) return res.status(500);
-        res.jsonp(rows);
-    });
-
-    connection.end();
-};
-
-exports.update = function(req, res) {
-    var connection = require('./db.js')();
-    connection.connect();
-
-    connection.query('UPDATE users SET ? WHERE id= ?', [req.body, req.params.userId],function(err, rows, fields) {
-        if (err) return res.status(500);
-        res.jsonp(rows);
-    });
-
-    connection.end();
-};
-
-exports.delete = function(req, res) {
-    var connection = require('./db.js')();
-    connection.connect();
-
-    connection.query('DELETE FROM users WHERE id = ?', [req.params.userId],function(err, rows, fields) {
-        if (err) return res.status(500);
-        res.jsonp(rows);
-    });
-
-    connection.end();
-};
-
-exports.login = function(req, res) {
-    var connection = require('./db.js')();
-    connection.connect();
-	
-	connection.query('SELECT password FROM users WHERE email = ?', [req.body.email], function(err, rows, fields) {
-		if (err || rows.length === 0) {
-			return res.status(500);	
-		} else if(passwordHash.verify(req.body.password, rows[0].password)){
-			res.jsonp(rows);
-			return res.status(200);			
-		}
-	});
-
-    connection.end();
-};
-
-
-
-
-
-
-
-
