@@ -13,8 +13,9 @@ module.exports = function(express, passport) {
     router.delete('/users/:userId', loggedIn, users.delete);
 
     //*******************Login/Signup*******************************
-	router.post('/users/login', users.login);
-	router.post('/users/signup', users.signup);
+	router.post('/login', users.login);
+	router.post('/signup', users.signup);
+    router.get('/logout', users.logout);
 
     //function to check if user is logged in
     //sends a 401 if unsuccessfull

@@ -1,8 +1,9 @@
 /*globals angular */
 'use strict';
 
-angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', '$location', function($scope, Users, $location) {
+angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', '$location', 'Authentication', function($scope, Users, $location, Authentication) {
     $scope.result = {};
+    $scope.Authentication = Authentication;
 
     //************************CRUD-Example********************
 
@@ -83,8 +84,10 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', 
     //See above
 	$scope.login = function(){
 		Users.login($scope.loginData).success(function(data) {
-            console.log(data);
             if (data.success) {
+                //saving the user in the Authentication-Service
+                $scope.Authentication.user(data.user);
+
                 $location.url('/users');
             } else {
                 $scope.result = data;

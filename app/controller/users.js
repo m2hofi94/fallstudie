@@ -63,9 +63,21 @@ module.exports = function(passport) {
                 //success, log-in user
                 req.login(user, function(err) {
                     if (err) {return next(err);}
-                    return res.send({ success : true});
+
+                    //building the result (returning the user to the client)
+                    var result = {};
+                    result.success = true;
+                    result.user = req.user;
+                    return res.send(result);
                 });
           })(req, res, next);
+        },
+
+        logout: function(req, res) {
+            req.logout();
+            req.session.destroy(function (err) {
+                res.send({success: true});
+            });
         },
 
         signup: function(req, res, next) {
@@ -80,7 +92,12 @@ module.exports = function(passport) {
                 //success, log-in user
                 req.login(user, function(err) {
                     if (err) {return next(err);}
-                    return res.send({ success : true});
+
+                    //building the result
+                    var result = {};
+                    result.success = true;
+                    result.user = req.user;
+                    return res.send(result);
                 });
           })(req, res, next);
         },

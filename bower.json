@@ -6,6 +6,10 @@
     "font-awesome": "latest",
     "angular": "latest",
     "angular-route": "latest",
-    "angular-bootstrap": "~0.11.0"
+    "angular-bootstrap": "~0.11.0",
+    "angular-cookies": "~1.2.25"
+  },
+  "resolutions": {
+    "angular": "1.2.25"
   }
 }

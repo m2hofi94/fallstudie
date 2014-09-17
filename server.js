@@ -33,13 +33,6 @@ var router = require('./app/routes')(express, passport);
 
 app.use('/api', router);
 
-app.get('/logout', function(req, res) {
-    req.logout();
-    req.session.destroy(function (err) {
-        res.redirect('/'); //Inside a callback… bulletproof!
-    });
-});
-
 // START THE SERVER
 // =============================================================================
 app.listen(port);

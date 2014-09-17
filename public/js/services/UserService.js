@@ -5,11 +5,11 @@ angular.module('UserService', []).factory('Users', ['$http', function($http) {
 	return {
 		// login
 		login : function(user){
-			return $http.post('/api/users/login', user);
+			return $http.post('/api/login', user);
 		},
 
         signup : function(user) {
-            return $http.post('/api/users/signup', user);
+            return $http.post('/api/signup', user);
         },
 		
 		// call to get all nerds
