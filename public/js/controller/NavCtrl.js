@@ -17,4 +17,10 @@ angular.module('NavController', []).controller('NavCtrl', ['$scope', 'Authentica
     $scope.logout = function() {
         Authentication.logout();
     };
+    
+     $scope.onLoad = function() {
+        if(!$scope.loggedIn()){
+            $location.url('/');
+        }
+    };
 }]);

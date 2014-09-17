@@ -24,7 +24,7 @@ angular.module('Authentication', ['ngCookies']).factory('Authentication', ['$coo
                 $http.get('/api/logout');
             }
 		};
-
+    
 		return _this._data;
 	}
 ]);
