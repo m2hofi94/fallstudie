@@ -3,8 +3,9 @@
 
 var mysql      = require('mysql');
 
-module.exports = function() {
-    return mysql.createConnection({
+module.exports = function(num) {
+    return mysql.createPool({
+      connectionLimit : num,
       host     : 'localhost',
       user     : 'afs',
       password : 'EgDetVuWeHewitye',

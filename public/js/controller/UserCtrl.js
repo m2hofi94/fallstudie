@@ -1,7 +1,7 @@
 /*globals angular */
 'use strict';
 
-angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', function($scope, Users) {
+angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', '$location', function($scope, Users, $location) {
     $scope.result = {};
 
     //************************CRUD-Example********************
@@ -12,6 +12,7 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', 
             $scope.result = data;
         }).error(function(err) {
             console.log(err);
+            $scope.result = err;
         });
     };
 
@@ -31,6 +32,7 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', 
             $scope.result = data;
         }).error(function(err) {
             console.log(err);
+            $scope.result = err;
         });
     };
 
@@ -40,6 +42,7 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', 
             $scope.result = data;
         }).error(function(err) {
             console.log(err);
+            $scope.result = err;
         });
     };
 
@@ -49,37 +52,46 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', 
             $scope.result = data;
         }).error(function(err) {
             console.log(err);
+            $scope.result = err;
         });
     };
 	
 	
 	//************************Signup**************************
+    // redirects to users module on success
+    // writes messages to $scope.result.message
+    // server always returns 200, so data.success is required
+
 	$scope.signUp = function(){
-		if($scope.user.password == $scope.passwordCheck){
-			Users.create($scope.user).success(function(data) {
-				console.log(data);
-				$scope.result = data;
-				$scope.result.message = "Sie wurden erfolgreich registriert";
-				location.href='#/login';		
+		if($scope.user.password == $scope.passwordCheck) {
+			Users.signup($scope.user).success(function(data) {
+				if (data.success) {
+                    $location.url('/users');
+                } else {
+                    $scope.result = data;
+                }
 			}).error(function(err) {
 				console.log(err);
 				$scope.result = err;
 			});
-		}else {
+		} else {
 			$scope.result.message = "Die Passwörter müssen übereinstimmen";
 		}
 	};
 	
 	//************************Login***************************
+    //See above
 	$scope.login = function(){
 		Users.login($scope.loginData).success(function(data) {
-			console.log(data);
-			$scope.result = data;
-			$scope.result.message = "Login erfolgreich";
-			location.href='#/surveys'; 			
+            console.log(data);
+            if (data.success) {
+                $location.url('/users');
+            } else {
+                $scope.result = data;
+            }
 		}).error(function(err) {
 			console.log(err);
-			$scope.result.message = "Sie konnten leider nicht eingeloggt werden";
+            $scope.result = err;
 		});
 	};
 	
