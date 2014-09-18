@@ -24,3 +24,14 @@ angular.module('NavController', []).controller('NavCtrl', ['$scope', 'Authentica
         }
     };
 }]);
+
+angular.module('NavController').run(['$rootScope', '$location', 'Authentication', '$window', function($rootScope, $location, Authentication, $window) {
+	$rootScope.$on('$routeChangeStart', function(event, next, current) {
+		$window.scrollTo(0,0);
+
+		if (next.protected && !Authentication.user()) {
+			event.preventDefault();
+			$location.url('/login');
+		}
+	});
+}]);

@@ -1,4 +1,6 @@
+/*globals angular */
 'use strict';
+
 
 angular.module('afsApp').config(['$routeProvider',
     function ($routeProvider) {
@@ -18,11 +20,13 @@ angular.module('afsApp').config(['$routeProvider',
             })
             .when('/users', {
                 templateUrl: 'views/users.html',
-                controller: 'UserCtrl'
+                controller: 'UserCtrl',
+				protected: true
             })
 			.when('/surveys', {
 				templateUrl: 'views/surveys.html',
-                controller: 'UserCtrl'
+                controller: 'UserCtrl',
+				protected: true
 			})
 			.when('/contact', {
 				templateUrl: 'views/contact.html',
