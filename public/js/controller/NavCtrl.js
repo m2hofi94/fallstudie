@@ -1,27 +1,25 @@
 /*globals angular */
 'use strict';
 
-angular.module('NavController', []).controller('NavCtrl', ['$scope', 'Authentication', '$location', function($scope, Authentication, $location) {
-    $scope.authentication = Authentication;
+angular.module('NavController', []).controller('NavCtrl', ['$scope', 'Authentication', function($scope, Authentication) {
     $scope.isCollapsed = true;
+	var _user = null;
 
-    $scope.loggedIn = function() {
-        return $scope.authentication.user();
-    };
+	$scope.loggedIn = function() {
+		return _user;
+	};
 
     $scope.user = function() {
-        return  Authentication.user();
+        if (!_user) {
+			_user = Authentication.user();
+		}
+		return _user;
     };
 
     //logging out is handled in the Authentication Service
     $scope.logout = function() {
-        Authentication.logout();
-    };
-    
-     $scope.onLoad = function() {
-        if(!$scope.loggedIn()){
-            $location.url('/');
-        }
+        _user = null;
+		Authentication.logout();
     };
 }]);
 

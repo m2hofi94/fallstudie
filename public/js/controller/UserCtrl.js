@@ -3,7 +3,6 @@
 
 angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', '$location', 'Authentication', function($scope, Users, $location, Authentication) {
     $scope.result = {};
-    $scope.Authentication = Authentication;
 
     //************************CRUD-Example********************
 
@@ -65,8 +64,9 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', 
 
 	$scope.signUp = function(){
 		if($scope.user.password == $scope.passwordCheck) {
-			Users.signup($scope.user).success(function(data) {
+			Authentication.signup($scope.user).success(function(data) {
 				if (data.success) {
+					Authentication.user(data.user);
                     $location.url('/users');
                 } else {
                     $scope.result = data;
@@ -83,10 +83,10 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', 
 	//************************Login***************************
     //See above
 	$scope.login = function(){
-		Users.login($scope.loginData).success(function(data) {
+		Authentication.login($scope.loginData).success(function(data) {
             if (data.success) {
                 //saving the user in the Authentication-Service
-                $scope.Authentication.user(data.user);
+                Authentication.user(data.user);
 
                 $location.url('/users');
             } else {

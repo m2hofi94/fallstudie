@@ -4,10 +4,9 @@
 'use strict';
 
 angular.module('Authentication', ['ngCookies']).factory('Authentication', ['$cookieStore', '$http', function($cookieStore, $http) {
-		var _this = this;
         var user = $cookieStore.get('userobj');
 
-		_this._data = {
+		return {
 			user: function(userObj) {
                 if (userObj) {
                     $cookieStore.put('userobj', userObj);
@@ -22,9 +21,18 @@ angular.module('Authentication', ['ngCookies']).factory('Authentication', ['$coo
                 $cookieStore.remove('userobj');
                 user = null;
                 $http.get('/api/logout');
-            }
+            },
+
+			login : function(user){
+				return $http.post('/api/login', user);
+			},
+
+			signup : function(user) {
+				return $http.post('/api/signup', user);
+			},
 		};
-    
-		return _this._data;
+
+
+
 	}
 ]);
