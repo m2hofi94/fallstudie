@@ -4,7 +4,8 @@ drop table if exists users;
 create table users (
   id int not null auto_increment primary key,
   email varchar(100) not null unique,
+  firstName varchar(100),
+  lastName varchar(100),
   password varchar(100) not null,
   created timestamp default now()
 );
-

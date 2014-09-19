@@ -12,6 +12,7 @@
     <!-- CSS -->
     <link href="libs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="libs/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="libs/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <link href="css/app.css" rel="stylesheet">
 
     <!-- JS -->
@@ -57,12 +58,12 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right" data-ng-hide="loggedIn()">
                     <li class="divider"></li>
-                    <li><a href="#/login">Login</a></li>
-                    <li><a href="#/signup">Signup</a></li>
+                    <li><a href="#/login"><i class="fa fa-sign-in"></i>&nbsp;Login</a></li>
+                    <!-- <li><a href="#/signup">Signup</a></li> -->
                 </ul>
                 <ul class="nav navbar-nav navbar-right" data-ng-show="loggedIn()">
-                    <li class="navbar-text">{{user().email}}</li>
-                    <li><a href="#" data-ng-click="logout()">Logout</a></li>
+                    <li class="navbar-text" >{{user().firstName +  " " +  user().lastName}}</li>
+                    <li><a href="#" data-ng-click="logout()"><i class="fa fa-sign-out"></i>&nbsp;Logout</a></li>
                 </ul>
             </div>
         </div>
