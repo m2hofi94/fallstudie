@@ -3,7 +3,6 @@
 
 angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', '$location', 'Authentication', function($scope, Users, $location, Authentication) {
     $scope.result = {};
-
     //************************CRUD-Example********************
 
     $scope.list = function() {
@@ -97,7 +96,25 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', 
             $scope.result = err;
 		});
 	};
+    
+    //********************************* Test Michael ************
+    $scope.number = 1;
+    
+    $scope.addQuestion = function(){ 
+        $scope.number++;
+    };
+    
+    $scope.removeQuestion = function(q) {
+        console.log("remove");
+        $scope.number--;   
+        // var remove = document.getElementById(q);
+        // document.all.questions.removeChild(remove);
+    }
 	
-	
+    $scope.getNumber = function(num) {
+    return new Array(num);   
+    };
 	
 }]);
+
+

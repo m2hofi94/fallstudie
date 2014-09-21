@@ -1,0 +1,27 @@
+<div class="panel" style="padding:0px;border:1px solid grey;background:#AAAAAA;" id="div1">
+        <button class="afs-corner-btn" data-ng-click="removeQuestion(div1)"><i class="fa fa-trash"></i></button></br></br>
+        <form class="form-horizontal panel-body" role="form">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Titel der Frage</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" data-ng-model="first_question.title " value="Wie fanden Sie die Veranstaltung?"></input>                   </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Fragentyp</label>
+            <div class="col-sm-10 dropdown">
+              <button class="btn btn-default dropdown-toggle" type="button" id="q1" data-toggle="dropdown">
+              Fragetyp&nbsp;<span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                 <li role="presentation"><a role="menuitem" tabindex="0">Skala</a></li>
+                 <!-- <li role="presentation" class="divider"></li> -->
+                 <li role="presentation"><a role="menuitem" tabindex="1">Textfeld</a></li>
+              </ul>
+            </div>
+          </div>
+        </form>
+    </div>
+
+<!-- IDs von einzelnen Feldern? 
+-->
+
