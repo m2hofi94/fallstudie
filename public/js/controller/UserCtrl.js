@@ -1,8 +1,11 @@
 /*globals angular */
 'use strict';
 
-angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', '$location', 'Authentication', function($scope, Users, $location, Authentication) {
+angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', 
+
+'$location', 'Authentication', function($scope, Users, $location, Authentication) {
     $scope.result = {};
+
     $scope.question = {title:"Wie fanden Sie die Veranstaltung?"};
     
     //************************CRUD-Example********************
@@ -99,24 +102,7 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', 
 		});
 	};
     
-    //********************************* Test Michael ************
-    $scope.number = 1;
     
-    $scope.addQuestion = function(){ 
-        $scope.number++;
-    };
-    
-    $scope.removeQuestion = function(q) {
-        console.log("remove");
-        $scope.number--;   
-        // var remove = document.getElementById(q);
-        // document.all.questions.removeChild(remove);
-    }
-	
-    $scope.getNumber = function(num) {
-    return new Array(num);   
-    };
-	
 }]);
 
 
