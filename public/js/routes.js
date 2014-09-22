@@ -25,7 +25,17 @@ angular.module('afsApp').config(['$routeProvider',
             })
 			.when('/surveys', {
 				templateUrl: 'views/surveys.html',
-                controller: 'UserCtrl',
+                controller: 'FormCtrl',
+				protected: true
+			})
+            .when('/surveys/edit', {
+				templateUrl: 'views/surveys/edit-field.html',
+                controller: 'FormCtrl',
+				protected: true
+			})
+            .when('/surveys/view', {
+				templateUrl: 'views/surveys/view-field.html',
+                controller: 'FormCtrl',
 				protected: true
 			})
 			.when('/contact', {
