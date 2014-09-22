@@ -5,10 +5,11 @@
 .afs-corner-btn{
     border-left:1px solid black;
     border-bottom:1px solid black;
+    border-right:1px solid white;
     border-bottom-left-radius: 15%;
     border-top-right-radius:15%;
     
-    
+    background-color: #FFFFFF;
     
     float:right;
     
@@ -17,5 +18,5 @@
 }
 
 .afs-corner-btn:hover{
-    ## on Hover change Color
+    background-color: #OOOOFF;
 }

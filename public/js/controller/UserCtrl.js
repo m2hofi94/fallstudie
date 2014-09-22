@@ -3,6 +3,8 @@
 
 angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', '$location', 'Authentication', function($scope, Users, $location, Authentication) {
     $scope.result = {};
+    $scope.question = {title:"Wie fanden Sie die Veranstaltung?"};
+    
     //************************CRUD-Example********************
 
     $scope.list = function() {
