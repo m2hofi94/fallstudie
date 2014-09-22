@@ -10,14 +10,7 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">Fragentyp</label>
             <div class="col-sm-10 dropdown">
-              <button class="btn btn-default dropdown-toggle" type="button" id="q1" data-toggle="dropdown">
-              Auswählen&nbsp;<span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                 <li role="presentation"><a role="menuitem" tabindex="0">Skala</a></li>
-                 <!-- <li role="presentation" class="divider"></li> -->
-                 <li role="presentation"><a role="menuitem" tabindex="1">Textfeld</a></li>
-              </ul>
+            <select class="btn btn-default" ng-model="textArea" ng-options="option.name for option in options"></select>  
             </div>
           </div>
         </form>
