@@ -13,5 +13,6 @@ angular.module('afsApp', [
 
     //Controller
     'NavController',
+    'FormController',
     'UserController'
 ]);
