@@ -5,6 +5,7 @@ angular.module('afsApp', [
     //libraries
     'ngRoute',
     'ngCookies',
+    'ngClipboard',
     'ui.bootstrap',
 
     // Serivces
@@ -14,5 +15,6 @@ angular.module('afsApp', [
     //Controller
     'NavController',
     'FormController',
-    'UserController'
+    'UserController',
+    'HomeController'
 ]);

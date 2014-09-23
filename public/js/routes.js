@@ -8,7 +8,7 @@ angular.module('afsApp').config(['$routeProvider',
         $routeProvider
             .when('/', {
                 templateUrl: 'views/home.html',
-                controller: 'NavCtrl'
+                controller: 'HomeCtrl'
             })
             .when('/signup', {
                 templateUrl: 'views/signup.html',
