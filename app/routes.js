@@ -3,6 +3,7 @@
 
 module.exports = function(express, passport) {
     var users = require('./controller/users')(passport);
+    var questions = require('./controller/questions')(null);
     var router = express.Router();
 
     //******************USERS-CRUD-Example***********************
@@ -16,6 +17,10 @@ module.exports = function(express, passport) {
 	router.post('/login', users.login);
 	router.post('/signup', users.signup);
     router.get('/logout', users.logout);
+
+    //*******************Questions**********************************
+    router.get('/questions', questions.getQuestions);
+    router.post('/questions', questions.addQuestion);
 
     //function to check if user is logged in
     //sends a 401 if unsuccessfull

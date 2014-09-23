@@ -4,15 +4,16 @@
 'use strict';
 
 
-angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Authentication', function($scope,  Authentication) {  
+angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Questions', 'Authentication', function($scope, Questions,  Authentication) {
   $scope.authentication = Authentication;
   $scope.question = {title:"Wie fanden Sie die Veranstaltung?"};
   $scope.content = "option1";
   $scope.id = 0;
 
-  $scope.date = [{value: new Date()},{value : new Date()}];
 
   // Date Picker
+  $scope.date = [{value: new Date()},{value : new Date()}];
+
   $scope.today = function(date) {
     date = new Date();
   };
@@ -23,12 +24,37 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Authenti
   };
   $scope.toggleMin();
 
-  $scope.open = function($event) {
+  $scope.open = function($event, title) {
     $event.preventDefault();
     $event.stopPropagation();
 
-    $scope.opened = true;
+    if(title == "buStart") {
+        if($scope.openedStart !== true) {
+        $scope.openedStart = true;
+        } else {
+            $scope.openedStart = false;
+        }
+    }
+    if(title == "buEnd") {
+        if($scope.openedEnd !== true) {
+        $scope.openedEnd = true;
+        } else {
+            $scope.openedEnd = false;
+        }
+    }
   };
+
+
+  $scope.getQuestions = function() {
+        Questions.getQuestions().success(function(data) {
+            $scope.fields = data;
+            console.log($scope.fields);
+        }).error(function(err) {
+            console.log(err);
+            $scope.result = err;
+        });
+    };
+  $scope.getQuestions();
 
   // Options for survey
   $scope.options = [
@@ -41,37 +67,27 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Authenti
       name: 'Textfeld'
     }
   ];
-    
   $scope.textArea = $scope.options[1];
     
-  // entity to edit  
-  $scope.entity = {  
-      title: "This is my title",
+  // Standard Value for new question
+  $scope.standardQuestion = {
+      title: "Wie fanden Sie die Veranstaltung wirklich?",
       type: "Textarea"
   };  
   
-  // fields description of entity  
-  $scope.fields = [  
-    {  
-      name: 'title',  
-      title: 'title',  
-      required: true,  
-      type: {  
-        view: 'input'  
-      }  
-    },
-    {  
-      name: 'type',  
-      title: 'type',  
-      type: {  
-        view: 'select',   
-      }  
-    } 
-  ];  
+
+
     
   $scope.number = 1;
     
   $scope.addQuestion = function(){ 
+    Questions.addQuestion($scope.standardQuestion).success(function(data) {
+            console.log(data);
+            $scope.result = data;
+        }).error(function(err) {
+            console.log(err);
+            $scope.result = err;
+        });
     $scope.number++;
   };
     

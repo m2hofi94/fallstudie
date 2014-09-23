@@ -1,9 +1,7 @@
 /*globals angular */
 'use strict';
 
-angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', 
-
-'$location', 'Authentication', function($scope, Users, $location, Authentication) {
+angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', '$location', 'Authentication', function($scope, Users, $location, Authentication) {
     $scope.result = {};
 
     //************************Signup**************************
