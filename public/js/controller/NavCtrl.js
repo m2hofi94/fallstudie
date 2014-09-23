@@ -5,6 +5,10 @@ angular.module('NavController', []).controller('NavCtrl', ['$scope', 'Authentica
     $scope.isCollapsed = true;
 	var _user = null;
 
+    $scope.$on('$routeChangeStart', function() {
+       $scope.isCollapsed = true;
+    });
+
 	$scope.loggedIn = function() {
 		return _user;
 	};

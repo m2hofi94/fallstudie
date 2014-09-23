@@ -1,14 +1,21 @@
-<br>
-<div class="row col-md-10 col-md-offset-1 ">
-    <h1 class="text-center">Neue Umfrage erstellen</h1>
+<div class="row col-md-10 col-md-offset-1">
+    <h1 class="page-header">Neue Umfrage erstellen</h1>
+</div>
+
+<div class="row col-md-10 col-md-offset-1">
     <input class="form-control text-center" type="text" placeholder="Titel zur Umfrage hinzufügen" style="cursor:text;">
+</div>
+
+<div class="row col-md-10 col-md-offset-1 ">
     <h2>Fragen</h2>
     <div id="questions">
-        <div ng-repeat="n in getNumber(number) track by $index" ng-include src="'views/surveys/question-field.html'"></ng-include></div>
-
+        <div ng-repeat="n in getNumber(number) track by $index" ng-include src="'views/surveys/question-field.html'"></div>
     </div>
     <button class="btn btn-primary" data-ng-click="addQuestion()">Neue Frage hinzufügen</button>
-    <button class="btn btn-primary">Vorschau</button><br /><br />
+    <button class="btn btn-info">Vorschau</button>
+</div>
+
+<div class="row col-md-5 col-md-offset-1">
     <h2>Teilnehmer</h2>
     <div class="radio-inline">
       <label>
@@ -22,21 +29,17 @@
         Emfpängerliste
       </label>
     </div>
-    <br />
-    <div class="input-group col-sm-6" ng-show="content == 'option1'">
+
+    <div class="input-group" ng-show="content == 'option1'">
         <input class="form-control" type="text" value="http://www.afs.de/dXYjklsefs" style="cursor:text;" readonly="readonly">
         <span class="input-group-btn">
             <button class="btn btn-default" type="button">Link kopieren</button>
         </span>
     </div>
-    <div style="width:100%;height:120px" ng-show="content == 'option2'">
-        <textarea class="col-sm-6"  rows="5" align= "text-center" placeholder="Mehrere Empfänger durch Semikolon getrennt eingeben"></textarea>
+    <div class="form-group" ng-show="content == 'option2'">
+        <textarea class="form-control" rows="5" align= "text-center" placeholder="Mehrere Empfänger durch Semikolon getrennt eingeben"></textarea>
     </div>
-    <br />
-    <h5>Umfrage wiederholen (?)</h5>
     
-    <div style="clear:left">
-        <br />
-        <button class="btn btn-success">Umfrage freischalten</button>
-    </div>
+    <h5>Umfrage wiederholen (?)</h5>
+    <button class="btn btn-success">Umfrage freischalten</button>
 </div>

@@ -54,18 +54,18 @@
             </div>
             <div class="navbar-collapse" data-collapse="isCollapsed">
                 <ul class="nav navbar-nav">
-                    <li><a href="#/users">Users</a></li>
-                    <li><a href="#/surveys">Surveys</a></li>
+                    <li><a href="#/users"><i class="fa fa-fw fa-users"></i>&nbsp;Users</a></li>
+                    <li><a href="#/surveys"><i class="fa fa-fw fa-question-circle"></i>&nbsp;Surveys</a></li>
                     <li class="divider"></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right" data-ng-hide="loggedIn()">
                     <li class="divider"></li>
-                    <li><a href="#/login"><i class="fa fa-sign-in"></i>&nbsp;Login</a></li>
-                    <!-- <li><a href="#/signup">Signup</a></li> -->
+                    <li><a href="#/login"><i class="fa fa-fw fa-sign-in"></i>&nbsp;Login</a></li>
+                    <li><a href="#/signup"><i class="fa fa-fw fa-rotate-270 fa-sign-in"></i>&nbsp;Signup</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right" data-ng-show="loggedIn()">
-                    <li class="navbar-text" >{{user().firstName +  " " +  user().lastName}}</li>
-                    <li><a href="#" data-ng-click="logout()"><i class="fa fa-sign-out"></i>&nbsp;Logout</a></li>
+                    <li><a href="#/profile"><i class="fa fa-fw fa-user"></i>&nbsp;{{user().firstName +  " " +  user().lastName}}</a></li>
+                    <li><a href="#" data-ng-click="logout()"><i class="fa fa-fw fa-sign-out"></i>&nbsp;Logout</a></li>
                 </ul>
             </div>
         </div>
@@ -74,7 +74,6 @@
     <div class="container">
         <div ng-view></div>
     </div>
-	<br/><br/><br/>
     <nav class="navbar navbar-default navbar-fixed-bottom">
         <div class="text-center"><br />@Copyright by ABCJMMM | <a href="#/contact">Impressum</a></div>
     </nav>
