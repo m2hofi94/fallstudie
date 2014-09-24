@@ -13,6 +13,10 @@ angular.module('QuestionService', []).factory('Questions', ['$http', function($h
 		// create new Question
 		addQuestion   : function(questionData) {
 			return $http.post('/api/questions', questionData);
+		},
+
+        removeQuestion : function(questionId) {
+			return $http.delete('/api/questions/' + questionId);
 		}
 	};
 

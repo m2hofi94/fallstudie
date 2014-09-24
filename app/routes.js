@@ -21,6 +21,7 @@ module.exports = function(express, passport) {
     //*******************Questions**********************************
     router.get('/questions', questions.getQuestions);
     router.post('/questions', questions.addQuestion);
+    router.delete('/questions/:questionId', questions.removeQuestion);
 
     //function to check if user is logged in
     //sends a 401 if unsuccessfull

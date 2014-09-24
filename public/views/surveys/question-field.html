@@ -1,5 +1,5 @@
 <div class="panel panel-default" id="div1">
-    <button class="btn btn-danger afs-corner-btn" data-ng-click="removeQuestion(div1)"><i class="fa fa-trash-o fa-lg"></i></button>
+    <button class="btn btn-danger afs-corner-btn" data-ng-click="removeQuestion(field)"><i class="fa fa-trash-o fa-lg"></i></button>
     <form class="form-horizontal panel-body" role="form">
     <div class="form-group">
         <label class="col-sm-2 control-label">Titel der Frage</label>
@@ -10,7 +10,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label">Fragentyp</label>
         <div class="col-sm-10 dropdown">
-        <select class="btn btn-default" data-ng-model="field.type" ng-options="option.name for option in options"></select>
+        <select class="btn btn-default" data-ng-model="field.type" ng-options="option.value for option in options"></select>
         </div>
       </div>
     </form>

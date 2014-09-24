@@ -10,6 +10,7 @@
     <h2>Fragen</h2>
     <div id="questions">
         <div ng-repeat="field in fields">
+            <script type="text/javascript">console.log(field);</script>
             <ng-include src="'views/surveys/question-field.html'"/>
         </div>
     </div>
@@ -47,7 +48,7 @@
         <div class="col-md-6">
             <h4>Start</h4>
             <p class="input-group">
-              <input type="text" class="form-control" datepicker-popup="dd-MMMM-yyyy" ng-model="date[0].value" is-open="openedStart" min-date="minDate" max-date="'2099-12-31'" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+              <input type="text" class="form-control" datepicker-popup="dd.MM.yyyy" ng-model="date[0].value" is-open="openedStart" min-date="minDate" max-date="'2099-12-31'" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
               <span class="input-group-btn">
                 <button type="button" class="btn btn-default" id="buStart" ng-click="open($event, 'buStart')" ><i class="glyphicon glyphicon-calendar"></i></button>
               </span>
@@ -56,7 +57,7 @@
         <div class="col-md-6">
             <h4>Ende</h4>
             <p class="input-group">
-              <input type="text" class="form-control" datepicker-popup="dd-MMMM-yyyy" ng-model="date[1].value" is-open="openedEnd" value="2099-12-31" min-date="minDate" max-date="'2099-12-31'" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+              <input type="text" class="form-control" datepicker-popup="dd.MM.yyyy" ng-model="date[1].value" is-open="openedEnd" value="2099-12-31" min-date="minDate" max-date="'2099-12-31'" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
               <span class="input-group-btn">
                 <button type="button" class="btn btn-default" ng-click="open($event, 'buEnd')" id="buEnd"><i class="glyphicon glyphicon-calendar"></i></button>
               </span>

@@ -8,7 +8,6 @@ module.exports = function() {
         getQuestions : function(req, res) {
             connection.query('SELECT * FROM questions', function(err, rows, fields) {
               if (err) throw err;
-              console.log(fields + " ... " + rows);
               res.jsonp(rows);
             });
         },
@@ -16,7 +15,14 @@ module.exports = function() {
         addQuestion : function(req, res) {
          connection.query('INSERT INTO questions SET ?', [req.body], function(err, rows, fields){
                if (err) throw err;
-               console.log(fields + " ... " + rows);
+               res.jsonp(rows);
+            });
+        },
+
+        removeQuestion : function(req, res) {
+         connection.query('DELETE FROM questions WHERE id = ?', [req.params.questionId], function(err, rows, fields){
+               if (err) throw err;
+               res.jsonp(rows);
             });
         }
     };
