@@ -3,7 +3,7 @@
 </div>
 
 <div class="row col-md-10 col-md-offset-1">
-    <input class="form-control text-center" type="text" placeholder="Titel zur Umfrage hinzufügen" style="cursor:text;">
+    <a href="#" editable-text="title">{{title}}</a>
 </div>
 
 <div class="row col-md-10 col-md-offset-1 ">
@@ -39,10 +39,10 @@
             <button class="btn btn-default" type="button">Link kopieren</button>
         </span>
     </div>
-    <div class="form-group" ng-show="content == 'option2'">
-        <textarea class="form-control" rows="5" align= "text-center" placeholder="Mehrere Empfänger durch Semikolon getrennt eingeben"></textarea>
+    <div ng-show="content == 'option2'">
+        <tags-input data-ng-model="emails" placeholder="E-Mail Adressen hier eingeben" add-on-space="true" enable-editing-last-tag="true" type="email" replace-spaces-with-dashes="false"></tags-input>
     </div>
-    
+
     <h2>Zeitraum</h2>
     <div class="row">
         <div class="col-md-6">

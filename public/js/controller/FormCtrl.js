@@ -7,7 +7,8 @@
 angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Questions', 'Authentication', function($scope, Questions,  Authentication) {
   $scope.authentication = Authentication;
   // for "Teilnehmer" Radio Button
-  $scope.content = "option1"; 
+  $scope.content = "option1";
+    $scope.title= 'Unbenannte Umfrage';
     
   // Date Picker
   $scope.date = [{value: new Date()},{value : new Date()}];

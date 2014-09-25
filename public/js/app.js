@@ -7,6 +7,8 @@ angular.module('afsApp', [
     'ngCookies',
     'ngClipboard',
     'ui.bootstrap',
+    'xeditable',
+    'ngTagsInput',
 
     // Serivces
     'UserService',
@@ -19,3 +21,7 @@ angular.module('afsApp', [
     'UserController',
     'HomeController'
 ]);
+
+angular.module('afsApp').run(['editableOptions', function(editableOptions) {
+    editableOptions.theme = 'bs3';
+}]);
