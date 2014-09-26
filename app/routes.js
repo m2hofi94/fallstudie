@@ -3,7 +3,7 @@
 
 module.exports = function(express, passport) {
     var users = require('./controller/users')(passport);
-    var questions = require('./controller/questions')(null);
+    var surveys = require('./controller/surveys')(null);
     var router = express.Router();
 
     //******************USERS-CRUD-Example***********************
@@ -19,9 +19,9 @@ module.exports = function(express, passport) {
     router.get('/logout', users.logout);
 
     //*******************Questions**********************************
-    router.get('/questions', questions.getQuestions);
-    router.post('/questions', questions.addQuestion);
-    router.delete('/questions/:questionId', questions.removeQuestion);
+    // router.get('/questions', questions.getQuestions);
+    router.post('/surveys', loggedIn, surveys.createSurvey);
+    // router.delete('/questions/:questionId', questions.removeQuestion);
 
     //function to check if user is logged in
     //sends a 401 if unsuccessfull

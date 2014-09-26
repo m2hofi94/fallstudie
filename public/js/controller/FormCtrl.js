@@ -4,7 +4,7 @@
 'use strict';
 
 
-angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Questions', 'Authentication', '$modal', function ($scope, Questions, Authentication, $modal) {
+angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys', 'Authentication', '$modal', '$location', function ($scope, Surveys, Authentication, $modal, $location) {
     $scope.init = function() {
         $scope.authentication = Authentication;
         // for "Teilnehmer" Radio Button
@@ -76,31 +76,30 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Question
     };
 
     $scope.removeQuestion = function (index) {
-        console.log($scope.fields[index]);
         $scope.fields.splice(index, 1);
     };
 
-    $scope.open = function () {
-
-       var modalInstance = $modal.open({
-            template: '<div class="modal-body"><p>Sind sie sicher?</p></div><div class="modal-footer"><button class="btn btn-primary" ng-click="$modalInstance.close()">OK</button><button class="btn btn-warning" ng-click="$modalInstance.dimiss()">Cancel</button></div>',
-            size: 'sm'
-           }
-       );
-
-       modalInstance.result.then(function () {
-           console.log('success');
-       }, function () {
-           console.log('Modal dismissed at: ' + new Date());
-       });
-    };
-
     $scope.submit = function() {
-
+        Surveys.createSurvey($scope.fields)
+        .success(function(data){
+            console.log(data);
+        }).error(function(err){
+				console.log(err);
+        });
     };
 
     $scope.cancel = function() {
-        $scope.open();
+        var modalInstance = $modal.open({
+            template: '<div class="modal-body"><p>Sind sie sicher?</p></div><div class="modal-footer"><button class="btn btn-default" ng-click="$dismiss()">Cancel</button><button class="btn btn-warning" ng-click="$close()">OK</button></div>',
+            size: 'sm',
+            scope: $scope
+        });
+
+        modalInstance.result.then(function () {
+           $location.url('/');
+       }, function () {
+           console.log('Modal dismissed at: ' + new Date());
+       });
     };
     
     $scope.init();

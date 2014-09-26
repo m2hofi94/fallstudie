@@ -13,7 +13,7 @@ angular.module('afsApp', [
     // Serivces
     'UserService',
     'Authentication',
-    'QuestionService',
+    'SurveyService',
 
     //Controller
     'NavController',
