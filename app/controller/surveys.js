@@ -3,6 +3,7 @@
 
 var connection = require('./../config/db.js')(100);
 
+<<<<<<< HEAD
 module.exports = function () {
     return {
         getQuestions: function (req, res) {
