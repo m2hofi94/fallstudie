@@ -4,13 +4,13 @@
     <div class="form-group">
         <label class="col-sm-2 control-label">Titel der Frage</label>
         <div class="col-sm-8">
-            <input type="text" class="form-control" data-ng-model="field.title"/>
+            <input type="text" class="form-control" data-ng-model="field.title" placeholder="Geben Sie ihre Frage ein"/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">Fragentyp</label>
         <div class="col-sm-10 dropdown">
-        <select class="btn btn-default" data-ng-model="field.type" ng-options="option.value for option in options"></select>
+        <select class="btn btn-default" data-ng-model="field.type" ng-options="option.type as option.value for option in options"></select>
         </div>
       </div>
     </form>

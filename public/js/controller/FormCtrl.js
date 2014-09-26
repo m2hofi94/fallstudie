@@ -4,104 +4,90 @@
 'use strict';
 
 
-angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Questions', 'Authentication', function($scope, Questions,  Authentication) {
-  $scope.authentication = Authentication;
-  // for "Teilnehmer" Radio Button
-  $scope.content = "option1";
-    $scope.title= 'Unbenannte Umfrage';
-    
-  // Date Picker
-  $scope.date = [{value: new Date()},{value : new Date()}];
+angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Questions', 'Authentication', function ($scope, Questions, Authentication) {
+    $scope.init = function() {
+        $scope.authentication = Authentication;
+        // for "Teilnehmer" Radio Button
+        $scope.content = "option1";
+        $scope.title = 'Unbenannte Umfrage';
 
-  $scope.today = function(date) {
-    date = new Date();
-  };
-  $scope.today();
+        $scope.fields = $scope.standardQuestions.slice();
 
-  $scope.toggleMin = function() {
-    $scope.minDate = $scope.minDate ? null : new Date();
-  };
-  $scope.toggleMin();
+        $scope.today();
+        $scope.toggleMin();
+        // $scope.getQuestions();
+    };
 
-  $scope.open = function($event, title) {
-    $event.preventDefault();
-    $event.stopPropagation();
+    // Date Picker
+    $scope.date = [
+        {value: new Date()},
+        {value: new Date()}
+    ];
 
-    if(title == "buStart") {
-        if($scope.openedStart !== true) {
-        $scope.openedStart = true;
+    $scope.today = function (date) {
+        date = new Date();
+    };
+
+    $scope.toggleMin = function () {
+        $scope.minDate = $scope.minDate ? null : new Date();
+    };
+
+    $scope.open = function ($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        if ($event.target.id === 'btnStart') {
+            $scope.openedStart = !$scope.openedStart;
         } else {
-            $scope.openedStart = false;
+            $scope.openedEnd = !$scope.openedEnd;
         }
-    }
-    if(title == "buEnd") {
-        if($scope.openedEnd !== true) {
-        $scope.openedEnd = true;
-        } else {
-            $scope.openedEnd = false;
+    };
+
+    // Options for survey
+    $scope.options = [
+        {
+            id: 0,
+            type: 'Slider',
+            value: 'Skala'
+        },
+        {
+            id: 1,
+            type: 'TextArea',
+            value: 'Textfeld'
         }
-    }
-  };
-    
-    
-  // Options for survey
-  $scope.options = [
-    {
-      id: 0, 
-      name: 'Slider',
-      value: 'Skala'
-    },  
-    {
-      id: 1, 
-      name: 'TextArea',
-      value: 'Textfeld'
-    }
-  ];
-    
-  // Standard Value for new question
-  $scope.standardQuestion = {
-      surveyID: 1,
-      title: "Geben Sie hier ihre Frage ein",
-      type: "TextArea"
-  };  
-  
-  $scope.getQuestions = function() {
-        Questions.getQuestions().success(function(data) {
+];
+
+    // Standard Value for new question
+    $scope.standardQuestions = [
+        {
+            title: "Wie fanden Sie die Veranstaltung?",
+            type: "Slider"
+        },
+        {
+            title: "Bitte begründen Sie Ihre Antwort",
+            type: "TextArea"
+        }
+    ];
+
+/*    $scope.getQuestions = function () {
+        Questions.getQuestions().success(function (data) {
             $scope.fields = data;
-        }).error(function(err) {
+        }).error(function (err) {
             console.log(err);
             $scope.result = err;
         });
     };
-  $scope.getQuestions();
-    
-  $scope.addQuestion = function(){ 
-    Questions.addQuestion($scope.standardQuestion).success(function(data) {
-            $scope.getQuestions();
-            console.log(data);
-        }).error(function(err) {
-            console.log(err);
-            $scope.result = err;
-        });
-      // Reload questions for Window
-      $scope.getQuestions();
-  };
-    
-  $scope.removeQuestion = function(field) {
-     Questions.removeQuestion(field.id).success(function(data) {
-            field = null;
-            // console.log(data);
-            
-        }).error(function(err) {
-            // console.log(err);
-            $scope.result = err;
-        });
-      // Reload questions for Window
-      $scope.getQuestions();
-   };
-
-}]);  
+*/
 
 
+    $scope.addQuestion = function () {
+
+    };
+
+    $scope.removeQuestion = function (field) {
+
+    };
+
     
-	
+    $scope.init();
+}]);
