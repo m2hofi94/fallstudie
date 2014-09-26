@@ -3,20 +3,26 @@
 </div>
 
 <div class="row col-md-10 col-md-offset-1">
-    <a href="#" editable-text="title">{{title}}</a>
+    <input class="form-control text-center" type="text" data-ng-model="title" placeholder="Unbenannte Umfrage" />
 </div>
 
 <div class="row col-md-10 col-md-offset-1 ">
     <h2>Fragen</h2>
     <div id="questions">
-        <div ng-repeat="field in fields">
+        <div ng-repeat="field in fields"    >
             <script type="text/javascript">console.log(field);</script>
             <ng-include src="'views/surveys/question-field.html'"/>
         </div>
     </div>
-    <button class="btn btn-primary" data-ng-click="addQuestion()">Neue Frage hinzufügen</button>
-    <button class="btn btn-info">Vorschau</button>
+    <button class="btn btn-primary" data-ng-click="addQuestion()"><i class="fa fa-plus"></i>&nbsp;Neue Frage hinzufügen</button>
 </div>
+
+<div class="row col-md-10 col-md-offset-1">
+    <h2>Optionen</h2>
+    <button class="btn btn-default" data-ng-click="cancel()">Abbrechen</button>
+    <button class="btn btn-success" data-ng-click="submit()">Speichern</button>
+</div>
+<!--
 
 <div class="row col-md-5 col-md-offset-1">
     <h2>Teilnehmer</h2>
@@ -66,3 +72,4 @@
     </div>
     <button class="btn btn-success" ng-click="getQuestions()">Umfrage freischalten</button>
 </div>
+-->
