@@ -15,7 +15,6 @@ angular.module('SurveyService', []).factory('Surveys', ['$http', function($http)
 			return $http.post('/api/surveys', surveyData);
 		},
 
-
 	};
 
 }]);

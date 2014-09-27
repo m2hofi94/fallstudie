@@ -9,8 +9,7 @@
 <div class="row col-md-10 col-md-offset-1 ">
     <h2>Fragen</h2>
     <div id="questions">
-        <div ng-repeat="field in fields"    >
-            <script type="text/javascript">console.log(field);</script>
+        <div ng-repeat="field in fields">
             <ng-include src="'views/surveys/question-field.html'"/>
         </div>
     </div>
@@ -20,7 +19,8 @@
 <div class="row col-md-10 col-md-offset-1">
     <h2>Optionen</h2>
     <button class="btn btn-default" data-ng-click="cancel()">Abbrechen</button>
-    <button class="btn btn-success" data-ng-click="submit()">Speichern</button>
+    <button class="btn btn-success" data-ng-click="submit('draft')">Speichern</button>
+    <button class="btn btn-info" data-ng-click="preview()">Vorschau</button>
 </div>
 <!--
 

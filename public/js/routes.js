@@ -6,7 +6,7 @@ angular.module('afsApp').config(['$routeProvider',
     function ($routeProvider) {
 
         $routeProvider
-            .when('/', {
+            .when('/home', {
                 templateUrl: 'views/home.html',
                 controller: 'HomeCtrl'
             })
@@ -23,18 +23,13 @@ angular.module('afsApp').config(['$routeProvider',
                 controller: 'UserCtrl',
 				protected: true
             })
-			.when('/surveys', {
-				templateUrl: 'views/surveys.html',
+			.when('/newSurvey', {
+				templateUrl: 'views/newSurvey.html',
                 controller: 'FormCtrl',
 				protected: true
 			})
-            .when('/surveys/edit', {
-				templateUrl: 'views/surveys/edit-field.html',
-                controller: 'FormCtrl',
-				protected: true
-			})
-            .when('/surveys/view', {
-				templateUrl: 'views/surveys/view-field.html',
+            .when('/preview', {
+				templateUrl: 'views/preview.html',
                 controller: 'FormCtrl',
 				protected: true
 			})

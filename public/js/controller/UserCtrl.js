@@ -14,7 +14,7 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', 
 			Authentication.signup($scope.user).success(function(data) {
 				if (data.success) {
 					Authentication.user(data.user);
-                    $location.url('/users');
+                   $location.url('/home');
                 } else {
                     $scope.result = data;
                 }
@@ -35,7 +35,7 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', 
                 //saving the user in the Authentication-Service
                 Authentication.user(data.user);
 
-                $location.url('/users');
+                $location.url('/home');
             } else {
                 $scope.result = data;
             }

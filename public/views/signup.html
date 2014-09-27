@@ -1,33 +1,34 @@
 <div class="row">
     <div class="col-md-4 col-md-offset-4">
         <h1 class="page-header">Signup</h1>
-        <form>
-            <div class="form-group">
+        <alert data-ng-show="result.message" close="result.message=''">
+			<p>{{result.message}}</p>
+		</alert>
+        <form data-ng-submit="signUp()">
+            <div class="form-group" >
                 <label>E-Mail:</label>
-                <input class="form-control" type="email" placeholder="Geben Sie ihre e-Mail-Adresse ein" data-ng-model="user.email" />
+                <input class="form-control" type="email" placeholder="Geben Sie ihre e-Mail-Adresse ein" data-ng-model="user.email" ng-required= "true"/>
             </div>
             <div class="form-group">
                 <label>Vorname:</label>
-                <input class="form-control" type="text" placeholder="Geben Sie ihren Vornamen ein" data-ng-model="user.firstName" />
+                <input class="form-control" type="text" placeholder="Geben Sie ihren Vornamen ein" data-ng-model="user.firstName" ng-required= "true"/>
             </div>
             <div class="form-group">
                 <label>Nachname:</label>
-                <input class="form-control" type="text" placeholder="Geben Sie ihren Nachnamen ein" data-ng-model="user.lastName" />
+                <input class="form-control" type="text" placeholder="Geben Sie ihren Nachnamen ein" data-ng-model="user.lastName" ng-required= "true"/>
             </div>
             <div class="form-group">
                 <label>Passwort:</label>
-                <input class="form-control" type="password" placeholder="Passwort" data-ng-model="user.password" />
+                <input class="form-control" type="password" placeholder="Passwort" data-ng-model="user.password" ng-required= "true"/>
             </div>
             <div class="form-group">
                 <label>Passwort best&auml;tigen:</label>
-                <input class="form-control" type="password" placeholder="Passwort best&auml;tigen" data-ng-model="passwordCheck" />
+                <input class="form-control" type="password" placeholder="Passwort best&auml;tigen" data-ng-model="passwordCheck" ng-required= "true"/>
             </div>
             <div class="form-group text-center">
-                <button class="btn btn-primary" type="submit"  data-ng-click="signUp()" >Registrieren</button>
+                <button class="btn btn-primary" type="submit"  value="Registrieren" >Registrieren</button>
             </div>
         </form>
-		<alert data-ng-show="result.message" close="result.message=''">
-			<p>{{result.message}}</p>
-		</alert>
+
     </div>
 </div>

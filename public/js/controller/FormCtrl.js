@@ -1,5 +1,3 @@
-//********************************* Test Michael ************
-
 /*globals angular */
 'use strict';
 
@@ -14,11 +12,15 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
         $scope.standardQuestions = [
             {
                 title: 'Wie fanden Sie die Veranstaltung?',
-                type: 'Slider'
+                type: 'Slider',
+                rate: 6,
+                input: ''
             },
             {
                 title: 'Bitte begründen Sie Ihre Antwort',
-                type: 'TextArea'
+                type: 'TextArea',
+                rate: 6,
+                input: ''
             }
         ];
 
@@ -49,6 +51,7 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
 
 
 
+
     $scope.today = function (date) {
         date = new Date();
     };
@@ -71,7 +74,9 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
     $scope.addQuestion = function () {
         $scope.fields.push({
             title: '',
-            type: 'TextArea'
+            type: 'TextArea',
+            rate: 6,
+            input: ''
         });
     };
 
@@ -79,13 +84,26 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
         $scope.fields.splice(index, 1);
     };
 
-    $scope.submit = function() {
-        Surveys.createSurvey($scope.fields)
-        .success(function(data){
-            console.log(data);
-        }).error(function(err){
-				console.log(err);
-        });
+    $scope.submit = function(status) {
+        // Tempor&auml;r solange der Scope noch nicht &uuml;bertragen wird
+        console.log(status);
+        if(status == 'activate'){
+            $location.url('/home');
+            return;
+        } else {
+            $scope.survey = [$scope.survey.title, $scope.fields, status];
+            Surveys.createSurvey($scope.survey)
+            .success(function(data){
+                // console.log(data);
+            }).error(function(err){
+                    console.log(err);
+            });
+            $location.url('/home');
+        }
+    };
+
+    $scope.preview = function() {
+        $location.url('/preview');
     };
 
     $scope.cancel = function() {
@@ -96,7 +114,7 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
         });
 
         modalInstance.result.then(function () {
-           $location.url('/');
+           $location.url('/home');
        }, function () {
            console.log('Modal dismissed at: ' + new Date());
        });
