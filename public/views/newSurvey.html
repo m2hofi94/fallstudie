@@ -1,26 +1,49 @@
-<div class="row col-md-10 col-md-offset-1">
-    <h1 class="page-header">Neue Umfrage erstellen</h1>
+<div ng-hide="preview">
+    <div class="row col-md-10 col-md-offset-1">
+        <h1 class="page-header">Neue Umfrage erstellen</h1>
+    </div>
+
+    <div class="row col-md-10 col-md-offset-1">
+        <input class="form-control text-center" type="text" data-ng-model="title" placeholder="Unbenannte Umfrage" />
+    </div>
+
+    <div class="row col-md-10 col-md-offset-1 ">
+        <h2>Fragen</h2>
+        <div id="questions">
+            <div ng-repeat="field in fields">
+                <ng-include src="'views/surveys/question-field.html'"/>
+            </div>
+        </div>
+        <button class="btn btn-primary" data-ng-click="addQuestion()"><i class="fa fa-plus"></i>&nbsp;Neue Frage hinzufügen</button>
+    </div>
+
+    <div class="row col-md-10 col-md-offset-1">
+        <h2>Optionen</h2>
+        <button class="btn btn-default" data-ng-click="cancel()">Abbrechen</button>
+        <button class="btn btn-success" data-ng-click="submit('draft')">Speichern</button>
+        <button class="btn btn-info" data-ng-click="togglePreview()">Vorschau</button>
+    </div>
 </div>
 
-<div class="row col-md-10 col-md-offset-1">
-    <input class="form-control text-center" type="text" data-ng-model="title" placeholder="Unbenannte Umfrage" />
-</div>
+<div ng-show="preview">
+    <div class="row col-md-10 col-md-offset-1">
+        <h1 class="page-header">{{title}}</h1>
+    </div>
 
-<div class="row col-md-10 col-md-offset-1 ">
-    <h2>Fragen</h2>
-    <div id="questions">
-        <div ng-repeat="field in fields">
-            <ng-include src="'views/surveys/question-field.html'"/>
+    <div class="row col-md-10 col-md-offset-1 ">
+        <div id="questions">
+            <div ng-repeat="field in fields">
+                <ng-include src="'views/surveys/preview-field.html'"/>
+            </div>
         </div>
     </div>
-    <button class="btn btn-primary" data-ng-click="addQuestion()"><i class="fa fa-plus"></i>&nbsp;Neue Frage hinzufügen</button>
-</div>
 
-<div class="row col-md-10 col-md-offset-1">
-    <h2>Optionen</h2>
-    <button class="btn btn-default" data-ng-click="cancel()">Abbrechen</button>
-    <button class="btn btn-success" data-ng-click="submit('draft')">Speichern</button>
-    <button class="btn btn-info" data-ng-click="preview()">Vorschau</button>
+    <div class="row col-md-10 col-md-offset-1">
+        <h2>Optionen</h2>
+        <button class="btn btn-default" data-ng-click="togglePreview()">Zurück</button>
+        <button class="btn btn-success" data-ng-click="submit('draft')">Speichern und Schließen</button>
+        <button class="btn btn-info" data-ng-click="submit('active')">Umfrage Freischalten</button>
+    </div>
 </div>
 <!--
 

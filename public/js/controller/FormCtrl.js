@@ -7,7 +7,7 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
         $scope.authentication = Authentication;
         // for "Teilnehmer" Radio Button
         $scope.content = 'option1';
-
+        $scope.title = '';
         // Standard Value for new survey
         $scope.standardQuestions = [
             {
@@ -47,10 +47,9 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
 
         $scope.today();
         $scope.toggleMin();
+
+
     };
-
-
-
 
     $scope.today = function (date) {
         date = new Date();
@@ -85,25 +84,33 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
     };
 
     $scope.submit = function(status) {
-        // Tempor&auml;r solange der Scope noch nicht &uuml;bertragen wird
-        console.log(status);
-        if(status == 'activate'){
+        $scope.survey = [$scope.title, $scope.fields, status];
+
+        Surveys.createSurvey($scope.survey).success(function(data){
+            $scope.survey = [];
+
+            if(status == 'draft'){
             $location.url('/home');
-            return;
-        } else {
-            $scope.survey = [$scope.survey.title, $scope.fields, status];
-            Surveys.createSurvey($scope.survey)
-            .success(function(data){
-                // console.log(data);
-            }).error(function(err){
-                    console.log(err);
-            });
-            $location.url('/home');
-        }
+            } else {
+                Surveys.publishSurvey(data.insertId).success(function(data){
+                    $scope.tokenUrl = 'localhost:61701/#/participate/' + data.insertId;
+                    console.log($scope.tokenUrl);
+                    $location.url('/home');
+                }).error(function(err){
+
+                });
+            }
+        }).error(function(err){
+                console.log(err);
+        });
+
+
+        // console.log(status);
+
     };
 
-    $scope.preview = function() {
-        $location.url('/preview');
+    $scope.togglePreview = function() {
+        $scope.preview = !$scope.preview;
     };
 
     $scope.cancel = function() {
@@ -120,5 +127,6 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
        });
     };
     
+
     $scope.init();
 }]);

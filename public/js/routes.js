@@ -37,7 +37,19 @@ angular.module('afsApp').config(['$routeProvider',
 				templateUrl: 'views/contact.html',
                 controller: 'UserCtrl'
 			})
+            .when('/publish', {
+                templateUrl: 'views/publish.html',
+                controller: 'FormCtrl'
+            })
+            .when('/main', {
+                templateUrl: 'views/main.html',
+                controller: 'MainCtrl'
+            })
+            .when('/participate/:token',{
+                templateUrl: 'views/participate.html',
+                controller: 'AnswerCtrl'
+            })
             .otherwise({
-                redirectTo: '/'
+                redirectTo: '/login'
             });
 }]);

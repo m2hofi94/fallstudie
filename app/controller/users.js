@@ -9,7 +9,6 @@ module.exports = function(passport) {
         list: function(req, res) {
             connection.query('SELECT * FROM users', function(err, rows, fields) {
               if (err) throw err;
-
               res.jsonp(rows);
             });
         },

@@ -19,7 +19,8 @@ angular.module('afsApp', [
     'NavController',
     'FormController',
     'UserController',
-    'HomeController'
+    'HomeController',
+    'AnswerController'
 ]);
 
 angular.module('afsApp').run(['editableOptions', function(editableOptions) {

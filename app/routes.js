@@ -4,9 +4,10 @@
 module.exports = function(express, passport) {
     var users = require('./controller/users')(passport);
     var surveys = require('./controller/surveys')(null);
+    var tokens = require('./controller/tokens')(null);
     var router = express.Router();
 
-    //******************USERS-CRUD-Example***********************
+    //******************USERS-CRUD-Example**************************
     router.get('/users', users.list);
     router.post('/users', loggedIn, users.create);
     router.get('/users/:userId', loggedIn, users.read);
@@ -18,10 +19,15 @@ module.exports = function(express, passport) {
 	router.post('/signup', users.signup);
     router.get('/logout', users.logout);
 
-    //*******************Questions**********************************
-    // router.get('/questions', questions.getQuestions);
+    //*******************Questions/Surveys**************************
+    router.get('/questions/:token', surveys.getQuestionsWithToken);
     router.post('/surveys', loggedIn, surveys.createSurvey);
-    // router.delete('/questions/:questionId', questions.removeQuestion);
+    router.get('/surveys', loggedIn, surveys.getSurveys);
+    router.put('/surveys/:id', surveys.activateSurvey);
+    router.delete('/surveys/:id', surveys.deleteSurvey);
+
+    //******************Create Token********************************
+    router.post('/tokens/:id', tokens.publishForAll);
 
     //function to check if user is logged in
     //sends a 401 if unsuccessfull

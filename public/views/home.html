@@ -6,13 +6,12 @@
     <p><button class="btn btn-primary" ng-click="go('/newSurvey')" >Neue Umfrage erstellen</button></p>
 </div>
 
-<div class="row col-md-10 col-md-offset-1">
+<div class="row col-md-10 col-md-offset-1" ng-repeat="s in status">
     <div class="panel panel-default">
-        <!-- Default panel contents -->
-    <div class="panel-heading">Entwürfe</div>
+    <!-- Default panel contents -->
+    <div class="panel-heading">{{s.name}}</div>
 
-
-        <!-- Table -->
+    <!-- Table -->
     <table class="table table-hover">
         <thead style="cursor:default">
             <tr>
@@ -22,34 +21,38 @@
                 <th>Teilnahme</th>
             </tr>
         </thead>
-        <tbody style="cursor:pointer">
-            <tr ng-click="isCollapsed = !isCollapsed">
-                <td>20.09.2014</td>
-                <td>10.10.2014</td>
-                <td>WWI2013E - Fallstudie Systemanalyse</td>
-                <td>
-                    <progressbar max="max" value="dynamic"><span style="color:white; white-space:nowrap;">{{dynamic}} / {{max}}</span></progressbar>
-                </td>
-            </tr>
-            <tr collapse="isCollapsed">
-                <td colspan="4" style="border:0px">
-                    <button class="btn btn-default">Bearbeiten</button>
-                    <button class="btn btn-success">Freischalten</button>
-                    <button class="btn btn-danger">Löschen</button>
-                </td>
-            </tr>
+
+        <tbody style="cursor:pointer" ng-repeat="survey in listSurveys(s.type)">
+
+                <tr ng-click="toggleCollapse()">
+                    <td>Startdatum</td>
+                    <td>Enddatum</td>
+                    <td>{{survey.title}}</td>
+                    <td>
+                        <progressbar max="max" value="dynamic"><span style="color:white; white-space:nowrap;">{{dynamic}} / {{max}}</span></progressbar>
+                    </td>
+                </tr>
+                <tr collapse="isCollapsed">
+                    <td colspan="4" style="border:0px">
+                        <button class="btn btn-default" ng-Click="edit(survey) ">Bearbeiten</button>
+                        <button class="btn btn-success" ng-Click="activate(survey)">Freischalten</button>
+                        <button class="btn btn-danger" ng-Click="delete(survey)">Löschen</button>
+                    </td>
+                </tr>
         </tbody>
     </table>
 </div>
+
 </div>
 
+
+
+
+
+<!--
 <div class="row col-md-10 col-md-offset-1">
     <div class="panel panel-default">
-        <!-- Default panel contents -->
     <div class="panel-heading">Laufende Umfragen</div>
-
-
-        <!-- Table -->
     <table class="table table-hover">
         <thead style="cursor:default">
             <tr>
@@ -79,39 +82,4 @@
 </div>
 </div>
 
-<div class="row col-md-10 col-md-offset-1">
-    <div class="panel panel-default">
-        <!-- Default panel contents -->
-    <div class="panel-heading">Beendete Umfragen</div>
-
-
-        <!-- Table -->
-    <table class="table table-hover">
-        <thead style="cursor:default">
-            <tr>
-                <th>Von</th>
-                <th>Bis</th>
-                <th>Titel</th>
-                <th>Teilnahme</th>
-            </tr>
-        </thead>
-        <tbody style="cursor:pointer">
-            <tr ng-click="isCollapsed = !isCollapsed">
-                <td>20.09.2014</td>
-                <td>10.10.2014</td>
-                <td>WWI2013E - Fallstudie Systemanalyse</td>
-                <td>
-                    <progressbar max="max" value="dynamic"><span style="color:white; white-space:nowrap;">{{dynamic}} / {{max}}</span></progressbar>
-                </td>
-            </tr>
-            <tr collapse="isCollapsed">
-                <td colspan="4" style="border:0px">
-                    <button class="btn btn-warning">Löschen</button>
-                    <button class="btn btn-info">Auswertung ansehen</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-</div>
-
+-->

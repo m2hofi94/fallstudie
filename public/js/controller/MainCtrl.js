@@ -1,7 +1,7 @@
 /*globals angular */
 'use strict';
 
-angular.module('HomeController', []).controller('HomeCtrl', ['$scope', '$http', function($scope, $http) {
+angular.module('MainController', []).controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.longUrl = '';
     $scope.shortUrl = 'http://bit.ly/1r31Vnc';
 
