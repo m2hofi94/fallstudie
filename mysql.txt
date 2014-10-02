@@ -26,5 +26,7 @@ create table questions(
   created timestamp default now()
 );
 
-INSERT INTO questions VALUES(0,1,"Wie fanden Sie die Veranstaltung?","Slider",null);
-INSERT INTO questions VALUES(0,1,"Bitte begründen Sie","TextArea",null);
+create table tokens (
+  id int not null auto_increment primary key,
+  surveyID int not null
+);
