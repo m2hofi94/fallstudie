@@ -26,12 +26,10 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
 
         $scope.options = [
             {
-                id: 0,
                 type: 'Slider',
                 value: 'Skala'
             },
             {
-                id: 1,
                 type: 'TextArea',
                 value: 'Textfeld'
             }
@@ -87,21 +85,19 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
         $scope.survey = [$scope.title, $scope.fields, status];
 
         Surveys.createSurvey($scope.survey).success(function(data){
-            $scope.survey = [];
+            // $scope.survey = [];
 
             if(status == 'draft'){
-            $location.url('/home');
+                $location.url('/home');
             } else {
                 Surveys.publishSurvey(data.insertId).success(function(data){
-                    $scope.tokenUrl = 'localhost:61701/#/participate/' + data.insertId;
-                    console.log($scope.tokenUrl);
-                    $location.url('/home');
+                    $location.url('/publish/' + data.insertId);
                 }).error(function(err){
-
+                    console.log(err);
                 });
             }
         }).error(function(err){
-                console.log(err);
+
         });
 
 
@@ -126,7 +122,8 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
            console.log('Modal dismissed at: ' + new Date());
        });
     };
-    
 
     $scope.init();
 }]);
+
+

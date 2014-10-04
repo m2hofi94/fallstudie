@@ -8,7 +8,8 @@ angular.module('afsApp').config(['$routeProvider',
         $routeProvider
             .when('/home', {
                 templateUrl: 'views/home.html',
-                controller: 'HomeCtrl'
+                controller: 'HomeCtrl',
+                protected: true
             })
             .when('/signup', {
                 templateUrl: 'views/signup.html',
@@ -37,13 +38,19 @@ angular.module('afsApp').config(['$routeProvider',
 				templateUrl: 'views/contact.html',
                 controller: 'UserCtrl'
 			})
-            .when('/publish', {
+            .when('/publish/:token', {
                 templateUrl: 'views/publish.html',
-                controller: 'FormCtrl'
+                controller: 'AnswerCtrl',
+                protected: true
             })
             .when('/main', {
                 templateUrl: 'views/main.html',
                 controller: 'MainCtrl'
+            })
+            .when('/profile', {
+                templateUrl: 'views/profile.html',
+                controller: 'UserCtrl',
+                protected: true
             })
             .when('/participate/:token',{
                 templateUrl: 'views/participate.html',

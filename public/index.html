@@ -67,7 +67,7 @@
                 <a class="navbar-brand" href="/">Anonymes Feedbacksystem</a>
             </div>
             <div class="navbar-collapse" data-collapse="isCollapsed">
-                <ul class="nav navbar-nav">
+                <ul class="nav navbar-nav" data-ng-show="loggedIn()">
                     <!-- <li><a href="#/users"><i class="fa fa-fw fa-users"></i>&nbsp;Users</a></li> -->
                     <li><a href="#/home"><i class="fa fa-fw fa-question-circle"></i>&nbsp;My Surveys</a></li>
                     <li class="divider"></li>
@@ -78,7 +78,7 @@
                     <li><a href="#/signup"><i class="fa fa-fw fa-rotate-270 fa-sign-in"></i>&nbsp;Signup</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right" data-ng-show="loggedIn()">
-                    <li><a href="#/profile"><i class="fa fa-fw fa-user"></i>&nbsp;{{user().firstName +  " " +  user().lastName}}</a></li>
+                    <li><a href="#/profile"><i class="fa fa-fw fa-user"></i>&nbsp;{{user().title + " " + user().firstName +  " " +  user().lastName}}</a></li>
                     <li><a href="#" data-ng-click="logout()"><i class="fa fa-fw fa-sign-out"></i>&nbsp;Logout</a></li>
                 </ul>
             </div>

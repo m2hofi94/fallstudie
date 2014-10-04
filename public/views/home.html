@@ -5,11 +5,11 @@
 <div class="row col-md-10 col-md-offset-1">
     <p><button class="btn btn-primary" ng-click="go('/newSurvey')" >Neue Umfrage erstellen</button></p>
 </div>
-
-<div class="row col-md-10 col-md-offset-1" ng-repeat="s in status">
+<!-- sortedSurveys got 3 entries ( one for each status ) -->
+<div class="row col-md-10 col-md-offset-1" ng-repeat="s in sortedSurveys">
     <div class="panel panel-default">
     <!-- Default panel contents -->
-    <div class="panel-heading">{{s.name}}</div>
+    <div class="panel-heading">{{s[0]}}</div>
 
     <!-- Table -->
     <table class="table table-hover">
@@ -21,22 +21,36 @@
                 <th>Teilnahme</th>
             </tr>
         </thead>
+        <!-- for each survey in the sortedSurveys[x] - Array one tbody element -->
+        <tbody style="cursor:pointer" ng-repeat="survey in s[1]">
 
-        <tbody style="cursor:pointer" ng-repeat="survey in listSurveys(s.type)">
-
-                <tr ng-click="toggleCollapse()">
+                <tr ng-click="toggleCollapse(survey)">
                     <td>Startdatum</td>
                     <td>Enddatum</td>
-                    <td>{{survey.title}}</td>
+                    <td>{{survey.data.title}}</td>
                     <td>
                         <progressbar max="max" value="dynamic"><span style="color:white; white-space:nowrap;">{{dynamic}} / {{max}}</span></progressbar>
                     </td>
                 </tr>
-                <tr collapse="isCollapsed">
+                <tr collapse="survey.isCollapsed">
                     <td colspan="4" style="border:0px">
-                        <button class="btn btn-default" ng-Click="edit(survey) ">Bearbeiten</button>
-                        <button class="btn btn-success" ng-Click="activate(survey)">Freischalten</button>
-                        <button class="btn btn-danger" ng-Click="delete(survey)">Löschen</button>
+                        <!-- Depending on status there are different buttons -->
+                        <span ng-switch on="s[0]">
+                              <span ng-switch-when="Entwurf">
+                                    <button class="btn btn-default" ng-Click="edit(survey) ">Bearbeiten</button>
+                                    <button class="btn btn-success" ng-Click="activate(survey)">Freischalten</button>
+                                    <button class="btn btn-danger" ng-Click="delete(survey)">Löschen</button>
+                              </span>
+                              <span ng-switch-when="Laufende Umfragen">
+                                    <button class="btn btn-default" ng-Click="close(survey)">Umfrage Beenden</button>
+                                    <button class="btn btn-warning" ng-Click="delete(survey)">Umfrage Abbrechen</button>
+                              </span>
+                                <span ng-switch-when="Beendete Umfragen">
+                                    <button class="btn btn-warning" ng-Click="viewResults(survey)">Auswertung ansehen</button>
+                                    <button class="btn btn-default" ng-Click="delete(survey)">Umfrage L&ouml;schen</button>
+                              </span>
+                        </span>
+
                     </td>
                 </tr>
         </tbody>
@@ -51,35 +65,8 @@
 
 <!--
 <div class="row col-md-10 col-md-offset-1">
-    <div class="panel panel-default">
-    <div class="panel-heading">Laufende Umfragen</div>
-    <table class="table table-hover">
-        <thead style="cursor:default">
-            <tr>
-                <th>Von</th>
-                <th>Bis</th>
-                <th>Titel</th>
-                <th>Teilnahme</th>
-            </tr>
-        </thead>
-        <tbody style="cursor:pointer">
-            <tr ng-click="isCollapsed = !isCollapsed">
-                <td>20.09.2014</td>
-                <td>10.10.2014</td>
-                <td>WWI2013E - Fallstudie Systemanalyse</td>
-                <td>
-                    <progressbar max="max" value="dynamic"><span style="color:white; white-space:nowrap;">{{dynamic}} / {{max}}</span></progressbar>
-                </td>
-            </tr>
-            <tr collapse="isCollapsed">
-                <td colspan="4" style="border:0px">
-                    <button class="btn btn-warning">Abbrechen</button>
-                    <button class="btn btn-default">Beenden</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+    <button class="btn btn-warning">Abbrechen</button>
+    <button class="btn btn-default">Beenden</button>
 </div>
 
 -->

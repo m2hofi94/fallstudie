@@ -14,8 +14,8 @@ angular.module('SurveyService', []).factory('Surveys', ['$http', function($http)
             return $http.get('/api/surveys');
         },
 
-        activateSurvey : function(id){
-            return $http.put('/api/surveys/'+ id);
+        changeStatus : function(id, status){
+            return $http.put('/api/surveys', [id, status]);
         },
 
         deleteSurvey : function(id){

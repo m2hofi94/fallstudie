@@ -37,7 +37,20 @@ module.exports = function(passport) {
         },
 
         update: function(req, res) {
-            connection.query('UPDATE users SET ? WHERE id= ?', [req.body, req.params.userId],function(err, rows, fields) {
+            console.log(req.body.passwordToChange);
+            if(typeof req.body.passwordToChange != 'undefined')
+                req.body.password = passwordHash.generate(req.body.passwordToChange);
+            console.log(req.body);
+
+            var values = {email : req.body.email,
+                          title : req.body.title,
+                          firstName : req.body.firstName,
+                          lastName : req.body.lastName,
+                          password : req.body.password
+                         };
+
+            connection.query('UPDATE users SET ? WHERE id= ?', [values, req.body.id],function(err, rows, fields) {
+                console.log(rows);
                 if (err) return res.status(500);
                 res.jsonp(rows);
             });
@@ -82,7 +95,6 @@ module.exports = function(passport) {
         signup: function(req, res, next) {
             passport.authenticate('local-signup', function(err, user, info) {
                 if (err) {return next(err);}
-
                 // Generate a JSON response reflecting authentication status
                 if (! user) {
                   return res.send({ success : false, message : req.signUpMessage });

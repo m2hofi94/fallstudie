@@ -39,7 +39,7 @@ module.exports = function (passport) {
             passReqToCallback: true // allows us to pass back the entire request to the callback
         },
         function (req, email, password, done) {
-            console.log(req.body);
+             console.log(req.body);
             // find a user whose email is the same as the forms email
             // we are checking to see if the user trying to login already exists
             connection.query("select * from users where email = '" + email + "'", function (err, rows) {
@@ -52,6 +52,7 @@ module.exports = function (passport) {
                     // if there is no user with that email
                     // create the user
                     var newUserMysql = {};
+                    newUserMysql.title = req.body.title;
                     newUserMysql.email = email;
                     newUserMysql.firstName = req.body.firstName;
                     newUserMysql.lastName = req.body.lastName;

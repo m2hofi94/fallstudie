@@ -13,13 +13,12 @@ angular.module('UserService', []).factory('Users', ['$http', function($http) {
 			return $http.post('/api/users', userData);
 		},
 
-		
         read : function(id) {
 			return $http.get('/api/users/' + id);
 		},
 
         update : function(updateData) {
-			return $http.put('/api/users/' + updateData.id, updateData);
+			return $http.put('/api/users', updateData);
 		},
 
 		// call to DELETE a nerd

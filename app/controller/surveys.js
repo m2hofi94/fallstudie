@@ -10,6 +10,7 @@ module.exports = function () {
                 if (err) throw err;
                 if(rows.length > 0){
                     var result = rows[0];
+                    // console.log(result);
                     connection.query('SELECT * FROM surveys WHERE id = ?', [result.surveyID], function (err, rows, fields) {
                         if (err) throw err;
                         var title = rows[0].title;
@@ -36,10 +37,11 @@ module.exports = function () {
             });
         },
 
-        activateSurvey: function(req, res) {
-            connection.query('UPDATE surveys SET status = ? WHERE id= ?', ['active', req.params.id],function(err, rows, fields) {
+        changeStatus: function(req, res) {
+            console.log(req.body);
+            connection.query('UPDATE surveys SET status = ? WHERE id= ?', [req.body[1], req.body[0]],function(err, rows, fields) {
                 if (err) return res.status(500);
-                console.log(rows);
+                // console.log(fields);
                 res.jsonp(rows);
             });
         },
@@ -53,7 +55,8 @@ module.exports = function () {
 
                     connection.query('DELETE FROM tokens WHERE surveyId = ?', [req.params.id],function(err, rows, fields) {
                     if (err) return res.status(500);
-                });
+                        res.jsonp(rows);
+                    });
                 });
             });
         },
