@@ -4,11 +4,18 @@
 angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys', '$http', '$location', function($scope, Surveys, $http, $location) {
     $scope.dynamic = 25;
     $scope.max = 50;
+    $scope.activeSurvey = {isCollapsed : true};
     // in [0] = Title of Table; [1] = survey + isCollapsed variable
     $scope.sortedSurveys = [['Entwurf', []],['Laufende Umfragen', []],['Beendete Umfragen' ,[]]];
 
     $scope.toggleCollapse = function (survey){
         survey.isCollapsed = !survey.isCollapsed;
+        // If is needed because you may click on the same survey more often
+        // in this case the survey would be isCollapsed = true forever
+        if($scope.activeSurvey != survey){
+            $scope.activeSurvey.isCollapsed = true;
+            $scope.activeSurvey = survey;
+        }
     };
 
     $scope.go = function ( path ) {
@@ -34,19 +41,26 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
     };
     $scope.getSurveys();
 
-    $scope.edit = function(survey){
+    $scope.edit = function(index){
+        var surveys = $scope.sortedSurveys[0][1];
+        Surveys.idToEdit = surveys[index].data.id;
+        Surveys.tempTitle = surveys[index].data.title;
+        $location.url('/newSurvey');
+    };
+
+    $scope.viewResults = function(index){
 
     };
 
-    $scope.viewResults = function(survey){
-
-    };
-
-    $scope.close = function(survey){
+    $scope.close = function(index){
         // Update field status in table surveys
-        Surveys.changeStatus(survey.data.id, 'closed')
+        var surveys = $scope.sortedSurveys[1][1];
+        
+        Surveys.changeStatus(surveys[index].data.id, 'closed')
         .success(function(data){
-            $scope.loadData();
+            $scope.sortedSurveys[2][1].push(surveys[index]);
+            surveys[index].isCollapsed = true;
+            $scope.sortedSurveys[1][1].splice(index, 1);
             // Later Function "close" may be integrated in viewResults (or vice versa)
             // View Results
         }).error(function(err){
@@ -54,12 +68,16 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
         });
     };
 
-    $scope.activate = function(survey){
+    $scope.activate = function(index){
         // Update field status in table surveys
-        Surveys.changeStatus(survey.data.id, 'active')
+        var surveys = $scope.sortedSurveys[0][1];
+        console.log(index);
+        console.log($scope.sortedSurveys);
+        Surveys.changeStatus(surveys[index].data.id, 'active')
         .success(function(data){
             // Save surveyID in table tokens and return token ( in this case the ID )
-            Surveys.publishSurvey(survey.data.id).success(function(data){
+            Surveys.publishSurvey(surveys[index].data.id).success(function(data){
+                $scope.sortedSurveys[0][1].splice(index, 1);
                 $location.url('/publish/' + data.insertId);
              }).error(function(err){
 
@@ -70,21 +88,15 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
         });
     };
 
-    $scope.delete = function(survey){
+    $scope.delete = function(firstIndex, secondIndex){
         // Delete Survey in surveys, and delete entries in tokens and questions
-        Surveys.deleteSurvey(survey.data.id)
+        var surveys = $scope.sortedSurveys[firstIndex][1];
+        Surveys.deleteSurvey(surveys[secondIndex].data.id)
             .success(function(data){
-                $scope.loadData();
+                $scope.sortedSurveys[firstIndex][1].splice(secondIndex, 1);
             }).error(function(err){
                     console.log(err);
             });
-
-    };
-
-    $scope.loadData = function () {
-        // reload data after clicking one button ( in the current state only "Delete" )
-        $scope.sortedSurveys = [['Entwurf', []],['Laufende Umfragen', []],['Beendete Umfragen' ,[]]];
-        $scope.getSurveys();
     };
 
 }]);

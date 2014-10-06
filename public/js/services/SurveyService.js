@@ -13,6 +13,10 @@ angular.module('SurveyService', []).factory('Surveys', ['$http', function($http)
         getSurveys : function() {
             return $http.get('/api/surveys');
         },
+        
+        getQuestions : function(id) {
+            return $http.get('/api/getQuestions/' + id);
+        },
 
         changeStatus : function(id, status){
             return $http.put('/api/surveys', [id, status]);
@@ -29,8 +33,10 @@ angular.module('SurveyService', []).factory('Surveys', ['$http', function($http)
 
         publishSurvey : function(id){
             return $http.post('/api/tokens/' + id);
-        }
-
+        },
+        
+        tempTitle : '',
+        idToEdit : -1
 	};
 
 }]);

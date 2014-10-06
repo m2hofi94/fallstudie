@@ -20,7 +20,13 @@ angular.module('Authentication', ['ngCookies']).factory('Authentication', ['$coo
             logout: function() {
                 $cookieStore.remove('userobj');
                 user = null;
-                $http.get('/api/logout');
+                $http.get('/api/logout');                
+            },
+            
+            deleteUser : function(id){
+                $cookieStore.remove('userobj');
+                user = null;
+                $http.delete('/api/deleteUser/' + id);
             },
 
 			login : function(user){

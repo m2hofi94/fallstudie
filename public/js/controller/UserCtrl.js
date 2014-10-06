@@ -5,12 +5,19 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', 
     $scope.result = {};
     $scope.user = Authentication.user();
     if(typeof $scope.user !== 'undefined' && $scope.user !== null)
-        $scope.updatedUser = {id : $scope.user.id, title : $scope.user.title, email : $scope.user.email, firstName : $scope.user.firstName, lastName : $scope.user.lastName, password : $scope.user.password};
+        $scope.updatedUser = {
+            id : $scope.user.id, 
+            title : $scope.user.title,
+            email : $scope.user.email,
+            firstName : $scope.user.firstName, 
+            lastName : $scope.user.lastName, 
+            password : $scope.user.password
+        };
 
 
     // Use name / value pairs because "Kein Titel" needs empty String as value in Database
     $scope.titles = [
-        {name : 'Kein Titel' , value : ''},
+        // {name : 'Kein Titel' , value : ''},
         {name : 'Prof.', value : 'Prof.'},
         {name: 'Dr.', value : 'Dr.'},
         {name : 'Prof. Dr.', value : 'Prof. Dr.'}];
@@ -20,7 +27,10 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', 
     // writes messages to $scope.result.message
     // server always returns 200, so data.success is required
 	$scope.signUp = function(){
-		if($scope.user.password == $scope.passwordCheck) {
+        if(typeof $scope.user.title == 'undefined' || $scope.user.title === null)
+            $scope.user.title = '';
+        console.log($scope.user);
+        if($scope.user.password == $scope.passwordCheck) {
 			Authentication.signup($scope.user).success(function(data) {
 				if (data.success) {
 					Authentication.user(data.user);
@@ -35,6 +45,7 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', 
 		} else {
 			$scope.result.message = "Die Passwörter müssen übereinstimmen";
 		}
+
 	};
 
 	//************************Login***************************
@@ -88,12 +99,19 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', 
     };
 
     $scope.update = function() {
+        if(typeof $scope.updatedUser.title == 'undefined' || $scope.updatedUser.title === null)
+            $scope.updatedUser.title = '';
+        
         if($scope.updatedUser.passwordToChange == $scope.passwordCheck) {
             Users.update($scope.updatedUser).success(function(data) {
                 $scope.result.message = "Änderung erfolgreich";
                 // Changes cookie // TODO
-                $scope.user = $scope.updatedUser;
-                Authentication.user($scope.user);
+                // $scope.user = $scope.updatedUser;
+                Authentication.user($scope.updatedUser);
+                $scope.user = Authentication.user();
+                
+                // Update Navbar
+                $location.url('/profile/#');
             }).error(function(err) {
                 console.log(err);
                 $scope.result = err;
@@ -104,14 +122,8 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', 
     };
 
     $scope.deleteUser = function() {
-        Authentication.logout();
-        Users.delete($scope.user.id).success(function(data) {
-            console.log(data);
-
-        }).error(function(err) {
-            console.log(err);
-            $scope.result = err;
-        });
+        Authentication.deleteUser($scope.user.id);
+        $location.url('/deleteUser');
     };
 }]);
 

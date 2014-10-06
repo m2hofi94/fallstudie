@@ -22,7 +22,7 @@
             </tr>
         </thead>
         <!-- for each survey in the sortedSurveys[x] - Array one tbody element -->
-        <tbody style="cursor:pointer" ng-repeat="survey in s[1]">
+        <tbody style="cursor:pointer" ng-repeat="survey in s[1] track by $index">
 
                 <tr ng-click="toggleCollapse(survey)">
                     <td>Startdatum</td>
@@ -37,17 +37,17 @@
                         <!-- Depending on status there are different buttons -->
                         <span ng-switch on="s[0]">
                               <span ng-switch-when="Entwurf">
-                                    <button class="btn btn-default" ng-Click="edit(survey)">Bearbeiten</button>
-                                    <button class="btn btn-success" ng-Click="activate(survey)">Freischalten</button>
-                                    <button class="btn btn-danger" ng-Click="delete(survey)">Löschen</button>
+                                    <button class="btn btn-default" ng-Click="edit($index)">Bearbeiten</button>
+                                    <button class="btn btn-success" ng-Click="activate($index)">Freischalten</button>
+                                    <button class="btn btn-danger" ng-Click="delete(0, $index)">Löschen</button>
                               </span>
                               <span ng-switch-when="Laufende Umfragen">
-                                    <button class="btn btn-default" ng-Click="close(survey)">Beenden</button>
-                                    <button class="btn btn-danger" ng-Click="delete(survey)">Löschen</button>
+                                    <button class="btn btn-default" ng-Click="close($index)">Beenden</button>
+                                    <button class="btn btn-danger" ng-Click="delete(1, $index)">Löschen</button>
                               </span>
                                 <span ng-switch-when="Beendete Umfragen">
-                                    <button class="btn btn-default" ng-Click="viewResults(survey)">Auswertung</button>
-                                    <button class="btn btn-danger" ng-Click="delete(survey)">L&ouml;schen</button>
+                                    <button class="btn btn-default" ng-Click="viewResults($index)">Auswertung</button>
+                                    <button class="btn btn-danger" ng-Click="delete(2, $index)">L&ouml;schen</button>
                               </span>
                         </span>
 

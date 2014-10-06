@@ -36,6 +36,14 @@ module.exports = function () {
                 res.jsonp(rows);
             });
         },
+        
+        getQuestions: function (req, res) {
+            connection.query('SELECT * FROM questions WHERE surveyID = ?', [req.params.id], function (err, rows, fields) {
+                // console.log(rows);
+                if (err) throw err;
+                res.jsonp(rows);
+            });
+        },
 
         changeStatus: function(req, res) {
             console.log(req.body);

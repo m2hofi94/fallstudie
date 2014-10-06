@@ -4,6 +4,7 @@
 
 angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys', 'Authentication', '$modal', '$location', function ($scope, Surveys, Authentication, $modal, $location) {
     $scope.init = function() {
+        $scope.inEditMode = false;
         $scope.authentication = Authentication;
         // for "Teilnehmer" Radio Button
         $scope.content = 'option1';
@@ -41,8 +42,18 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
             {value: new Date()}
         ];
 
-        $scope.fields = $scope.standardQuestions.slice();
-
+        if(Surveys.idToEdit != -1){
+            $scope.inEditMode = true;
+            $scope.title = Surveys.tempTitle;
+            $scope.edit(Surveys.idToEdit); 
+            
+            // Surveys.tempTitle = '';
+            // Surveys.idToEdit = -1;
+            // $scope.inEditMode = false;
+        
+        }else {
+            $scope.fields = $scope.standardQuestions.slice();
+        }
         $scope.today();
         $scope.toggleMin();
 
@@ -81,9 +92,20 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
         $scope.fields.splice(index, 1);
     };
 
+    $scope.edit = function(id){
+        Surveys.getQuestions(id)
+        .success(function(data){  
+             console.log(data);
+             $scope.fields = data;
+        }).error(function(err){
+             console.log(err);
+        }); 
+    };
+    
     $scope.submit = function(status) {
         $scope.survey = [$scope.title, $scope.fields, status];
-
+        
+                                                           
         Surveys.createSurvey($scope.survey).success(function(data){
             // $scope.survey = [];
 

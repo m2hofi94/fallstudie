@@ -1,11 +1,20 @@
 /*globals angular */
 'use strict';
 
-angular.module('NavController', []).controller('NavCtrl', ['$scope', 'Authentication', function($scope, Authentication) {
+angular.module('NavController', []).controller('NavCtrl', ['$scope', '$location', 'Authentication', function($scope, $location, Authentication) {
     $scope.isCollapsed = true;
 	var _user = null;
 
     $scope.$on('$routeChangeStart', function() {
+        // Manually delete User Object to refresh the navBar after deleting User
+        if($location.url() == '/deleteUser'){
+            _user = null;         
+        }
+        // Called after profile Update to reload the navbar
+        if($location.url() == '/profile'){
+            _user = Authentication.user();         
+        }
+        
        $scope.isCollapsed = true;
     });
 
