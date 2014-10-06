@@ -40,7 +40,6 @@ module.exports = function(passport) {
             console.log(req.body.passwordToChange);
             if(typeof req.body.passwordToChange != 'undefined')
                 req.body.password = passwordHash.generate(req.body.passwordToChange);
-            console.log(req.body);
 
             var values = {email : req.body.email,
                           title : req.body.title,

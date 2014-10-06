@@ -4,6 +4,8 @@
 angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', '$location', 'Authentication', function($scope, Users, $location, Authentication) {
     $scope.result = {};
     $scope.user = Authentication.user();
+    if(typeof $scope.user !== 'undefined' && $scope.user !== null)
+        $scope.updatedUser = {id : $scope.user.id, title : $scope.user.title, email : $scope.user.email, firstName : $scope.user.firstName, lastName : $scope.user.lastName, password : $scope.user.password};
 
 
     // Use name / value pairs because "Kein Titel" needs empty String as value in Database
@@ -86,11 +88,11 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', 'Users', 
     };
 
     $scope.update = function() {
-        if($scope.user.passwordToChange == $scope.passwordCheck) {
-            $scope.user.title = $scope.user.title == 'Kein Titel' ? '' : $scope.user.title;
-            Users.update($scope.user).success(function(data) {
+        if($scope.updatedUser.passwordToChange == $scope.passwordCheck) {
+            Users.update($scope.updatedUser).success(function(data) {
                 $scope.result.message = "Änderung erfolgreich";
-                // Changes cookie
+                // Changes cookie // TODO
+                $scope.user = $scope.updatedUser;
                 Authentication.user($scope.user);
             }).error(function(err) {
                 console.log(err);

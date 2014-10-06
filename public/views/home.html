@@ -37,17 +37,17 @@
                         <!-- Depending on status there are different buttons -->
                         <span ng-switch on="s[0]">
                               <span ng-switch-when="Entwurf">
-                                    <button class="btn btn-default" ng-Click="edit(survey) ">Bearbeiten</button>
+                                    <button class="btn btn-default" ng-Click="edit(survey)">Bearbeiten</button>
                                     <button class="btn btn-success" ng-Click="activate(survey)">Freischalten</button>
                                     <button class="btn btn-danger" ng-Click="delete(survey)">Löschen</button>
                               </span>
                               <span ng-switch-when="Laufende Umfragen">
-                                    <button class="btn btn-default" ng-Click="close(survey)">Umfrage Beenden</button>
-                                    <button class="btn btn-warning" ng-Click="delete(survey)">Umfrage Abbrechen</button>
+                                    <button class="btn btn-default" ng-Click="close(survey)">Beenden</button>
+                                    <button class="btn btn-danger" ng-Click="delete(survey)">Löschen</button>
                               </span>
                                 <span ng-switch-when="Beendete Umfragen">
-                                    <button class="btn btn-warning" ng-Click="viewResults(survey)">Auswertung ansehen</button>
-                                    <button class="btn btn-default" ng-Click="delete(survey)">Umfrage L&ouml;schen</button>
+                                    <button class="btn btn-default" ng-Click="viewResults(survey)">Auswertung</button>
+                                    <button class="btn btn-danger" ng-Click="delete(survey)">L&ouml;schen</button>
                               </span>
                         </span>
 
