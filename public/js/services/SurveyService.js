@@ -35,6 +35,10 @@ angular.module('SurveyService', []).factory('Surveys', ['$http', function($http)
             return $http.post('/api/tokens/' + id);
         },
         
+        submitSurvey : function(surveyData){
+            return $http.post('/api/submit/', surveyData);
+        },
+
         tempTitle : '',
         idToEdit : -1
 	};

@@ -31,7 +31,9 @@ module.exports = function(express, passport) {
     router.delete('/surveys/:id', surveys.deleteSurvey);
 
     //******************Create Token********************************
-    router.post('/tokens/:id', tokens.publishForAll);
+    // router.post('/tokens/:id', tokens.publishForAll);
+    router.post('/tokens/:id', loggedIn, tokens.publishIndividually);
+    router.post('/submit', tokens.takePart);
 
     //function to check if user is logged in
     //sends a 401 if unsuccessfull

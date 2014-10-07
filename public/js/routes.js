@@ -4,7 +4,6 @@
 
 angular.module('afsApp').config(['$routeProvider',
     function ($routeProvider) {
-
         $routeProvider
             .when('/home', {
                 templateUrl: 'views/home.html',
@@ -54,6 +53,14 @@ angular.module('afsApp').config(['$routeProvider',
             })
             .when('/participate/:token',{
                 templateUrl: 'views/participate.html',
+                controller: 'AnswerCtrl'
+            })
+            .when('/noSurvey',{
+                templateUrl: 'views/surveys/noSurvey.html',
+                controller: 'AnswerCtrl'
+            })
+            .when('/thanks',{
+                templateUrl: 'views/surveys/thanks.html',
                 controller: 'AnswerCtrl'
             })
             .otherwise({
