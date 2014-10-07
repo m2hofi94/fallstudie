@@ -16,7 +16,7 @@ module.exports = function () {
 
     var sendMail = function(recipient, token, user){
         console.log("in Send mail");
-        var body = 'Guten Tag,<br>' + user + ' l&auml;dt Sie ein, an einer Umfrage teilzunehmen.<br>Dazu klicken Sie bitte auf den unten stehenden Link<br><a href="http://localhost:61701/#/participate/'+token+'">Umfrage</a>';
+        var body = 'Guten Tag,<br>' + user + ' l&auml;dt Sie ein, an einer Umfrage teilzunehmen.<br>Dazu klicken Sie bitte auf den unten stehenden Link<br><a href="http://afs.nunki.uberspace.de/#/participate/'+token+'">Umfrage</a>';
 
         var mailOptions = {
             from: 'AnFeSys <AnFeSys@gmail.com>', // sender address

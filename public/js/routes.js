@@ -61,7 +61,7 @@ angular.module('afsApp').config(['$routeProvider',
             })
             .when('/thanks',{
                 templateUrl: 'views/surveys/thanks.html',
-                controller: 'AnswerCtrl'
+                controller: 'UserCtrl'
             })
             .otherwise({
                 redirectTo: '/login'
