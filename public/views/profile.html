@@ -1,7 +1,6 @@
 <div class="row">
     <div class="col-md-4 col-md-offset-4">
         <h1 class="page-header">Profil Editieren</h1>
-        <a href="#" editable-text="updatedUser.email">{{ user.email || 'empty' }}</a>
         <alert data-ng-show="result.message" close="result.message=''">
 			<p>{{result.message}}</p>
 		</alert>
@@ -38,19 +37,44 @@
                 <button class="btn btn-primary" type="submit"  value="Speichern" >&Auml;nderungen speichern</button>
             </div>
         </form>
-        <div class="form group">
-                <button class="btn btn-primary" type="submit" value="Entfernen" ng-click="deleteUser()" >Account l&ouml;schen</button>
+        <div class="form group text-center">
+                <button class="btn btn-danger" type="submit" value="Entfernen" ng-click="deleteUser()" >Account l&ouml;schen</button>
         </div>
     </div>
 </div>
 
+
 <!--
 <div class="form-group">
-                <label>Passwort &auml;ndern:</label>
-                <input class="form-control" type="password" placeholder="Passwort" data-ng-model="user.password"/>
+                <label>Titel:</label>
+                <div class="dropdown">
+                    <select class="btn btn-default" data-ng-model="updatedUser.title" ng-options="title.value as title.name for title in titles">
+                        <option value="">Kein Titel</option>
+                    </select>
+                </div>
             </div>
             <div class="form-group">
-                <label>Passwort best&auml;tigen:</label>
-                <input class="form-control" type="password" placeholder="Passwort best&auml;tigen" data-ng-model="passwordCheck" ng-required= "true"/>
+                <label>E-Mail:</label><br>
+                <a href="#" editable-text="updatedUser.email">{{ updatedUser.email || 'empty' }}</a>
             </div>
+            <div class="form-group">
+                <label>Vorname:</label><br>
+                <a href="#" editable-text="updatedUser.firstName">{{ updatedUser.firstName || 'empty' }}</a>
+            </div>
+            <div class="form-group">
+                <label>Nachname:</label><br>
+                <a href="#" editable-text="updatedUser.lastName">{{ updatedUser.lastName || 'empty' }}</a>
+            </div>
+            <div class="form-group">
+                <label>Passwort &auml;ndern:</label><br>
+                <a href="#" editable-text="updatedUser.passwordToChange" type="password" placeholder="Passwort">{{ updatedUser.passwordToChange || 'Password' }}</a>
+            </div>
+            <div class="form-group">
+                <label>Passwort best&auml;tigen:</label><br>
+                <a href="#" editable-text="passwordCheck" type="password" placeholder="Passwort">{{ passwordCheck || 'Password bestätigen' }}</a>
+            </div>
+            <div class="form-group text-center">
+                <button class="btn btn-primary" type="submit"  value="Speichern" ng-click="update()">&Auml;nderungen speichern</button>
+            </div>
+
 -->

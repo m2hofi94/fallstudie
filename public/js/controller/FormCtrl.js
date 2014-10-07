@@ -43,9 +43,10 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
         ];
 
         if(Surveys.idToEdit != -1){
-            $scope.inEditMode = true;
+            // $scope.inEditMode = true;
             $scope.title = Surveys.tempTitle;
             $scope.edit(Surveys.idToEdit); 
+            console.log("edit " + Surveys.idToEdit);
             
             // Surveys.tempTitle = '';
             // Surveys.idToEdit = -1;
@@ -105,10 +106,16 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
     $scope.submit = function(status) {
         $scope.survey = [$scope.title, $scope.fields, status];
         
-                                                           
-        Surveys.createSurvey($scope.survey).success(function(data){
-            // $scope.survey = [];
+        if(Surveys.idToEdit != -1){
+            Surveys.deleteSurvey(Surveys.idToEdit).success(function (data){
+            }).error(function(data){
 
+            });
+            Surveys.idToEdit = -1;
+        }
+
+
+        Surveys.createSurvey($scope.survey).success(function(data){
             if(status == 'draft'){
                 $location.url('/home');
             } else {
@@ -121,10 +128,6 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
         }).error(function(err){
 
         });
-
-
-        // console.log(status);
-
     };
 
     $scope.togglePreview = function() {

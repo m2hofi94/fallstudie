@@ -3,7 +3,8 @@
     <div class="panel-body">
        <span ng-switch on="field.type">
               <span ng-switch-when="Slider">
-                  Sehr Schlecht (0)  <rating ng-model="field.rate" max="10" style="width:100%"></rating> (10) Sehr gut
+                  <rating class="fa-2x" ng-model="field.rate" max="10" style="color:#FFD755"></rating>
+                  <!-- <p style="text-align:center;width:28%">^</p> -->
               </span>
               <span ng-switch-when="TextArea">
                 <textarea class="form-control" rows="5" style="width:100%" ng-model="field.input"></textarea>
