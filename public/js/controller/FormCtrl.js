@@ -149,7 +149,7 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
     };
 
     $scope.cancel = function() {
-        var modalInstance = $modal.open({
+       /* var modalInstance = $modal.open({
             template: '<div class="modal-body"><p>Sind sie sicher?</p></div><div class="modal-footer"><button class="btn btn-default" ng-click="$dismiss()">Cancel</button><button class="btn btn-warning" ng-click="$close()">OK</button></div>',
             size: 'sm',
             scope: $scope
@@ -160,6 +160,8 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
        }, function () {
            console.log('Modal dismissed at: ' + new Date());
        });
+       */
+        $location.url('/home');
     };
 
     $scope.init();

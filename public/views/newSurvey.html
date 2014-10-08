@@ -18,14 +18,14 @@
     </div>
 
     <div class="row col-md-10 col-md-offset-1">
-        <h3>Empfänger</h3>
+        <h2>Empfänger</h2>
         <textarea data-ng-model="emails" placeholder="E-Mail Adressen bitte durch Semikolon getrennt eingeben" rows="4" style="width:50%"></textarea>
     </div>
 
     <div class="row col-md-10 col-md-offset-1">
         <h2>Optionen</h2>
         <button class="btn btn-default" data-ng-click="cancel()">Abbrechen</button>
-        <button class="btn btn-success" data-ng-click="submit('draft')">Speichern</button>
+        <button class="btn btn-success" data-ng-click="submit('draft')">Entwurf speichern</button>
         <button class="btn btn-info" data-ng-click="togglePreview()">Vorschau</button>
     </div>
 </div>
@@ -46,8 +46,8 @@
     <div class="row col-md-10 col-md-offset-1">
         <h2>Optionen</h2>
         <button class="btn btn-default" data-ng-click="togglePreview()">Zurück</button>
-        <button class="btn btn-success" data-ng-click="submit('draft')">Speichern und Schließen</button>
-        <button class="btn btn-info" data-ng-click="submit('active')">Umfrage Freischalten</button>
+        <button class="btn btn-success" data-ng-click="submit('draft')">Entwurf speichern</button>
+        <button class="btn btn-info" data-ng-click="submit('active')">Umfrage freischalten</button>
     </div>
 </div>
 <!--

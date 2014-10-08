@@ -9,10 +9,13 @@
 <div class="row col-md-10 col-md-offset-1" ng-repeat="s in sortedSurveys">
     <div class="panel panel-default">
     <!-- Default panel contents -->
-    <div class="panel-heading">{{s[0]}}</div>
+    <div class="panel-heading"><b>{{s[0]}} </b><span class="badge pull-right">{{s[1].length}}</span></div>
 
-    <!-- Table -->
-    <table class="table table-hover">
+    <!--Table -->
+
+    <p style="margin:15px" ng-hide="s[1].length != 0">Keine Umfragen vorhanden</p>
+
+    <table class="table table-hover" ng-show="s[1].length != 0">
         <thead style="cursor:default">
             <tr>
                 <th>Von</th>
@@ -38,15 +41,16 @@
                         <span ng-switch on="s[0]">
                               <span ng-switch-when="Entwurf">
                                     <button class="btn btn-default" ng-Click="edit($index)">Bearbeiten</button>
-                                    <button class="btn btn-success" ng-Click="activate($index)">Freischalten</button>
-                                    <button class="btn btn-danger" ng-Click="delete(0, $index)">Löschen</button>
+                                    <button class="btn btn-info" ng-Click="activate($index)">Freischalten</button>
+                                    <button class="btn btn-danger" ng-Click="delete(0, $index)">L&ouml;schen</button>
                               </span>
                               <span ng-switch-when="Laufende Umfragen">
                                     <button class="btn btn-default" ng-Click="close($index)">Beenden</button>
-                                    <button class="btn btn-danger" ng-Click="delete(1, $index)">Löschen</button>
+                                    <button class="btn btn-danger" ng-Click="delete(1, $index)">L&ouml;schen</button>
                               </span>
                                 <span ng-switch-when="Beendete Umfragen">
                                     <button class="btn btn-default" ng-Click="viewResults($index)">Auswertung</button>
+                                    <button class="btn btn-success" ng-Click="restart($index)">Wiederverwenden</button>
                                     <button class="btn btn-danger" ng-Click="delete(2, $index)">L&ouml;schen</button>
                               </span>
                         </span>

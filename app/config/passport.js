@@ -85,14 +85,14 @@ module.exports = function (passport) {
 
                 console.log(rows.length);
                 if (!rows.length) {
-                    req.loginMessage='No user found.';
+                    req.loginMessage='Die eingegebene E-Mail-Adresse oder das Passwort ist falsch.';
                     return done(null, false);
                 }
 
                 console.log(passwordHash.verify(password, rows[0].password));
                 // if the user is found but the password is wrong
                 if (!passwordHash.verify(password, rows[0].password)) {
-                    req.loginMessage = 'Oops! Wrong password.';
+                    req.loginMessage = 'Die eingegebene E-Mail-Adresse oder das Passwort ist falsch.';
                     return done(null, false);
                 }
 

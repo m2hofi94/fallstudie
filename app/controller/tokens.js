@@ -15,7 +15,6 @@ module.exports = function () {
     });
 
     var sendMail = function(recipient, token, user){
-        console.log("in Send mail");
         var body = 'Guten Tag,<br>' + user + ' l&auml;dt Sie ein, an einer Umfrage teilzunehmen.<br>Dazu klicken Sie bitte auf den unten stehenden Link<br><a href="http://afs.nunki.uberspace.de/#/participate/'+token+'">Umfrage</a>';
 
         var mailOptions = {
@@ -28,6 +27,7 @@ module.exports = function () {
 
         // send mail with defined transport object
         transporter.sendMail(mailOptions, function(error, info){
+            console.log("send mail");
             if(error){
                 console.log(error);
             }else{
@@ -60,7 +60,7 @@ module.exports = function () {
                     // Create token with surveyID and random Number
                     var hash = md5((Math.random() * req.params.id) + '');
                     var u = req.user.firstName + " " + req.user.lastName;
-                    console.log("before Send Mail");
+                    console.log(rows[i].email + " .. " + hash + " .. " + u);
                     sendMail(rows[i].email, hash, u);
 
                     connection.query('INSERT INTO tokens SET surveyId = ?, token = ?', [req.params.id ,hash], function(err, rows, fields){
