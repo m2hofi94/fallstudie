@@ -9,11 +9,11 @@
 			
             <div class="form-group">
                 <label>E-Mail:</label>
-                <input class="form-control" type="email" placeholder="Geben Sie ihre e-Mail-Adresse ein" data-ng-model="loginData.email" required />
+                <input class="form-control" maxlength="100" type="email" placeholder="Geben Sie ihre e-Mail-Adresse ein" data-ng-model="loginData.email" required />
             </div>
             <div class="form-group">
                 <label>Passwort:</label>
-                <input class="form-control" type="password" placeholder="Passwort" data-ng-model="loginData.password" required />
+                <input class="form-control" maxlength="100" type="password" placeholder="Passwort" data-ng-model="loginData.password" required />
             </div>
             <div class="form-group text-center">
                 <input class="btn btn-primary" type="submit" value="Einloggen"> oder <a href="#/signup">registrieren.</a>

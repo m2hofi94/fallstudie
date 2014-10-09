@@ -15,7 +15,7 @@ module.exports = function () {
     });
 
     var sendMail = function(recipient, token, user, email){
-        var body = 'Guten Tag,<br>' + user + ' l&auml;dt Sie ein, an einer Umfrage teilzunehmen.<br>Dazu klicken Sie bitte auf den unten stehenden Link<br><a href="http://afs.nunki.uberspace.de/#/participate/'+token+'">Umfrage</a>';
+        var body = 'Guten Tag,<br>' + user + ' l&auml;dt Sie ein, an einer Umfrage teilzunehmen.<br>Dazu klicken Sie bitte auf den unten stehenden Link<br><a href="http://afs.nunki.uberspace.de/#/participate/'+token+ '">Umfrage</a>';
 
         var mailOptions = {
             from: user  + ' <' + email + '>',// sender address  'AnFeSys <AnFeSys@gmail.com>'
@@ -48,15 +48,17 @@ module.exports = function () {
         },
 
         publishIndividually : function(req, res){
+            console.log('IN METHODE PUBLISH INDIVIDUALLY -- ' + req.params.id);
             // req.params.id -> surveyID
             // Get E-Mails which are assigned to this survey
             connection.query('SELECT * FROM recipients WHERE surveyID = ?', [req.params.id], function(err, rows, fields){
                 if (err) throw err;
-                console.log(rows);
+                console.log(rows.length);
 
                 if(rows.length === 0){
                     res.jsonp('No Recipients');
                 } else {
+
                     // for each E-Mail publish one token into the DB
                     for(var i = 0; i < rows.length; i++){
                         // TODO for each E-Mail-Address send an E-Mail to recipient

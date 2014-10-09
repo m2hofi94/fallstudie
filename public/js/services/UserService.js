@@ -24,7 +24,9 @@ angular.module('UserService', []).factory('Users', ['$http', function($http) {
 		// call to DELETE a nerd
 		delete : function(id) {
 			return $http.delete('/api/users/' + id);
-		}
+		},
+
+        changedUserAlert : false
 	};
 
 }]);

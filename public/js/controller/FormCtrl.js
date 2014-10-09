@@ -148,11 +148,12 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
                     $location.url('/home');
                 } else {
                     if($scope.emails !== ''){
-                        Surveys.publishSurvey(data.insertId).success(function(data){
-                            $location.url('/home');
-                        }).error(function(err){
-                            console.log(err);
-                        });
+                        setTimeout(function(){Surveys.publishSurvey(data.insertId).success(function(data){
+                                $location.url('/home');
+                            }).error(function(err){
+                                console.log(err);
+                            });
+                         }, 500);
                     } else {
                         Surveys.publishSurveyOpen(data.insertId).success(function(data){
                             console.log(data);

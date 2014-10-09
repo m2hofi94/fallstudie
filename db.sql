@@ -59,3 +59,5 @@ create table answers(
   FOREIGN KEY (questionID) REFERENCES questions(id) ON DELETE CASCADE
 );
 
+SELECT * FROM answers;
+SELECT * FROM tokens;

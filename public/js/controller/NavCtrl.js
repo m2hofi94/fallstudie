@@ -1,7 +1,7 @@
 /*globals angular */
 'use strict';
 
-angular.module('NavController', []).controller('NavCtrl', ['$scope', '$location', 'Authentication', function($scope, $location, Authentication) {
+angular.module('NavController', []).controller('NavCtrl', ['$scope', 'Users', '$location', 'Authentication', function($scope, Users, $location, Authentication) {
     $scope.isCollapsed = true;
 	var _user = null;
 
@@ -12,6 +12,7 @@ angular.module('NavController', []).controller('NavCtrl', ['$scope', '$location'
         }
         // Called after profile Update to reload the navbar
         if($location.url() == '/profile'){
+            Users.changeUserAlert = true;
             _user = Authentication.user();         
         }
         

@@ -18,18 +18,20 @@
     <table class="table table-hover" ng-show="s[1].length != 0">
         <thead style="cursor:default">
             <tr>
-                <th>Von</th>
-                <th>Bis</th>
-                <th>Titel</th>
-                <th>Teilnahme</th>
+                <th width="1%">Gestartet</th>
+                <th width="10%" ng-hide="s[0] == 'Beendete Umfragen'"></th>
+                <th width="10%" ng-show="s[0] == 'Beendete Umfragen'">Beendet</th>
+                <th width="56%">Titel</th>
+                <th width="20%">Teilnahme</th>
             </tr>
         </thead>
         <!-- for each survey in the sortedSurveys[x] - Array one tbody element -->
         <tbody style="cursor:pointer" ng-repeat="survey in s[1] track by $index">
 
                 <tr ng-click="toggleCollapse(survey)">
-                    <td>Startdatum</td>
-                    <td>Enddatum</td>
+                    <td>{{survey.data.start}}</td>
+                    <td ng-hide="s[0] == 'Beendete Umfragen'"></td>
+                    <td ng-show="s[0] == 'Beendete Umfragen'">{{survey.data.end}}</td>
                     <td>{{survey.data.title}}</td>
                     <td>
                         <progressbar max="max" value="dynamic"><span style="color:white; white-space:nowrap;">{{dynamic}} / {{max}}</span></progressbar>

@@ -4,6 +4,12 @@
 angular.module('UserController', []).controller('UserCtrl', ['$scope', '$modal', 'Users', '$location', 'Authentication',
     function ($scope, $modal, Users, $location, Authentication) {
         $scope.result = {};
+        // Set boolean ChangedUserAlert -> after click on "submit new user Data" to show alert
+        // the page reload because of updating the navbar deletes $scope.
+        if(Users.changedUserAlert){
+            $scope.result.message = 'Änderungen erfolgreich';
+            Users.changedUserAlert = false;
+        }
         $scope.user = Authentication.user();
         //$scope.editableForm = {};
         //$scope.editableForm.$show();
@@ -126,7 +132,8 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', '$modal',
 
             if ($scope.updatedUser.passwordToChange == $scope.passwordCheck) {
                 Users.update($scope.updatedUser).success(function (data) {
-                    $scope.result.message = "Änderung erfolgreich";
+                    Users.changedUserAlert = true;
+                    // console.log
                     // Changes cookie // TODO
                     // $scope.user = $scope.updatedUser;
                     Authentication.user($scope.updatedUser);

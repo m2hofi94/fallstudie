@@ -4,7 +4,7 @@
 angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys', '$http', '$location',
     function ($scope, Surveys, $http, $location) {
         Surveys.idToEdit = -1;
-        $scope.dynamic = 25;
+        $scope.dynamic = 0;
         $scope.max = 50;
         $scope.activeSurvey = {
             isCollapsed: true
@@ -32,17 +32,27 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
                 $scope.surveys = data;
                 // Depending on status the survey is saved in the approriate index in the sortedSurveys-Array
                 for (var i = 0; i < $scope.surveys.length; i++) {
+                    var date = new Date(data[i].created);
+                    $scope.surveys[i].start  = date.toLocaleDateString();
+                    date = new Date(data[i].endDate);
+                    $scope.surveys[i].end = date.toLocaleDateString();
+
                     if ($scope.surveys[i].status == 'draft')
                         $scope.sortedSurveys[0][1].push({
                             data: $scope.surveys[i],
                             isCollapsed: true
                         });
-                    else if ($scope.surveys[i].status == 'active')
+                    else if ($scope.surveys[i].status == 'active'){
                         $scope.sortedSurveys[1][1].push({
-                            data: $scope.surveys[i],
-                            isCollapsed: true
-                        });
-                    else if ($scope.surveys[i].status == 'closed')
+                                data: $scope.surveys[i],
+                                isCollapsed: true
+                            });
+                        if(date > new Date(0) && date < new Date()){
+                            // close latest entry in sortedSurveys[1][1]
+                            $scope.close($scope.sortedSurveys[1][1].length-1);
+
+                        }
+                    } else if ($scope.surveys[i].status == 'closed')
                         $scope.sortedSurveys[2][1].push({
                             data: $scope.surveys[i],
                             isCollapsed: true
@@ -63,7 +73,7 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
 
         $scope.viewResults = function (index) {
             var surveys = $scope.sortedSurveys[2][1];
-            $location.url('/results/' + surveys[index].data.id);
+            $location.url('/results/' + surveys[index].data.id + '/' + surveys[index].data.title);
         };
 
         $scope.close = function (index) {
@@ -72,6 +82,7 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
 
             Surveys.changeStatus(surveys[index].data.id, 'closed')
                 .success(function (data) {
+                    surveys[index].data.end = new Date().toLocaleDateString();
                     $scope.sortedSurveys[2][1].push(surveys[index]);
                     surveys[index].isCollapsed = true;
                     $scope.sortedSurveys[1][1].splice(index, 1);

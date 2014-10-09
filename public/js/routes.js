@@ -65,7 +65,7 @@ angular.module('afsApp').config(['$routeProvider',
                 templateUrl: 'views/surveys/thanks.html',
                 controller: 'AnswerCtrl'
             })
-            .when('/results/:token',{
+            .when('/results/:token/:title',{
                 templateUrl: 'views/surveys/results.html',
                 controller: 'AnswerCtrl'
             })

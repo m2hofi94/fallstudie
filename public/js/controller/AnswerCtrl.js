@@ -4,11 +4,19 @@
 angular.module('AnswerController', []).controller('AnswerCtrl', ['$scope', '$routeParams', 'Surveys', '$location', function ($scope, $routeParams, Surveys, $location) {
     $scope.token = $routeParams.token;
     $scope.tokenUrl = $location.$$absUrl.replace('publish', 'participate');
-    $scope.title = Surveys.tempTitle;
+    console.log($routeParams.title);
+    if(typeof $routeParams.title !== 'undefined')
+        $scope.title = $routeParams.title;
+    else
+        $scope.title = Surveys.tempTitle;
+
     $scope.results = [];
     $scope.ratingResults = 0;
     $scope.countRatings = 0;
 
+    $scope.go = function (path) {
+            $location.url(path);
+    };
 
     $scope.getQuestions = function (){
          Surveys.getQuestionsWithToken($scope.token).success(function(data) {
@@ -33,7 +41,9 @@ angular.module('AnswerController', []).controller('AnswerCtrl', ['$scope', '$rou
     $scope.send = function() {
        var body = [$scope.token, $scope.fields, $scope.surveyID];
        Surveys.submitSurvey(body).success(function(data) {
-           console.log("Erfolgreich");
+
+           Surveys.tempTitle = $scope.title;
+           console.log(Surveys.tempTitle);
            $location.url('/thanks');
        }).error(function(err) {
            console.log(err);
@@ -50,20 +60,30 @@ angular.module('AnswerController', []).controller('AnswerCtrl', ['$scope', '$rou
         Surveys.getQuestions($scope.token).success(function(data) {
             // data = { created, id, surveyID, title, type }
             for(var i = 0; i < data.length; i++){
-                $scope.results.push({id : data[i].id, title : data[i].title, answers : []});
+                $scope.results.push({id : data[i].id, title : data[i].title, type : data[i].type, answers : []});
             }
             Surveys.getAnswers($scope.token).success(function(data) {
                 // data = { id, questionID, surveyID, value }
-                for (var j = 0; j < $scope.results.length; j++){
-                    for(var i = 0; i < data.length; i++){
-                        if(data[i].questionID == $scope.results[j].id){
-                            $scope.results[j].answers.push(data[i].value);
-
+                if(data.length === 0){
+                    $scope.noAnswers = true;
+                } else {
+                    for (var j = 0; j < $scope.results.length; j++){
+                        for(var i = 0; i < data.length; i++){
+                            if(data[i].questionID == $scope.results[j].id){
+                                console.log($scope.results[j].type);
+                                if($scope.results[j].type == 'Slider'){
+                                    $scope.countRatings++;
+                                    $scope.ratingResults += parseInt(data[i].value);
+                                    console.log($scope.ratingResults);
+                                } else {
+                                    $scope.results[j].answers.push(data[i].value);
+                                }
+                            }
                         }
                     }
+                    $scope.average = Math.round($scope.ratingResults / $scope.countRatings * 100)/100;
+                    // console.log($scope.results);
                 }
-                // console.log($scope.results);
-
             }).error(function(err) {
                 console.log(err);
             });

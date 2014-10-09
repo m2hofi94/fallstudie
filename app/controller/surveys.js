@@ -32,6 +32,7 @@ module.exports = function () {
 
         getSurveys: function (req, res) {
             connection.query('SELECT * FROM surveys WHERE userID = ?', [req.user.id], function (err, rows, fields) {
+
                 // console.log(rows);
                 if (err) throw err;
                 res.jsonp(rows);
@@ -63,15 +64,16 @@ module.exports = function () {
         },
 
         changeStatus: function(req, res) {
-            console.log(req.body);
             connection.query('UPDATE surveys SET status = ? WHERE id= ?', [req.body[1], req.body[0]],function(err, rows, fields) {
                 if (err) return res.status(500);
 
                 if(req.body[1] == 'closed'){
+                   connection.query('UPDATE surveys SET endDate = ? WHERE id= ?', [new Date(), req.body[0]],function(err, rows, fields) {
                      connection.query('DELETE FROM tokens WHERE surveyId= ?', [req.body[0]],function(err, rows, fields) {
                          if (err) return res.status(500);
                          res.jsonp(rows);
                      });
+                });
                 }else{
                     res.jsonp(rows);
                 }
