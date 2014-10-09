@@ -96,12 +96,9 @@ module.exports = function(passport) {
             req.session.destroy(function (err) {
                 connection.query('DELETE FROM users WHERE id = ?', [req.params.userId],function(err, rows, fields) {
                     if (err) return res.status(500);
-                    res.jsonp({success: true});
                 });
                 // res.send({success: true});
             });
-            
-            
         },
 
         signup: function(req, res, next) {

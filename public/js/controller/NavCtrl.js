@@ -44,5 +44,11 @@ angular.module('NavController').run(['$rootScope', '$location', 'Authentication'
 			event.preventDefault();
 			$location.url('/login');
 		}
+
+        // Hide "signUp" and "LogIn" page if user is logged in
+        if (next.hideIfLoggedIn && Authentication.user()) {
+			event.preventDefault();
+			$location.url('/home');
+		}
 	});
 }]);

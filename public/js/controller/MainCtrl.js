@@ -2,6 +2,7 @@
 'use strict';
 
 angular.module('MainController', []).controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
+    /*
     $scope.longUrl = '';
     $scope.shortUrl = 'http://bit.ly/1r31Vnc';
 
@@ -25,8 +26,9 @@ angular.module('MainController', []).controller('MainCtrl', ['$scope', '$http', 
     $scope.getTextToCopy = function() {
         return $scope.shortUrl;
     };
+    */
 }]);
-
+/*
 angular.module('HomeController').directive('selectOnClick', function () {
     return {
         restrict: 'A',
@@ -43,8 +45,10 @@ angular.module('HomeController').directive('selectOnClick', function () {
             });
         }
     };
+
 });
 
 angular.module('HomeController').config(['ngClipProvider', function(ngClipProvider) {
     ngClipProvider.setPath("libs/zeroclipboard/dist/ZeroClipboard.swf");
 }]);
+*/

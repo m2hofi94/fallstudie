@@ -14,7 +14,6 @@ module.exports = function(express, passport) {
     // used for User Update Data and Delete User
     router.put('/users', loggedIn, users.update);
     router.delete('/users/:userId', loggedIn, users.delete);
-    
     router.delete('/deleteUser/:userId', loggedIn, users.deleteUser);
 
     //*******************Login/Signup*******************************
@@ -25,13 +24,15 @@ module.exports = function(express, passport) {
     //*******************Questions/Surveys**************************
     router.get('/questions/:token', surveys.getQuestionsWithToken);
     router.get('/getQuestions/:id', loggedIn, surveys.getQuestions);
+    router.get('/getAnswers/:id', loggedIn, surveys.getAnswers);
+    router.get('/getRecipients/:id', loggedIn, surveys.getRecipients);
     router.post('/surveys', loggedIn, surveys.createSurvey);
     router.get('/surveys', loggedIn, surveys.getSurveys);
     router.put('/surveys', surveys.changeStatus);
     router.delete('/surveys/:id', surveys.deleteSurvey);
 
     //******************Create Token********************************
-    // router.post('/tokens/:id', tokens.publishForAll);
+    router.post('/tokensOpen/:id', tokens.publishOpen);
     router.post('/tokens/:id', loggedIn, tokens.publishIndividually);
     router.post('/submit', tokens.takePart);
 

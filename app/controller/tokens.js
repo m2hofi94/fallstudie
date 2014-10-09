@@ -14,11 +14,11 @@ module.exports = function () {
         }
     });
 
-    var sendMail = function(recipient, token, user){
+    var sendMail = function(recipient, token, user, email){
         var body = 'Guten Tag,<br>' + user + ' l&auml;dt Sie ein, an einer Umfrage teilzunehmen.<br>Dazu klicken Sie bitte auf den unten stehenden Link<br><a href="http://afs.nunki.uberspace.de/#/participate/'+token+'">Umfrage</a>';
 
         var mailOptions = {
-            from: 'AnFeSys <AnFeSys@gmail.com>', // sender address
+            from: user  + ' <' + email + '>',// sender address  'AnFeSys <AnFeSys@gmail.com>'
             to: recipient, // list of receivers
             subject: 'Einladung zur Umfrage', // Subject line
             // Text ggf. user Name hinzufügen
@@ -37,16 +37,15 @@ module.exports = function () {
     };
 
     return {
-        publishForAll : function(req, res){
+        publishOpen : function(req, res){
             var hash = md5(req.params.id);
 
-            connection.query('INSERT INTO tokens SET surveyId = ?, token = ?', [req.params.id ,hash], function(err, rows, fields){
+            connection.query('INSERT INTO tokens SET surveyId = ?, token = ?, keepAfterUse = ?', [req.params.id ,hash, true], function(err, rows, fields){
                 if (err) throw err;
                 // console.log(fields);
                 res.jsonp(hash);
             });
         },
-
 
         publishIndividually : function(req, res){
             // req.params.id -> surveyID
@@ -54,20 +53,25 @@ module.exports = function () {
             connection.query('SELECT * FROM recipients WHERE surveyID = ?', [req.params.id], function(err, rows, fields){
                 if (err) throw err;
                 console.log(rows);
-                // for each E-Mail publish one token into the DB
-                for(var i = 0; i < rows.length; i++){
-                    // TODO for each E-Mail-Address send an E-Mail to recipient
-                    // Create token with surveyID and random Number
-                    var hash = md5((Math.random() * req.params.id) + '');
-                    var u = req.user.firstName + " " + req.user.lastName;
-                    console.log(rows[i].email + " .. " + hash + " .. " + u);
-                    sendMail(rows[i].email, hash, u);
 
-                    connection.query('INSERT INTO tokens SET surveyId = ?, token = ?', [req.params.id ,hash], function(err, rows, fields){
-                        if (err) throw err;
-                    });
+                if(rows.length === 0){
+                    res.jsonp('No Recipients');
+                } else {
+                    // for each E-Mail publish one token into the DB
+                    for(var i = 0; i < rows.length; i++){
+                        // TODO for each E-Mail-Address send an E-Mail to recipient
+                        // Create token with surveyID and random Number
+                        var hash = md5((Math.random() * req.params.id) + '');
+                        var u = req.user.title + ' ' + req.user.firstName + ' ' + req.user.lastName;
+                        console.log(rows[i].email + " .. " + hash + " .. " + u);
+                        sendMail(rows[i].email, hash, u, req.user.email);
+
+                        connection.query('INSERT INTO tokens SET surveyId = ?, token = ?', [req.params.id ,hash], function(err, rows, fields){
+                            if (err) throw err;
+                        });
+                    }
+                    res.jsonp(rows);
                 }
-                res.jsonp(rows);
             });
         },
 
@@ -76,15 +80,16 @@ module.exports = function () {
             // req.body[0] = token
             // req.body[1] = answers
             // req.body[2] = surveyID
+            // req.body[3] = questionID
 
             for(var i = 0; i < req.body[1].length; i++){
                 var v = (req.body[1][i].type === 'Slider') ? req.body[1][i].rate : req.body[1][i].input;
-                var answer = {value : v, surveyID : req.body[2]};
+                var answer = {value : v, surveyID : req.body[2], questionID : req.body[1][i].id};
                 connection.query('INSERT INTO answers SET ?', [answer], function(err, rows, fields){
                     if (err) throw err;
                 });
             }
-            connection.query('DELETE FROM tokens WHERE token = ?', [req.body[0]], function(err, rows, fields){
+            connection.query('DELETE FROM tokens WHERE token = ? AND keepAfterUse = ?', [req.body[0], false], function(err, rows, fields){
                 if (err) throw err;
                 res.jsonp(rows);
             });

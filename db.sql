@@ -58,3 +58,4 @@ create table answers(
   FOREIGN KEY (surveyID) REFERENCES surveys(id) ON DELETE CASCADE,
   FOREIGN KEY (questionID) REFERENCES questions(id) ON DELETE CASCADE
 );
+

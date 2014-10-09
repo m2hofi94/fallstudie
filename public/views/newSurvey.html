@@ -4,7 +4,7 @@
     </div>
 
     <div class="row col-md-10 col-md-offset-1">
-        <input class="form-control text-center" type="text" data-ng-model="title" placeholder="Unbenannte Umfrage" />
+        <input class="form-control text-center" type="text" data-ng-model="title" placeholder="Unbenannte Umfrage"/>
     </div>
 
     <div class="row col-md-10 col-md-offset-1">
@@ -24,9 +24,13 @@
 
     <div class="row col-md-10 col-md-offset-1">
         <h2>Optionen</h2>
+        <alert data-ng-show="checkMessage != ''" close="checkMessage = ''" style="padding:5px;width:50%">
+            {{checkMessage}}
+		</alert>
         <button class="btn btn-default" data-ng-click="cancel()">Abbrechen</button>
-        <button class="btn btn-success" data-ng-click="submit('draft')">Entwurf speichern</button>
+        <button class="btn btn-success"  data-ng-click="submit('draft')">Entwurf speichern</button>
         <button class="btn btn-info" data-ng-click="togglePreview()">Vorschau</button>
+
     </div>
 </div>
 

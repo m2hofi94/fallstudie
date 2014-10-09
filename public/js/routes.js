@@ -12,11 +12,13 @@ angular.module('afsApp').config(['$routeProvider',
             })
             .when('/signup', {
                 templateUrl: 'views/signup.html',
-                controller: 'UserCtrl'
+                controller: 'UserCtrl',
+                hideIfLoggedIn: true
             })
             .when('/login', {
                 templateUrl: 'views/login.html',
-                controller: 'UserCtrl'
+                controller: 'UserCtrl',
+                hideIfLoggedIn: true
             })
             .when('/users', {
                 templateUrl: 'views/users.html',
@@ -44,7 +46,7 @@ angular.module('afsApp').config(['$routeProvider',
             })
             .when('/main', {
                 templateUrl: 'views/main.html',
-                controller: 'MainCtrl'
+                // controller: 'MainCtrl'
             })
             .when('/profile', {
                 templateUrl: 'views/profile.html',
@@ -61,7 +63,11 @@ angular.module('afsApp').config(['$routeProvider',
             })
             .when('/thanks',{
                 templateUrl: 'views/surveys/thanks.html',
-                controller: 'UserCtrl'
+                controller: 'AnswerCtrl'
+            })
+            .when('/results/:token',{
+                templateUrl: 'views/surveys/results.html',
+                controller: 'AnswerCtrl'
             })
             .otherwise({
                 redirectTo: '/login'

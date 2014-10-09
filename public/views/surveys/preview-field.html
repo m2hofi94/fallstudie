@@ -1,5 +1,5 @@
 <div class="panel panel-default">
-    <div class="panel-heading"><b>{{field.title}}   </b></div>
+    <div class="panel-heading"><b>{{field.title}}</b></div>
     <div class="panel-body">
        <span ng-switch on="field.type">
               <span ng-switch-when="Slider">
@@ -7,8 +7,8 @@
                   <!-- <p style="text-align:center;width:28%">^</p> -->
               </span>
               <span ng-switch-when="TextArea">
-                <textarea class="form-control" rows="5" style="width:100%" ng-model="field.input"></textarea>
-
+                <textarea class="form-control" maxlength="1000" rows="5" style="width:100%;resize:vertical" ng-model="field.input"></textarea>
+                {{1000 - field.input.length}} chars remaining
               </span>
         </span>
     </div>

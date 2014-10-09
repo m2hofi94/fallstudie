@@ -3,6 +3,7 @@
 
 angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys', '$http', '$location',
     function ($scope, Surveys, $http, $location) {
+        Surveys.idToEdit = -1;
         $scope.dynamic = 25;
         $scope.max = 50;
         $scope.activeSurvey = {
@@ -61,7 +62,8 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
         };
 
         $scope.viewResults = function (index) {
-
+            var surveys = $scope.sortedSurveys[2][1];
+            $location.url('/results/' + surveys[index].data.id);
         };
 
         $scope.close = function (index) {
@@ -83,25 +85,27 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
         $scope.activate = function (index) {
             // Update field status in table surveys
             var surveys = $scope.sortedSurveys[0][1];
-            console.log(index);
-            console.log($scope.sortedSurveys);
             Surveys.changeStatus(surveys[index].data.id, 'active')
                 .success(function (data) {
                     // Save surveyID in table tokens and return token ( in this case the ID )
                     Surveys.publishSurvey(surveys[index].data.id).success(function (data) {
+                        console.log(data);
+                        if(data === '"No Recipients"'){
+                            Surveys.publishSurveyOpen(surveys[index].data.id).success(function (data) {
+                                console.log(data);
+                                data = data.replace('"','');
+                                data = data.replace('"','');
+                                $location.url('/publish/' + data);
+                            }).error(function(err){
+                                console.log(err);
+                            });
+                        } else {
                         //   /* If publishing to e-Mails
                         $scope.sortedSurveys[1][1].push(surveys[index]);
                         surveys[index].isCollapsed = true;
                         //    */
-
+                        }
                         $scope.sortedSurveys[0][1].splice(index, 1);
-
-                        /* if publishing for all
-                        console.log(data);
-                        data = data.replace('"','');
-                        data = data.replace('"','');
-                        $location.url('/publish/' + data);
-                        */
                     }).error(function (err) {
 
                     });
@@ -109,6 +113,14 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
                 }).error(function (err) {
                     console.log(err);
                 });
+        };
+
+        $scope.restart = function (index){
+            Surveys.restart = true;
+            var surveys = $scope.sortedSurveys[2][1];
+            Surveys.idToEdit = surveys[index].data.id;
+            Surveys.tempTitle = surveys[index].data.title;
+            $location.url('/newSurvey');
         };
 
         $scope.delete = function (firstIndex, secondIndex) {

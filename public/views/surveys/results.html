@@ -1,1 +1,10 @@
 <!-- is called after click on "Auswertung ansehen" in "Abgeschlossene Umfragen" -->
+
+<div class="row col-md-10 col-md-offset-1">
+        <div ng-repeat="question in questions">
+            {{question[0].title}}
+            <div ng-repeat="q in question[1]">
+                {{q[1]}}
+            </div>
+        </div>
+</div>
