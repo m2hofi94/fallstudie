@@ -5,7 +5,9 @@ angular.module('AnswerController', []).controller('AnswerCtrl', ['$scope', '$rou
     $scope.token = $routeParams.token;
     $scope.tokenUrl = $location.$$absUrl.replace('publish', 'participate');
     $scope.title = Surveys.tempTitle;
-    // $scope.results = [[],[]];
+    $scope.results = [];
+    $scope.ratingResults = 0;
+    $scope.countRatings = 0;
 
 
     $scope.getQuestions = function (){
@@ -47,34 +49,24 @@ angular.module('AnswerController', []).controller('AnswerCtrl', ['$scope', '$rou
         // $scope.getQuestions();
         Surveys.getQuestions($scope.token).success(function(data) {
             // data = { created, id, surveyID, title, type }
-            console.log(data.length);
-            var titles = [];
-            var ids = [];
             for(var i = 0; i < data.length; i++){
-                titles.push(data[i].title);
-                ids.push({id : data[i].id, value : ''});
+                $scope.results.push({id : data[i].id, title : data[i].title, answers : []});
             }
-            $scope.results[1].push(ids);
-            $scope.results[0].push(titles);
-             console.log($scope.results);
-        }).error(function(err) {
-            console.log(err);
-        });
+            Surveys.getAnswers($scope.token).success(function(data) {
+                // data = { id, questionID, surveyID, value }
+                for (var j = 0; j < $scope.results.length; j++){
+                    for(var i = 0; i < data.length; i++){
+                        if(data[i].questionID == $scope.results[j].id){
+                            $scope.results[j].answers.push(data[i].value);
 
-        Surveys.getAnswers($scope.token).success(function(data) {
-            // data = { id, questionID, surveyID, value }
-            /*
-            for (var j = 0; j < $scope.results[1].length; j++){
-                for(var i = 0; i < data.length; i++){
-                    console.log($scope.results[1][j]);
-                    console.log(data[i].questionID);
-                    if(data[i].questionID == $scope.results[1][j].id){
-                        console.log("push");
-                        $scope.results[1][1].push(data[i].value);
+                        }
                     }
                 }
-            }
-            */
+                // console.log($scope.results);
+
+            }).error(function(err) {
+                console.log(err);
+            });
         }).error(function(err) {
             console.log(err);
         });

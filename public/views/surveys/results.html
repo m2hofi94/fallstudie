@@ -1,10 +1,16 @@
 <!-- is called after click on "Auswertung ansehen" in "Abgeschlossene Umfragen" -->
-
 <div class="row col-md-10 col-md-offset-1">
-        <div ng-repeat="question in questions">
-            {{question[0].title}}
-            <div ng-repeat="q in question[1]">
-                {{q[1]}}
+    <h1 class="page-header">Auswertung: [Titel der Umfrage]</h1>
+</div>
+<div class="row col-md-10 col-md-offset-1" ng-repeat="result in results">
+    <div class="panel panel-default" style="padding:5px">
+        <div>
+            <label>{{result.title}}</label>
+        </div>
+        <div>
+            <div ng-repeat="answer in result.answers">
+               {{answer}}
             </div>
         </div>
+    </div>
 </div>
