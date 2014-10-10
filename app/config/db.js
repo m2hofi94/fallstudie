@@ -10,6 +10,7 @@ module.exports = function(num) {
       user     : 'afs',
       password : 'EgDetVuWeHewitye',
       port: 3306,
-      database: 'afs'
+      database: 'afs',
+	  multipleStatements: true
     });
 };

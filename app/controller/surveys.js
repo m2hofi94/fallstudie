@@ -93,28 +93,28 @@ module.exports = function () {
             var survey = {userID : req.user.id, title : req.body[0], status : req.body[2]};
             connection.query('INSERT INTO surveys SET ?', [survey], function(err, rows, fields) {
                 if (err) throw err;
-                for(var i = 0; i < req.body[1].length; i++){
-                    var insert = {surveyID : rows.insertId, title : req.body[1][i].title, type : req.body[1][i].type};
-                    // console.log(insert);
-                    connection.query('INSERT INTO questions SET ?', [insert], function(err, rows, fields){
-
-                        if (err) throw err;
-                        // res.status(200);
-                    });
+				console.log(rows);
+                var surveyId = rows.insertId;
+				var qInsStatement = '';
+				for(var i = 0; i < req.body[1].length; i++){
+                    qInsStatement = qInsStatement + 'INSERT INTO questions SET surveyID=' + rows.insertId + ',title="' + req.body[1][i].title + '",type="' + req.body[1][i].type + '";';
                 }
+				var rInsStatement = '';
+				if(req.body[3] !== null){
+					rInsStatement = '';
+					for(var j = 0; j < req.body[3].length; j++){
+						rInsStatement = rInsStatement + 'INSERT INTO recipients SET email="' + req.body[3][j] + '",surveyId=' + rows.insertId + ';';
+					}
+				}
                 console.log(req.body[3]);
-                if(req.body[3] !== null){
+				var finalStatement = qInsStatement + rInsStatement;
+			console.log(finalStatement);
+				connection.query(finalStatement, function(err, rows, fields){
+				   if(err) throw err;
 
-                    for(var j = 0; j < req.body[3].length; j++){
-                        var value = {email : req.body[3][j], surveyId : rows.insertId};
-                        connection.query('INSERT INTO recipients SET ?', value, function(err, rows, fields){
-                           if(err) throw err;
-                        });
-                    }
-                }
-                res.jsonp(rows);
+					return res.status(200).jsonp({insertId: surveyId});
+				});
             });
-            return;
         }
 
     };
