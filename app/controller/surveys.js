@@ -3,6 +3,17 @@
 
 var connection = require('./../config/db.js')(100);
 
+var formatDate = function(date) {
+	date = date.getUTCFullYear() + '-' +
+    ('00' + (date.getUTCMonth()+1)).slice(-2) + '-' +
+    ('00' + date.getUTCDate()).slice(-2) + ' ' +
+    ('00' + date.getUTCHours()).slice(-2) + ':' +
+    ('00' + date.getUTCMinutes()).slice(-2) + ':' +
+    ('00' + date.getUTCSeconds()).slice(-2);
+console.log(date);
+	return date;
+};
+
 module.exports = function () {
     return {
         getQuestionsWithToken: function (req, res) {
@@ -68,7 +79,7 @@ module.exports = function () {
                 if (err) return res.status(500);
 
                 if(req.body[1] == 'closed'){
-                   connection.query('UPDATE surveys SET endDate = ? WHERE id= ?', [new Date(), req.body[0]],function(err, rows, fields) {
+                   connection.query('UPDATE surveys SET endDate = ? WHERE id= ?', [formatDate(new Date()), req.body[0]],function(err, rows, fields) {
                      connection.query('DELETE FROM tokens WHERE surveyId= ?', [req.body[0]],function(err, rows, fields) {
                          if (err) return res.status(500);
                          res.jsonp(rows);

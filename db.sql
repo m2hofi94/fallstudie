@@ -21,7 +21,7 @@ create table surveys (
   userID int not null,
   status varchar(100) not null,
   title varchar(100),
-  endDate datetime,
+  endDate timestamp default 0,
   created timestamp default now(),
   FOREIGN KEY (userID) REFERENCES users(id) ON DELETE CASCADE
 );

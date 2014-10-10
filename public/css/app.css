@@ -9,3 +9,8 @@
     
     float:right;
 }
+
+.navbar-brand {
+	color: white;
+	cursor: default;
+}
