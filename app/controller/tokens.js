@@ -4,15 +4,10 @@
 var connection = require('./../config/db.js')(100);
 var md5 = require('MD5');
 var mailer = require('nodemailer');
+var mailSettings = require('./../config/mail.js')();
 
 module.exports = function () {
-    var transporter = mailer.createTransport({
-        service: 'Gmail',
-        auth: {
-            user: 'anfesys@gmail.com',
-            pass: 'DaFSsi6Wfs!'
-        }
-    });
+    var transporter = mailer.createTransport(mailSettings);
 
     var sendMail = function(recipient, token, user, email, title){
         var body = 'Guten Tag,<br/><br/>' + user + ' hat Sie eingeladen, an der Umfrage ' + title + ' teilzunehmen.<br/><br/>Besuchen Sie zur Teilnahme die folgende Seite:<br><a href="http://afs.nunki.uberspace.de/#/participate/'+token+ '">http://afs.nunki.uberspace.de/#/participate/' +token+ '</a>';
