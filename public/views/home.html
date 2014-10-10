@@ -18,11 +18,19 @@
     <table class="table table-hover" ng-show="s[1].length != 0">
         <thead style="cursor:default">
             <tr>
-                <th width="1%">Gestartet</th>
-                <th width="10%" ng-hide="s[0] == 'Beendete Umfragen'"></th>
-                <th width="10%" ng-show="s[0] == 'Beendete Umfragen'">Beendet</th>
-                <th width="56%">Titel</th>
-                <th width="20%">Teilnahme</th>
+
+                <th width="15%">
+                    <span ng-switch on="s[0]">
+                        <span ng-switch-when="Entwurf">Letzte &Auml;nderung</span>
+                        <span ng-switch-when="Laufende Umfragen">Start</span>
+                        <span ng-switch-when="Beendete Umfragen">Start</span>
+                    </span>
+                </th>
+                <th width="15%" ng-hide="s[0] == 'Beendete Umfragen'"></th>
+                <th width="15%" ng-show="s[0] == 'Beendete Umfragen'">Ende</th>
+                <th>Titel</th>
+                <th width="25%" ng-show="s[0] == 'Entwurf'"></th>
+                <th width="25%" ng-hide="s[0] == 'Entwurf'">Teilnahme</th>
             </tr>
         </thead>
         <!-- for each survey in the sortedSurveys[x] - Array one tbody element -->
@@ -33,7 +41,8 @@
                     <td ng-hide="s[0] == 'Beendete Umfragen'"></td>
                     <td ng-show="s[0] == 'Beendete Umfragen'">{{survey.data.end}}</td>
                     <td>{{survey.data.title}}</td>
-                    <td>
+                    <td ng-show="s[0] == 'Entwurf'"></td>
+                    <td ng-hide="s[0] == 'Entwurf'">
                         <progressbar max="max" value="dynamic"><span style="color:white; white-space:nowrap;">{{dynamic}} / {{max}}</span></progressbar>
                     </td>
                 </tr>

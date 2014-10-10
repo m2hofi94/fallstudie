@@ -14,13 +14,13 @@ module.exports = function () {
         }
     });
 
-    var sendMail = function(recipient, token, user, email){
-        var body = 'Guten Tag,<br>' + user + ' l&auml;dt Sie ein, an einer Umfrage teilzunehmen.<br>Dazu klicken Sie bitte auf den unten stehenden Link<br><a href="http://afs.nunki.uberspace.de/#/participate/'+token+ '">Umfrage</a>';
+    var sendMail = function(recipient, token, user, email, title){
+        var body = 'Guten Tag,<br/><br/>' + user + ' hat Sie eingeladen, an der Umfrage ' + title + ' teilzunehmen.<br/><br/>Besuchen Sie zur Teilnahme die folgende Seite:<br><a href="http://afs.nunki.uberspace.de/#/participate/'+token+ '">http://afs.nunki.uberspace.de/#/participate/' +token+ '</a>';
 
         var mailOptions = {
-            from: user  + ' <' + email + '>',// sender address  'AnFeSys <AnFeSys@gmail.com>'
+            from: user  + ' via AnFeSys <' + email + '>',// sender address  'Hans Wurst via <AnFeSys@gmail.com>'
             to: recipient, // list of receivers
-            subject: 'Einladung zur Umfrage', // Subject line
+            subject: 'Einladung zur Umfrage ' + title, // Subject line
             // Text ggf. user Name hinzufügen
             html: body // html body
         };
@@ -51,29 +51,34 @@ module.exports = function () {
             console.log('IN METHODE PUBLISH INDIVIDUALLY -- ' + req.params.id);
             // req.params.id -> surveyID
             // Get E-Mails which are assigned to this survey
-            connection.query('SELECT * FROM recipients WHERE surveyID = ?', [req.params.id], function(err, rows, fields){
-                if (err) throw err;
-                console.log(rows.length);
+            connection.query('SELECT * FROM surveys WHERE id = ?', [req.params.id], function(err, rows, fields){
+                var survey = rows[0];
 
-                if(rows.length === 0){
-                    res.jsonp('No Recipients');
-                } else {
+                connection.query('SELECT * FROM recipients WHERE surveyID = ?', [req.params.id], function(err, rows, fields){
+                    if (err) throw err;
+                    console.log(rows.length);
 
-                    // for each E-Mail publish one token into the DB
-                    for(var i = 0; i < rows.length; i++){
-                        // TODO for each E-Mail-Address send an E-Mail to recipient
-                        // Create token with surveyID and random Number
-                        var hash = md5((Math.random() * req.params.id) + '');
-                        var u = req.user.title + ' ' + req.user.firstName + ' ' + req.user.lastName;
-                        console.log(rows[i].email + " .. " + hash + " .. " + u);
-                        sendMail(rows[i].email, hash, u, req.user.email);
+                    if(rows.length === 0){
+                        res.jsonp('No Recipients');
+                    } else {
 
-                        connection.query('INSERT INTO tokens SET surveyId = ?, token = ?', [req.params.id ,hash], function(err, rows, fields){
-                            if (err) throw err;
-                        });
+                        // for each E-Mail publish one token into the DB
+                        for(var i = 0; i < rows.length; i++){
+                            // TODO for each E-Mail-Address send an E-Mail to recipient
+                            // Create token with surveyID and random Number
+                            var hash = md5((Math.random() * req.params.id) + '');
+                            var u = req.user.title + ' ' + req.user.firstName + ' ' + req.user.lastName;
+                            console.log(rows[i].email + " .. " + hash + " .. " + u);
+                            sendMail(rows[i].email, hash, u, req.user.email, survey.title);
+
+                            connection.query('INSERT INTO tokens SET surveyId = ?, token = ?', [req.params.id ,hash], function(err, rows, fields){
+                                if (err) throw err;
+                            });
+                        }
+                        res.jsonp(rows);
                     }
-                    res.jsonp(rows);
-                }
+            });
+
             });
         },
 

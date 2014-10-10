@@ -10,9 +10,17 @@ angular.module('AnswerController', []).controller('AnswerCtrl', ['$scope', '$rou
     else
         $scope.title = Surveys.tempTitle;
 
+     $scope.exampleData = [
+                {
+                    "key": "Series 1",
+                    "values": [[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],[8,0],[9,0],[10,0]]
+                }];
     $scope.results = [];
     $scope.ratingResults = 0;
+    $scope.ratingValues = [];
     $scope.countRatings = 0;
+    $scope.minimum = 0;
+    $scope.maximum = 0;
 
     $scope.go = function (path) {
             $location.url(path);
@@ -55,6 +63,23 @@ angular.module('AnswerController', []).controller('AnswerCtrl', ['$scope', '$rou
         return $scope.tokenUrl;
     };
 
+
+    $scope.evaluate = function(){
+        $scope.ratingValues.sort(function(a,b){return a -b;});
+        var sum = 0;
+        for(var i = 0; i < $scope.ratingValues.length; i++){
+            $scope.exampleData[0].values[$scope.ratingValues[i]-1][1] +=1;
+            console.log($scope.exampleData[0].values[$scope.ratingValues[i]-1][1]);
+           sum +=  $scope.ratingValues[i];
+        }
+
+        $scope.testData = $scope.exampleData.slice();
+
+        $scope.minimum = $scope.ratingValues[0];
+        $scope.average = Math.round(sum / $scope.ratingValues.length * 100)/100;
+        $scope.maximum = $scope.ratingValues[$scope.ratingValues.length-1];
+    };
+
     $scope.getResults = function() {
         // $scope.getQuestions();
         Surveys.getQuestions($scope.token).success(function(data) {
@@ -72,16 +97,14 @@ angular.module('AnswerController', []).controller('AnswerCtrl', ['$scope', '$rou
                             if(data[i].questionID == $scope.results[j].id){
                                 console.log($scope.results[j].type);
                                 if($scope.results[j].type == 'Slider'){
-                                    $scope.countRatings++;
-                                    $scope.ratingResults += parseInt(data[i].value);
-                                    console.log($scope.ratingResults);
+                                    $scope.ratingValues.push(parseInt(data[i].value));
                                 } else {
                                     $scope.results[j].answers.push(data[i].value);
                                 }
                             }
                         }
                     }
-                    $scope.average = Math.round($scope.ratingResults / $scope.countRatings * 100)/100;
+                    $scope.evaluate();
                     // console.log($scope.results);
                 }
             }).error(function(err) {
@@ -91,6 +114,10 @@ angular.module('AnswerController', []).controller('AnswerCtrl', ['$scope', '$rou
             console.log(err);
         });
     };
+
+
+
+
     // init getQuestions if page is "Participate"
     if($location.$$path.indexOf('participate') != -1)
     $scope.getQuestions();

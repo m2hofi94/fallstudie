@@ -11,6 +11,13 @@
     "zeroclipboard": "~2.1.6",
     "ng-clip": "~0.2.3",
     "angular-xeditable": "~0.1.8",
-    "ng-tags-input": "~2.1.1"
+    "ng-tags-input": "~2.1.1",
+    "d3": "~3.4.12",
+    "nvd3": "~1.1.15-beta",
+    "angularjs-nvd3-directives": "~0.0.7"
+  },
+  "resolutions": {
+    "angular": "1.2.26",
+    "d3": "~3.3.13"
   }
 }

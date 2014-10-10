@@ -9,6 +9,7 @@ angular.module('afsApp', [
     'ui.bootstrap',
     'xeditable',
     'ngTagsInput',
+    'nvd3ChartDirectives',
 
     // Serivces
     'UserService',

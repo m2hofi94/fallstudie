@@ -9,3 +9,17 @@
     
     float:right;
 }
+
+.progress {
+    margin-bottom: 0 !important;
+}
+
+.nv-bar {
+    fill: #428bca !important;
+    stroke: #428bca !important;
+    stroke-opacity: 1 !important;
+}
+
+.discreteBar {
+ stroke-opacity: 1 !important;
+}

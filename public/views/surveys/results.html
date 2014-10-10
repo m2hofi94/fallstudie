@@ -2,26 +2,47 @@
 
 <div class="row col-md-10 col-md-offset-1">
     <h2 class="page-header">{{title}}</h2>
+
     <div ng-repeat="result in results" ng-hide="noAnswers">
-        <div class="panel panel-default" style="padding:5px">
-            <div>
-                <label>{{result.title}}</label>
+        <div class="panel panel-default">
+            <div class="panel-heading"><b>{{result.title}}</b></div>
+            <div class="panel-body">
+                <span ng-switch on="result.type">
+                    <span ng-switch-when="Slider">
+
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <nvd3-discrete-bar-chart
+                                    data="testData"
+                                    showXAxis="true"
+                                    showYAxis="true"
+                                    tooltips="true"
+                                    interactive="true">
+                                </nvd3-discrete-bar-chart>
+                            </li>
+                            <li class="list-group-item">Der <b>kleinste</b> Wert liegt bei {{minimum}}.</li>
+                            <li class="list-group-item">Der <b>durchschnittliche</b> Wert liegt bei {{average}}.</li>
+                            <li class="list-group-item">Der <b>gr&ouml;&szlig;te</b> Wert liegt bei {{maximum}}.</li>
+                        </ul>
+                    </span>
+                    <span ng-switch-when="TextArea">
+                        <ul class="list-group">
+                            <li ng-repeat="answer in result.answers track by $index" class="list-group-item">{{$index+1}}:&nbsp;{{answer}}</li>
+                        </ul>
+                    </span>
+                </span>
             </div>
-            <span ng-switch on="result.type">
-              <span ng-switch-when="Slider">
-                  Es wurden {{countRatings}} Antworten abgegeben,<br />
-                  Im Durchschnitt liegt der Wert bei  {{average}}.
-              </span>
-              <span ng-switch-when="TextArea">
-                <div ng-repeat="answer in result.answers track by $index">
-                    {{$index+1}}:&nbsp;{{answer}}
-                </div>
-              </span>
-            </span>
         </div>
     </div>
-    <div ng-show="noAnswers">
-        Es tut uns leid, aber es wurden keine Antworten zu den Umfragen abgegeben
+
+    <div ng-hide="noAnswers">
+        <p>
+            <span class="label label-primary">Die Umfrage hatte <b>{{ratingValues.length}}</b> Teilnehmer.</span>
+        </p>
     </div>
-    <button class="btn btn-default" data-ng-click="go('/home');">Zur&uuml;ck zur Startseite</button>
+
+    <div class="alert alert-warning" role="alert" ng-show="noAnswers"><b>Schade!</b><br/>Leider wurden zu der Umfrage keine Antworten abgegeben.</div>
+
+    <button class="btn btn-default" data-ng-click="go('/home');">Zur&uuml;ck</button>
+
 </div>
