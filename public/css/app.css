@@ -23,3 +23,7 @@
 .discreteBar {
  stroke-opacity: 1 !important;
 }
+.navbar-brand {
+	color: white;
+	cursor: default;
+}

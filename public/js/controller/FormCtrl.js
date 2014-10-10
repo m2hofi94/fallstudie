@@ -144,16 +144,15 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
 
             $scope.survey = [$scope.title, $scope.fields, status, $scope.recipient];
             Surveys.createSurvey($scope.survey).success(function(data){
-                if(status == 'draft'){
+				if(status == 'draft'){
                     $location.url('/home');
                 } else {
                     if($scope.emails !== ''){
-                        setTimeout(function(){Surveys.publishSurvey(data.insertId).success(function(data){
-                                $location.url('/home');
-                            }).error(function(err){
-                                console.log(err);
-                            });
-                         }, 500);
+                        Surveys.publishSurvey(data.insertId).success(function(data){
+							$location.url('/home');
+						}).error(function(err){
+							console.log(err);
+						});
                     } else {
                         Surveys.publishSurveyOpen(data.insertId).success(function(data){
                             console.log(data);
