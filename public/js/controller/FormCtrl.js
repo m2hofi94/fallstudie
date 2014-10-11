@@ -6,8 +6,7 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
     $scope.init = function() {
         $scope.checkMessage = '';
         $scope.authentication = Authentication;
-        // for "Teilnehmer" Radio Button
-        $scope.content = 'option1';
+
         $scope.title = '';
         $scope.emails = '';
         // Standard Value for new survey
@@ -42,24 +41,16 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
             {value: new Date()},
             {value: new Date()}
         ];
-
-        if(Surveys.idToEdit != -1){
-            // $scope.inEditMode = true;
-            $scope.title = Surveys.tempTitle;
-            $scope.edit(Surveys.idToEdit); 
-            console.log("edit " + Surveys.idToEdit);
-            
-            // Surveys.tempTitle = '';
-            // Surveys.idToEdit = -1;
-            // $scope.inEditMode = false;
-        
-        }else {
-            $scope.fields = $scope.standardQuestions.slice();
-        }
         $scope.today();
         $scope.toggleMin();
 
-
+        if(Surveys.idToEdit != -1){
+            $scope.toEdit = true;
+            $scope.title = Surveys.tempTitle;
+            $scope.edit(Surveys.idToEdit);
+        }else {
+            $scope.fields = $scope.standardQuestions.slice();
+        }
     };
 
     $scope.today = function (date) {
@@ -96,8 +87,7 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
 
     $scope.edit = function(id){
         Surveys.getQuestions(id)
-        .success(function(data){  
-             console.log(data);
+        .success(function(data){
              $scope.fields = data;
              for(var i = 0; i < $scope.fields; i++){
                 if($scope.fields[i].type === 'Slider'){
@@ -106,7 +96,6 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
              }
             Surveys.getRecipients(id)
             .success(function(data){
-                 console.log(data);
                  var mail = data;
                  for(var i = 0; i < mail.length; i++){
                     $scope.emails +=  mail[i].email + ';';
@@ -123,52 +112,69 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
     
     $scope.submit = function(status) {
         if($scope.checkFields()){
-            if(Surveys.idToEdit != -1 && !Surveys.restart){
-                Surveys.deleteSurvey(Surveys.idToEdit).success(function (data){
-                }).error(function(data){
-
-                });
-                Surveys.idToEdit = -1;
-            }
-            Surveys.restart = false;
-
             if($scope.emails !== ''){
                 $scope.recipient = $scope.emails.split(';');
+                $scope.deletedEmails = [];
                 for(var i = 0; i < $scope.recipient.length; i++){
+                    $scope.recipient[i] = $scope.recipient[i].replace(/(^\s+|\s+$)/g,'');
                     if(!$scope.recipient[i].match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)){
-                        $scope.recipient.splice(i,1);
+                        $scope.deletedEmails.push($scope.recipient.splice(i,1));
                         i--;
                     }
-                }
-            }
-
-            $scope.survey = [$scope.title, $scope.fields, status, $scope.recipient];
-            Surveys.createSurvey($scope.survey).success(function(data){
-				if(status == 'draft'){
-                    $location.url('/home');
-                } else {
-                    if($scope.emails !== ''){
-                        Surveys.publishSurvey(data.insertId).success(function(data){
-							$location.url('/home');
-						}).error(function(err){
-							console.log(err);
-						});
-                    } else {
-                        Surveys.publishSurveyOpen(data.insertId).success(function(data){
-                            console.log(data);
-                            data = data.replace('"','');
-                            data = data.replace('"','');
-                            $location.url('/publish/' + data);
-                        }).error(function(err){
-                            console.log(err);
-                        });
-                    }
 
                 }
-            }).error(function(err){
+                $scope.submitToDb(status);
+        } else {
+            console.log(status);
+            var later = status == 'draft' ? 'sp&auml;ter' : '';
+            var modalInstance = $modal.open({
+            template: '<div class="modal-body"><p>Es wurden keine Teilnehmer angegeben. Möchten Sie die Umfrage ' + later + ' für jeden freischalten</p></div><div class="modal-footer"><button class="btn btn-default" ng-click="$dismiss()">Cancel</button><button class="btn btn-danger" ng-click="$close()">OK</button></div>',
+                size: 'sm',
+            scope: $scope
+            });
 
+            modalInstance.result.then(function () {
+                $scope.submitToDb(status);
+            }, function () {
+                console.log('Modal dismissed at: ' + new Date());
             });
         }
+        }
+    };
+
+    $scope.submitToDb = function(status){
+        if(Surveys.idToEdit != -1 && !Surveys.restart){
+            Surveys.deleteSurvey(Surveys.idToEdit).success(function (data){
+            }).error(function(data){
+            });
+            Surveys.idToEdit = -1;
+        }
+            Surveys.restart = false;
+      $scope.survey = [$scope.title, $scope.fields, status, $scope.recipient];
+                Surveys.createSurvey($scope.survey).success(function(data){
+                    if(status == 'draft'){
+                        $location.url('/home');
+                    } else {
+                        if($scope.emails !== ''){
+                            Surveys.publishSurvey(data.insertId).success(function(data){
+                                $location.url('/home');
+                            }).error(function(err){
+                                console.log(err);
+                            });
+                        } else {
+                            Surveys.publishSurveyOpen(data.insertId).success(function(data){
+                                data = data.replace('"','');
+                                data = data.replace('"','');
+                                $location.url('/publish/' + data);
+                            }).error(function(err){
+                                console.log(err);
+                            });
+                        }
+
+                    }
+                }).error(function(err){
+
+                });
     };
 
     $scope.togglePreview = function() {
@@ -185,6 +191,12 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
           $scope.checkMessage = 'Die Umfrage muss mindestens eine Frage enthalten';
           return false;
       } else {
+          for(var i = 0; i < $scope.fields.length; i++){
+            if($scope.fields[i].title === ''){
+                $scope.checkMessage = 'Jede Frage muss einen Titel enthalten';
+                return false;
+              }
+          }
         return true;
       }
     };

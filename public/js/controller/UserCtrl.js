@@ -11,11 +11,6 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', '$modal',
             Users.changedUserAlert = false;
         }
         $scope.user = Authentication.user();
-        //$scope.editableForm = {};
-        //$scope.editableForm.$show();
-        $scope.stars = [false, true];
-        $scope.emptyStars = new Array(5);
-        $scope.filledStars = new Array(5);
 
         if (typeof $scope.user !== 'undefined' && $scope.user !== null)
             $scope.updatedUser = {
@@ -27,12 +22,6 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', '$modal',
                 password: $scope.user.password
             };
 
-        $scope.changeRating = function (index) {
-            console.log("change rating " + index);
-            for (var i = 0; i < index; i++) {
-                $scope.stars[i] = true;
-            }
-        };
 
         // Use name / value pairs because "Kein Titel" needs empty String as value in Database
         $scope.titles = [
@@ -164,4 +153,15 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', '$modal',
            console.log('Modal dismissed at: ' + new Date());
        });
     };
-}]);
+
+        $scope.emailPass = '';
+        $scope.resetPassword = function () {
+            Users.resetPassword({email : $scope.emailPass}).success(function (data) {
+                console.log(data);
+                $scope.result.message = 'Ihr Passwort wurde erfolgreich zurückgesetzt';
+                $scope.forgotPassword = false;
+            }).error(function (err) {
+                $scope.result.message = 'Diese E-Mail-Adresse ist uns nicht bekannt';
+            });
+        };
+    }]);

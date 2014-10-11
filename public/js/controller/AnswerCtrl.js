@@ -4,13 +4,13 @@
 angular.module('AnswerController', []).controller('AnswerCtrl', ['$scope', '$routeParams', 'Surveys', '$location', function ($scope, $routeParams, Surveys, $location) {
     $scope.token = $routeParams.token;
     $scope.tokenUrl = $location.$$absUrl.replace('publish', 'participate');
-    console.log($routeParams.title);
+
     if(typeof $routeParams.title !== 'undefined')
         $scope.title = $routeParams.title;
     else
         $scope.title = Surveys.tempTitle;
 
-     $scope.exampleData = [
+    $scope.exampleData = [
                 {
                     "key": "Series 1",
                     "values": [[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],[8,0],[9,0],[10,0]]
@@ -49,9 +49,7 @@ angular.module('AnswerController', []).controller('AnswerCtrl', ['$scope', '$rou
     $scope.send = function() {
        var body = [$scope.token, $scope.fields, $scope.surveyID];
        Surveys.submitSurvey(body).success(function(data) {
-
            Surveys.tempTitle = $scope.title;
-           console.log(Surveys.tempTitle);
            $location.url('/thanks');
        }).error(function(err) {
            console.log(err);
@@ -114,9 +112,6 @@ angular.module('AnswerController', []).controller('AnswerCtrl', ['$scope', '$rou
             console.log(err);
         });
     };
-
-
-
 
     // init getQuestions if page is "Participate"
     if($location.$$path.indexOf('participate') != -1)

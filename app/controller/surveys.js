@@ -17,12 +17,10 @@ console.log(date);
 module.exports = function () {
     return {
         getQuestionsWithToken: function (req, res) {
-            connection.query('SELECT * FROM tokens WHERE token = ?', [req.params.token], function (err, rows, fields) {
-                console.log(rows);
+            connection.query('SELECT * FROM tokens WHERE token = ? AND valid = true', [req.params.token], function (err, rows, fields) {
                 if (err) throw err;
                 if(rows.length > 0){
                     var result = rows[0];
-                    // console.log(result);
                     connection.query('SELECT * FROM surveys WHERE id = ?', [result.surveyID], function (err, rows, fields) {
                         if (err) throw err;
                         var title = rows[0].title;
@@ -42,17 +40,34 @@ module.exports = function () {
         },
 
         getSurveys: function (req, res) {
+            var count = {recipients : [], answers : []};
             connection.query('SELECT * FROM surveys WHERE userID = ?', [req.user.id], function (err, rows, fields) {
-
-                // console.log(rows);
                 if (err) throw err;
-                res.jsonp(rows);
+                var selStatement = '';
+                for(var i = 0; i < rows.length; i++){
+                    selStatement = selStatement + 'SELECT * FROM tokens WHERE surveyID = ' + rows[i].id + ';';
+				}
+                connection.query(selStatement, function(err, rows2, fields){
+                        console.log(rows2);
+                        if(rows2.length == 1)
+                            rows2 = [rows2];
+                        if (err) throw err;
+                        for(var j = 0; j < rows2.length; j++){
+                            count.answers[j] = 0;
+                            for(var k = 0; k < rows2[j].length; k++){
+                                if(!rows2[j][k].valid)
+                                 count.answers[j]++;
+                            }
+                            count.recipients[j] = rows2[j].length;
+                        console.log(count);
+                        }
+                        res.jsonp({surveys : rows, count : count});
+                 });
             });
         },
         
         getQuestions : function (req, res) {
             connection.query('SELECT * FROM questions WHERE surveyID = ?', [req.params.id], function (err, rows, fields) {
-                // console.log(rows);
                 if (err) throw err;
                 res.jsonp(rows);
             });
@@ -60,7 +75,6 @@ module.exports = function () {
 
         getAnswers : function (req, res) {
             connection.query('SELECT * FROM answers WHERE surveyID = ?', [req.params.id], function (err, rows, fields) {
-                // console.log(rows);
                 if (err) throw err;
                 res.jsonp(rows);
             });
@@ -68,7 +82,6 @@ module.exports = function () {
 
         getRecipients : function (req, res) {
             connection.query('SELECT * FROM recipients WHERE surveyID = ?', [req.params.id], function (err, rows, fields) {
-                // console.log(rows);
                 if (err) throw err;
                 res.jsonp(rows);
             });
@@ -80,7 +93,7 @@ module.exports = function () {
 
                 if(req.body[1] == 'closed'){
                    connection.query('UPDATE surveys SET endDate = ? WHERE id= ?', [formatDate(new Date()), req.body[0]],function(err, rows, fields) {
-                     connection.query('DELETE FROM tokens WHERE surveyId= ?', [req.body[0]],function(err, rows, fields) {
+                     connection.query('UPDATE tokens SET valid = false WHERE surveyId= ?', [req.body[0]],function(err, rows, fields) {
                          if (err) return res.status(500);
                          res.jsonp(rows);
                      });
@@ -99,12 +112,10 @@ module.exports = function () {
         },
 
         createSurvey: function (req, res) {
-            console.log(req.body);
             // Insert into table surveys, questions into table questions and then the recipients
             var survey = {userID : req.user.id, title : req.body[0], status : req.body[2]};
             connection.query('INSERT INTO surveys SET ?', [survey], function(err, rows, fields) {
                 if (err) throw err;
-				console.log(rows);
                 var surveyId = rows.insertId;
 				var qInsStatement = '';
 				for(var i = 0; i < req.body[1].length; i++){
@@ -117,9 +128,7 @@ module.exports = function () {
 						rInsStatement = rInsStatement + 'INSERT INTO recipients SET email="' + req.body[3][j] + '",surveyId=' + rows.insertId + ';';
 					}
 				}
-                console.log(req.body[3]);
 				var finalStatement = qInsStatement + rInsStatement;
-			console.log(finalStatement);
 				connection.query(finalStatement, function(err, rows, fields){
 				   if(err) throw err;
 

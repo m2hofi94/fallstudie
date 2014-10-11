@@ -26,6 +26,10 @@ angular.module('UserService', []).factory('Users', ['$http', function($http) {
 			return $http.delete('/api/users/' + id);
 		},
 
+        resetPassword : function(email){
+            return $http.put('/api/resetPassword', email);
+        },
+
         changedUserAlert : false
 	};
 

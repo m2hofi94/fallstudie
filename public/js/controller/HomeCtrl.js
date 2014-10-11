@@ -1,11 +1,9 @@
 /*globals angular */
 'use strict';
 
-angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys', '$http', '$location',
-    function ($scope, Surveys, $http, $location) {
+angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys', '$modal', '$http', '$location',
+    function ($scope, Surveys, $modal, $http, $location) {
         Surveys.idToEdit = -1;
-        $scope.dynamic = 0;
-        $scope.max = 50;
         $scope.activeSurvey = {
             isCollapsed: true
         };
@@ -29,33 +27,38 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
         $scope.getSurveys = function () {
             // Get all Surveys for specific user
             Surveys.getSurveys().success(function (data) {
-                $scope.surveys = data;
+                // console.log(data);
+                $scope.surveys = data.surveys;
                 // Depending on status the survey is saved in the approriate index in the sortedSurveys-Array
                 for (var i = 0; i < $scope.surveys.length; i++) {
-                    var date = new Date(data[i].created);
+                    var date = new Date($scope.surveys[i].created);
                     $scope.surveys[i].start  = date.toLocaleDateString();
-                    date = new Date(data[i].endDate);
+                    date = new Date($scope.surveys[i].endDate);
                     $scope.surveys[i].end = date.toLocaleDateString();
 
+                    // $scope.surveys[i].countOfAnswers = Surveys.getCountOfAnswers($scope.surveys[i].id);
                     if ($scope.surveys[i].status == 'draft')
                         $scope.sortedSurveys[0][1].push({
                             data: $scope.surveys[i],
-                            isCollapsed: true
+                            isCollapsed: true,
                         });
                     else if ($scope.surveys[i].status == 'active'){
                         $scope.sortedSurveys[1][1].push({
                                 data: $scope.surveys[i],
-                                isCollapsed: true
+                                isCollapsed: true,
+                                recipients: data.count.recipients[i],
+                                answers: data.count.answers[i]
                             });
-                        if(date > new Date(0) && date < new Date()){
+                        if((date > new Date(0) && date < new Date()) || (data.count.recipients[i] == data.count.answers[i])){
                             // close latest entry in sortedSurveys[1][1]
                             $scope.close($scope.sortedSurveys[1][1].length-1);
-
                         }
                     } else if ($scope.surveys[i].status == 'closed')
                         $scope.sortedSurveys[2][1].push({
                             data: $scope.surveys[i],
-                            isCollapsed: true
+                            isCollapsed: true,
+                            recipients: data.count.recipients[i],
+                            answers: data.count.answers[i]
                         });
                 }
             }).error(function (err) {
@@ -135,14 +138,25 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
         };
 
         $scope.delete = function (firstIndex, secondIndex) {
-            // Delete Survey in surveys, and delete entries in tokens and questions
+            var modalInstance = $modal.open({
+            template: '<div class="modal-body"><p>M&ouml;chten Sie die Umfrage endg&uuml;ltig l&ouml;schen?</p></div><div class="modal-footer"><button class="btn btn-default" ng-click="$dismiss()">Cancel</button><button class="btn btn-danger" ng-click="$close()">OK</button></div>',
+            size: 'sm',
+            scope: $scope
+        });
+
+        modalInstance.result.then(function () {
             var surveys = $scope.sortedSurveys[firstIndex][1];
             Surveys.deleteSurvey(surveys[secondIndex].data.id)
                 .success(function (data) {
+                    console.log("Delete");
+                    $scope.alert = 'Die Umfrage wurde erfolgreich gelöscht';
                     $scope.sortedSurveys[firstIndex][1].splice(secondIndex, 1);
                 }).error(function (err) {
                     console.log(err);
                 });
+           }, function () {
+               console.log('Modal dismissed at: ' + new Date());
+           });
         };
 
 }]);

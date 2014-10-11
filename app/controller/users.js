@@ -3,8 +3,33 @@
 
 var passwordHash = require('password-hash');
 var connection = require('./../config/db.js')(100);
+var mailer = require('nodemailer');
+var mailSettings = require('./../config/mail.js')();
 
 module.exports = function(passport) {
+    var transporter = mailer.createTransport(mailSettings);
+
+    var sendMail = function(recipient, pass){
+        var body = 'Guten Tag,<br/><br/>Ihr Passwort f&uuml;r die Seite afs.nunki.uberspace.de wurde erfolgreich zur&uuml;ckgesetzt.<br/>Sie k&ouml;nnen sich nun mit dem Passwort "' + pass + '" anmelden.' ;
+
+        var mailOptions = {
+            from: 'AnFeSys <' + mailSettings.auth.user + '>',// sender address  'Hans Wurst via <AnFeSys@gmail.com>'
+            to: recipient, // list of receivers
+            subject: 'Ihr Passwort wurde zurückgesetzt', // Subject line
+            // Text ggf. user Name hinzufügen
+            html: body // html body
+        };
+
+        // send mail with defined transport object
+        transporter.sendMail(mailOptions, function(error, info){
+            if(error){
+                console.log(error);
+            }else{
+                console.log('Message sent: ' + info.response);
+            }
+        });
+    };
+
     return {
         list: function(req, res) {
             connection.query('SELECT * FROM users', function(err, rows, fields) {
@@ -15,7 +40,6 @@ module.exports = function(passport) {
 
         create: function(req, res) {
             req.body.password =  passwordHash.generate(req.body.password);
-            console.log(req.body);
 
             connection.query('INSERT INTO users SET ?', [req.body],function(err, rows, fields) {
                 if (err) {
@@ -37,7 +61,6 @@ module.exports = function(passport) {
         },
 
         update: function(req, res) {
-            console.log(req.body.passwordToChange);
             if(typeof req.body.passwordToChange != 'undefined')
                 req.body.password = passwordHash.generate(req.body.passwordToChange);
 
@@ -49,7 +72,6 @@ module.exports = function(passport) {
                          };
 
             connection.query('UPDATE users SET ? WHERE id= ?', [values, req.body.id],function(err, rows, fields) {
-                console.log(rows);
                 if (err) return res.status(500);
                 res.jsonp(rows);
             });
@@ -120,6 +142,27 @@ module.exports = function(passport) {
                     return res.send(result);
                 });
           })(req, res, next);
+        },
+
+        resetPassword : function(req, res) {
+            var text = "";
+            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+
+            for( var i=0; i < 10; i++ )
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+            var data = {password : passwordHash.generate(text)};
+
+            connection.query('UPDATE users SET ? WHERE email = ?', [data, req.body.email], function(err, rows, fields){
+                if(err) throw err;
+
+                if(rows.affectedRows !== 0){
+                    sendMail(req.body.email, text);
+                    res.status(200).jsonp(rows);
+                } else {
+                    res.status(418).jsonp(rows);
+                }
+            });
+
         },
     };
 };

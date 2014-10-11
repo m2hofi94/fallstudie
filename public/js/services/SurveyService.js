@@ -51,6 +51,10 @@ angular.module('SurveyService', []).factory('Surveys', ['$http', function($http)
             return $http.post('/api/submit/', surveyData);
         },
 
+        getCountOfAnswers : function(id){
+            return $http.get('/api/tokens/' + id);
+        },
+
         tempTitle : '',
         idToEdit : -1,
         restart: false

@@ -39,7 +39,6 @@ module.exports = function (passport) {
             passReqToCallback: true // allows us to pass back the entire request to the callback
         },
         function (req, email, password, done) {
-             console.log(req.body);
             // find a user whose email is the same as the forms email
             // we are checking to see if the user trying to login already exists
             connection.query("select * from users where email = '" + email + "'", function (err, rows) {
@@ -83,13 +82,11 @@ module.exports = function (passport) {
             connection.query("SELECT * FROM `users` WHERE `email` = '" + email + "'", function (err, rows) {
                 if (err) {return done(err);}
 
-                console.log(rows.length);
                 if (!rows.length) {
                     req.loginMessage='Die eingegebene E-Mail-Adresse oder das Passwort ist falsch.';
                     return done(null, false);
                 }
 
-                console.log(passwordHash.verify(password, rows[0].password));
                 // if the user is found but the password is wrong
                 if (!passwordHash.verify(password, rows[0].password)) {
                     req.loginMessage = 'Die eingegebene E-Mail-Adresse oder das Passwort ist falsch.';

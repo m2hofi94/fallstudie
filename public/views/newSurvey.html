@@ -1,6 +1,7 @@
 <div ng-hide="preview">
     <div class="row col-md-10 col-md-offset-1">
-        <h1 class="page-header">Neue Umfrage erstellen</h1>
+        <h1 class="page-header" ng-show="toEdit">Umfrage bearbeiten</h1>
+        <h1 class="page-header" ng-hide="toEdit">Neue Umfrage erstellen</h1>
     </div>
 
     <div class="row col-md-10 col-md-offset-1">

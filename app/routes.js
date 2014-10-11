@@ -15,6 +15,7 @@ module.exports = function(express, passport) {
     router.put('/users', loggedIn, users.update);
     router.delete('/users/:userId', loggedIn, users.delete);
     router.delete('/deleteUser/:userId', loggedIn, users.deleteUser);
+    router.put('/resetPassword', users.resetPassword);
 
     //*******************Login/Signup*******************************
 	router.post('/login', users.login);
@@ -28,13 +29,14 @@ module.exports = function(express, passport) {
     router.get('/getRecipients/:id', loggedIn, surveys.getRecipients);
     router.post('/surveys', loggedIn, surveys.createSurvey);
     router.get('/surveys', loggedIn, surveys.getSurveys);
-    router.put('/surveys', surveys.changeStatus);
-    router.delete('/surveys/:id', surveys.deleteSurvey);
+    router.put('/surveys', loggedIn, surveys.changeStatus);
+    router.delete('/surveys/:id', loggedIn ,surveys.deleteSurvey);
 
     //******************Create Token********************************
-    router.post('/tokensOpen/:id', tokens.publishOpen);
+    router.post('/tokensOpen/:id', loggedIn, tokens.publishOpen);
     router.post('/tokens/:id', loggedIn, tokens.publishIndividually);
     router.post('/submit', tokens.takePart);
+    router.get('/tokens/:id', loggedIn, tokens.getCountOfAnswers);
 
     //function to check if user is logged in
     //sends a 401 if unsuccessfull

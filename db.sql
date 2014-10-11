@@ -1,10 +1,12 @@
 use afs;
-drop table if exists users;
-drop table if exists surveys;
-drop table if exists questions;
+
 drop table if exists tokens;
 drop table if exists answers;
 drop table if exists recipients;
+drop table if exists questions;
+drop table if exists surveys;
+drop table if exists users;
+
 
 create table users (
   id int not null auto_increment primary key,
@@ -40,7 +42,7 @@ create table tokens (
   surveyID int not null,
   token varchar(100) not null,
   keepAfterUse boolean not null default 0,
-  FOREIGN KEY (surveyID) REFERENCES surveys(id) ON DELETE CASCADE
+  valid boolean not null default 1
 );
 
 create table recipients (
@@ -58,6 +60,3 @@ create table answers(
   FOREIGN KEY (surveyID) REFERENCES surveys(id) ON DELETE CASCADE,
   FOREIGN KEY (questionID) REFERENCES questions(id) ON DELETE CASCADE
 );
-
-SELECT * FROM answers;
-SELECT * FROM tokens;
