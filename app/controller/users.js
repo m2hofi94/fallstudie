@@ -31,13 +31,6 @@ module.exports = function(passport) {
     };
 
     return {
-        list: function(req, res) {
-            connection.query('SELECT * FROM users', function(err, rows, fields) {
-              if (err) throw err;
-              res.jsonp(rows);
-            });
-        },
-
         create: function(req, res) {
             req.body.password =  passwordHash.generate(req.body.password);
 
@@ -53,13 +46,6 @@ module.exports = function(passport) {
             });
         },
 
-        read: function(req, res) {
-            connection.query('SELECT * FROM users WHERE id = ?', [req.params.userId],function(err, rows, fields) {
-                if (err) return res.status(500);
-                res.jsonp(rows);
-            });
-        },
-
         update: function(req, res) {
             if(typeof req.body.passwordToChange != 'undefined')
                 req.body.password = passwordHash.generate(req.body.passwordToChange);
@@ -72,13 +58,6 @@ module.exports = function(passport) {
                          };
 
             connection.query('UPDATE users SET ? WHERE id= ?', [values, req.body.id],function(err, rows, fields) {
-                if (err) return res.status(500);
-                res.jsonp(rows);
-            });
-        },
-
-        delete: function(req, res) {
-            connection.query('DELETE FROM users WHERE id = ?', [req.params.userId],function(err, rows, fields) {
                 if (err) return res.status(500);
                 res.jsonp(rows);
             });

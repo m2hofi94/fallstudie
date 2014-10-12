@@ -31,6 +31,12 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
                 $scope.surveys = data.surveys;
                 // Depending on status the survey is saved in the approriate index in the sortedSurveys-Array
                 for (var i = 0; i < $scope.surveys.length; i++) {
+                    var openSurvey = false;
+                    if(data.count.recipients[i] === 0){
+                        console.log(i + ': rec = 0');
+                        data.count.recipients[i] = data.count.answers[i];
+                        openSurvey = true;
+                    }
                     var date = new Date($scope.surveys[i].created);
                     $scope.surveys[i].start  = date.toLocaleDateString();
                     date = new Date($scope.surveys[i].endDate);
@@ -47,9 +53,10 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
                                 data: $scope.surveys[i],
                                 isCollapsed: true,
                                 recipients: data.count.recipients[i],
-                                answers: data.count.answers[i]
+                                answers: data.count.answers[i],
+                                open : openSurvey
                             });
-                        if((date > new Date(0) && date < new Date()) || (data.count.recipients[i] == data.count.answers[i])){
+                        if((date > new Date(0) && date < new Date()) || (!openSurvey && (data.count.recipients[i] == data.count.answers[i]))){
                             // close latest entry in sortedSurveys[1][1]
                             $scope.close($scope.sortedSurveys[1][1].length-1);
                         }
@@ -58,7 +65,8 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
                             data: $scope.surveys[i],
                             isCollapsed: true,
                             recipients: data.count.recipients[i],
-                            answers: data.count.answers[i]
+                            answers: data.count.answers[i],
+                            open : openSurvey
                         });
                 }
             }).error(function (err) {

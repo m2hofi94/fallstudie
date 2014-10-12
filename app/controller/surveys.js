@@ -15,9 +15,19 @@ console.log(date);
 };
 
 module.exports = function () {
+    Array.prototype.contains = function(obj) {
+        var i = this.length;
+        while (i--) {
+            if (this[i] === obj) {
+                return true;
+            }
+        }
+        return false;
+    };
+
     return {
         getQuestionsWithToken: function (req, res) {
-            connection.query('SELECT * FROM tokens WHERE token = ? AND valid = true', [req.params.token], function (err, rows, fields) {
+            connection.query('SELECT * FROM tokens WHERE token = ? AND valid = true AND used = false', [req.params.token], function (err, rows, fields) {
                 if (err) throw err;
                 if(rows.length > 0){
                     var result = rows[0];
@@ -43,26 +53,50 @@ module.exports = function () {
             var count = {recipients : [], answers : []};
             connection.query('SELECT * FROM surveys WHERE userID = ?', [req.user.id], function (err, rows, fields) {
                 if (err) throw err;
-                var selStatement = '';
-                for(var i = 0; i < rows.length; i++){
-                    selStatement = selStatement + 'SELECT * FROM tokens WHERE surveyID = ' + rows[i].id + ';';
-				}
-                connection.query(selStatement, function(err, rows2, fields){
-                        console.log(rows2);
-                        if(rows2.length == 1)
-                            rows2 = [rows2];
+                var selStatementRec = '';
+                var selStatementAns = '';
+                // Need to do it this way, because when using mutliple single select statements in a for loop, response is sent before
+                // every statement has been executed
+                if(rows.length > 0){
+                    for(var i = 0; i < rows.length; i++){
+                        selStatementRec = selStatementRec + 'SELECT * FROM recipients WHERE surveyID = ' + rows[i].id + ';';
+                        selStatementAns = selStatementAns + 'SELECT * FROM answers WHERE surveyID = ' + rows[i].id + ';';
+                    }
+                    connection.query(selStatementRec, function(err, rows2, fields){
                         if (err) throw err;
-                        for(var j = 0; j < rows2.length; j++){
-                            count.answers[j] = 0;
-                            for(var k = 0; k < rows2[j].length; k++){
-                                if(!rows2[j][k].valid)
-                                 count.answers[j]++;
+                        // if rows.length == 1 --> rows2 looks like [ .. ]
+                        // if rows.length >= 2 --> rows2 looks lkie [ [..],[..] ]
+
+                        // Get count of recipients // if 0 survey is open for everyone
+                        var rec = [];
+                        if(rows.length == 1)
+                            rows2 = [rows2];
+                        for(var j = 0; j < rows2.length; j++)
+                            rec[j] = rows2[j].length;
+
+                        connection.query(selStatementAns, function(err, rows3, fields){
+                            if (err) throw err;
+                            var ans = [];
+                            if(rows.length == 1)
+                                rows3 = [rows3];
+                            for(var j = 0; j < rows3.length; j++){
+                                // get count of answers divided by count of questions for this survey
+                                var count = [];
+                                for(var k = 0; k < rows3[j].length; k++){
+                                    if(!count.contains(rows3[j][k].questionID))
+                                       count.push(rows3[j][k].questionID);
+                                }
+                                ans[j] = rows3[j].length / count.length;
                             }
-                            count.recipients[j] = rows2[j].length;
-                        console.log(count);
-                        }
-                        res.jsonp({surveys : rows, count : count});
-                 });
+                            console.log(rec);
+                            res.jsonp({surveys : rows, count : {recipients : rec, answers : ans}});
+                        });
+
+                    });
+                }
+
+
+                // res.jsonp({surveys : rows, count : count, multiple : false});
             });
         },
         
@@ -107,7 +141,9 @@ module.exports = function () {
         deleteSurvey: function(req, res) {
             connection.query('DELETE FROM surveys WHERE id = ?', [req.params.id],function(err, rows, fields) {
                 if (err) return res.status(500);
-                res.jsonp(rows);
+                connection.query('UPDATE tokens SET valid = 0 WHERE surveyID = ?', [req.params.id], function(err, rows, fields){
+                    res.jsonp(rows);
+                });
             });
         },
 
@@ -139,3 +175,36 @@ module.exports = function () {
 
     };
 };
+
+/*
+                var selStatement = '';
+
+                // Need to do it this way, because when using mutliple single select statements in a for loop, response is sent before
+                // every statement has been executed
+                if(rows.length > 0){
+                    for(var i = 0; i < rows.length; i++){
+                        selStatement = selStatement + 'SELECT * FROM tokens WHERE surveyID = ' + rows[i].id + ';';
+                    }
+                    connection.query(selStatement, function(err, rows2, fields){
+                        if (err) throw err;
+                        console.log(rows2);
+                        var multiple = false;
+                        // if only one token in db, rows2 looks [..], otherwise it is multidimensional [ [..], [..] ]
+                        if(rows2.length == 1){
+                            multiple = rows2[0].keepAfterUse;
+                            rows2 = [rows2];
+                        }
+                        for(var j = 0; j < rows2.length; j++){
+                            count.answers[j] = 0;
+                            for(var k = 0; k < rows2[j].length; k++){
+                                if(rows2[j][k].used)
+                                 count.answers[j]++;
+                            }
+                            count.recipients[j] = rows2[j].length;
+
+                        }
+                        console.log(count);
+                        res.jsonp({surveys : rows, count : count, multiple : multiple});
+                     });
+                 }
+*/

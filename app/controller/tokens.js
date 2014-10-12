@@ -72,34 +72,36 @@ module.exports = function () {
             });
         },
 
-        getCountOfAnswers : function(req, res){
-
-            connection.query('SELECT * FROM tokens WHERE valid = true AND surveyID = ?', [req.params.id], function(err, rows, fields){
-                if (err) throw err;
-                console.log(rows);
-                res.jsonp(rows);
-            });
-
-        },
-
         takePart : function(req, res){
             // req.body[0] = token
             // req.body[1] = answers
             // req.body[2] = surveyID
             // req.body[3] = questionID
-            connection.query('UPDATE tokens SET valid = ? WHERE token = ? AND keepAfterUse = ?', [false, req.body[0], false], function(err, rows, fields){
-                if (err) throw err;
-                console.log(rows);
-                if(rows.changedRows !== 0){
-                    for(var i = 0; i < req.body[1].length; i++){
-                        var v = (req.body[1][i].type === 'Slider') ? req.body[1][i].rate : req.body[1][i].input;
-                        var answer = {value : v, surveyID : req.body[2], questionID : req.body[1][i].id};
-                        connection.query('INSERT INTO answers SET ?', [answer], function(err, rows, fields){
-                            if (err) throw err;
-                        });
-                    }
+            if(req.body[1] === null){
+                return;
+            }
+
+            // Need keep and keepValid to decide if token can only be used once (then recipients contains at least one email)
+            // or multiple times (recipients contains no email for this survey) -> keep = true, keepValid = true
+            connection.query('SELECT * FROM recipients WHERE surveyID = ?', [req.body[2]], function(err, rows, fields){
+                var keep = false;
+                if(rows.length == 0){
+                    keep = true;
                 }
-                res.jsonp(rows);
+                connection.query('UPDATE tokens SET used = ? WHERE token = ? AND keepAfterUse = ?', [!keep, req.body[0], keep], function(err, rows, fields){
+                    if (err) throw err;
+                    console.log(rows);
+                    if(rows.changedRows !== 0 || keep){
+                        for(var i = 0; i < req.body[1].length; i++){
+                            var v = (req.body[1][i].type === 'Slider') ? req.body[1][i].rate : req.body[1][i].input;
+                            var answer = {value : v, surveyID : req.body[2], questionID : req.body[1][i].id};
+                            connection.query('INSERT INTO answers SET ?', [answer], function(err, rows, fields){
+                                if (err) throw err;
+                            });
+                        }
+                    }
+                    res.jsonp(rows);
+                });
             });
         }
     };

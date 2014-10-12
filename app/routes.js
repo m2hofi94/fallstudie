@@ -8,12 +8,9 @@ module.exports = function(express, passport) {
     var router = express.Router();
 
     //******************USERS-CRUD-Example**************************
-    router.get('/users', users.list);
     router.post('/users', loggedIn, users.create);
-    router.get('/users/:userId', loggedIn, users.read);
     // used for User Update Data and Delete User
     router.put('/users', loggedIn, users.update);
-    router.delete('/users/:userId', loggedIn, users.delete);
     router.delete('/deleteUser/:userId', loggedIn, users.deleteUser);
     router.put('/resetPassword', users.resetPassword);
 
@@ -36,7 +33,6 @@ module.exports = function(express, passport) {
     router.post('/tokensOpen/:id', loggedIn, tokens.publishOpen);
     router.post('/tokens/:id', loggedIn, tokens.publishIndividually);
     router.post('/submit', tokens.takePart);
-    router.get('/tokens/:id', loggedIn, tokens.getCountOfAnswers);
 
     //function to check if user is logged in
     //sends a 401 if unsuccessfull

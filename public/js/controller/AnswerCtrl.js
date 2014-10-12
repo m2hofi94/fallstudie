@@ -67,7 +67,6 @@ angular.module('AnswerController', []).controller('AnswerCtrl', ['$scope', '$rou
         var sum = 0;
         for(var i = 0; i < $scope.ratingValues.length; i++){
             $scope.exampleData[0].values[$scope.ratingValues[i]-1][1] +=1;
-            console.log($scope.exampleData[0].values[$scope.ratingValues[i]-1][1]);
            sum +=  $scope.ratingValues[i];
         }
 
@@ -93,7 +92,6 @@ angular.module('AnswerController', []).controller('AnswerCtrl', ['$scope', '$rou
                     for (var j = 0; j < $scope.results.length; j++){
                         for(var i = 0; i < data.length; i++){
                             if(data[i].questionID == $scope.results[j].id){
-                                console.log($scope.results[j].type);
                                 if($scope.results[j].type == 'Slider'){
                                     $scope.ratingValues.push(parseInt(data[i].value));
                                 } else {

@@ -45,7 +45,7 @@
                     <td>{{survey.data.title}}</td>
                     <td ng-show="s[0] == 'Entwurf'"></td>
                     <td ng-hide="s[0] == 'Entwurf'">
-                        <progressbar max="survey.recipients" value="survey.answers" style="text-color:black"><span style="color:white; white-space:nowrap;">{{survey.answers}} / {{survey.recipients}}</span></progressbar>
+                        <progressbar max="survey.recipients" value="survey.answers" style="text-color:black"><span style="color:white; white-space:nowrap;">{{survey.answers}} {{survey.open ? '' : ' / ' + survey.recipients}}</span></progressbar>
                     </td>
                 </tr>
                 <tr collapse="survey.isCollapsed">

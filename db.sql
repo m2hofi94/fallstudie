@@ -41,8 +41,9 @@ create table tokens (
   id int not null auto_increment primary key,
   surveyID int not null,
   token varchar(100) not null,
-  keepAfterUse boolean not null default 0,
-  valid boolean not null default 1
+  keepAfterUse boolean not null default 0, # if survey is open for everyone
+  valid boolean not null default 1, # if token may be used / Survey is still available
+  used boolean not null default 0 # if token is already used by someone
 );
 
 create table recipients (
