@@ -47,13 +47,15 @@ angular.module('AnswerController', []).controller('AnswerCtrl', ['$scope', '$rou
     };
 
     $scope.send = function() {
-       var body = [$scope.token, $scope.fields, $scope.surveyID];
-       Surveys.submitSurvey(body).success(function(data) {
-           Surveys.tempTitle = $scope.title;
-           $location.url('/thanks');
-       }).error(function(err) {
-           console.log(err);
-       });
+        if($scope.fields.length !== 0){
+           var body = {token : $scope.token, answers : $scope.fields, surveyID : $scope.surveyID};
+           Surveys.submitSurvey(body).success(function(data) {
+               Surveys.tempTitle = $scope.title;
+               $location.url('/thanks');
+           }).error(function(err) {
+               console.log(err);
+           });
+        }
     };
 
     $scope.getTextToCopy = function() {

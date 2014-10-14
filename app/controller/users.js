@@ -9,15 +9,13 @@ var mailSettings = require('./../config/mail.js')();
 module.exports = function(passport) {
     var transporter = mailer.createTransport(mailSettings);
 
-    var sendMail = function(recipient, pass){
-        var body = 'Guten Tag,<br/><br/>Ihr Passwort f&uuml;r die Seite afs.nunki.uberspace.de wurde erfolgreich zur&uuml;ckgesetzt.<br/>Sie k&ouml;nnen sich nun mit dem Passwort "' + pass + '" anmelden.' ;
-
+    var sendMail = function(recipient, title, text){
         var mailOptions = {
             from: 'AnFeSys <' + mailSettings.auth.user + '>',// sender address  'Hans Wurst via <AnFeSys@gmail.com>'
             to: recipient, // list of receivers
-            subject: 'Ihr Passwort wurde zurückgesetzt', // Subject line
+            subject: title, // Subject line
             // Text ggf. user Name hinzufügen
-            html: body // html body
+            html: text // html body
         };
 
         // send mail with defined transport object
@@ -109,6 +107,9 @@ module.exports = function(passport) {
                 if (! user) {
                   return res.send({ success : false, message : req.signUpMessage });
                 }
+                var text = 'Guten Tag,<br/><br/>Sie wurden erfolgreich f&uuml;r die Seite afs.nunki.uberspace.de registriert.<br/>Sie k&ouml;nnen sich nun <a href="http://afs.nunki.uberspace.de">hier</a> anmelden.<br><br>Vielen Dank f&uuml;r die Registrierung<br>Ihr AnFeSys-Team';
+                var title = 'Registrierung f&uuml;r AnFeSys';
+                sendMail(req.body.email, title ,text);
 
                 //success, log-in user
                 req.login(user, function(err) {
@@ -129,13 +130,15 @@ module.exports = function(passport) {
 
             for( var i=0; i < 10; i++ )
                 text += possible.charAt(Math.floor(Math.random() * possible.length));
+            var title = 'Ihr Passwort wurde zurückgesetzt';
+            var body = 'Guten Tag,<br/><br/>Ihr Passwort f&uuml;r die Seite <a href="http://afs.nunki.uberspace.de">afs.nunki.uberspace.de</a> wurde erfolgreich zur&uuml;ckgesetzt.<br/>Sie k&ouml;nnen sich nun mit dem Passwort "' + text + '" anmelden.' ;
             var data = {password : passwordHash.generate(text)};
 
             connection.query('UPDATE users SET ? WHERE email = ?', [data, req.body.email], function(err, rows, fields){
                 if(err) throw err;
 
                 if(rows.affectedRows !== 0){
-                    sendMail(req.body.email, text);
+                    sendMail(req.body.email, body);
                     res.status(200).jsonp(rows);
                 } else {
                     res.status(418).jsonp(rows);

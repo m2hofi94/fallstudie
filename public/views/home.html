@@ -45,7 +45,7 @@
                     <td>{{survey.data.title}}</td>
                     <td ng-show="s[0] == 'Entwurf'"></td>
                     <td ng-hide="s[0] == 'Entwurf'">
-                        <progressbar max="survey.recipients" value="survey.answers" style="text-color:black"><span style="color:white; white-space:nowrap;">{{survey.answers}} {{survey.open ? '' : ' / ' + survey.recipients}}</span></progressbar>
+                        <progressbar max="!survey.open ? survey.data.countRecipients : survey.data.countAnswers " value="survey.data.countAnswers" style="text-color:black"><span style="color:black;font-weight:bold; white-space:nowrap;">{{survey.data.countAnswers}} {{survey.open ? '' : ' / ' + survey.data.countRecipients}}</span></progressbar>
                     </td>
                 </tr>
                 <tr collapse="survey.isCollapsed">

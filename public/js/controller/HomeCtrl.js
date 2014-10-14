@@ -28,19 +28,14 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
             // Get all Surveys for specific user
             Surveys.getSurveys().success(function (data) {
                 // console.log(data);
-                $scope.surveys = data.surveys;
+                //$scope.surveys = data.surveys;
+                $scope.surveys = data; // {id, userID, status, title, countRecipients, countAnswers, endDate, created}
                 // Depending on status the survey is saved in the approriate index in the sortedSurveys-Array
                 for (var i = 0; i < $scope.surveys.length; i++) {
-                    var openSurvey = false;
-                    if(data.count.recipients[i] === 0){
-                        console.log(i + ': rec = 0');
-                        data.count.recipients[i] = data.count.answers[i];
-                        openSurvey = true;
-                    }
-                    var date = new Date($scope.surveys[i].created);
-                    $scope.surveys[i].start  = date.toLocaleDateString();
-                    date = new Date($scope.surveys[i].endDate);
-                    $scope.surveys[i].end = date.toLocaleDateString();
+                    var openSurvey = $scope.surveys[i].countRecipients === 0 ? true : false;
+
+                    $scope.surveys[i].start  = new Date($scope.surveys[i].created).toLocaleDateString();
+                    $scope.surveys[i].end = new Date($scope.surveys[i].endDate).toLocaleDateString();
 
                     // $scope.surveys[i].countOfAnswers = Surveys.getCountOfAnswers($scope.surveys[i].id);
                     if ($scope.surveys[i].status == 'draft')
@@ -52,11 +47,11 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
                         $scope.sortedSurveys[1][1].push({
                                 data: $scope.surveys[i],
                                 isCollapsed: true,
-                                recipients: data.count.recipients[i],
-                                answers: data.count.answers[i],
                                 open : openSurvey
                             });
-                        if((date > new Date(0) && date < new Date()) || (!openSurvey && (data.count.recipients[i] == data.count.answers[i]))){
+                        if(($scope.surveys[i].end > new Date(0) && $scope.surveys[i].end < new Date()) || (!openSurvey && ($scope.surveys[i].countRecipients == $scope.surveys[i].countAnswers))){
+                            console.log(data);
+                            console.log("close " + openSurvey + ' . ' + $scope.surveys[i].countRecipients);
                             // close latest entry in sortedSurveys[1][1]
                             $scope.close($scope.sortedSurveys[1][1].length-1);
                         }
@@ -64,8 +59,6 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
                         $scope.sortedSurveys[2][1].push({
                             data: $scope.surveys[i],
                             isCollapsed: true,
-                            recipients: data.count.recipients[i],
-                            answers: data.count.answers[i],
                             open : openSurvey
                         });
                 }
@@ -168,3 +161,57 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
         };
 
 }]);
+
+
+/* Surveys with Recipient/Answer model
+$scope.getSurveys = function () {
+            // Get all Surveys for specific user
+            Surveys.getSurveys().success(function (data) {
+                // console.log(data);
+                //$scope.surveys = data.surveys;
+                $scope.surveys = data; // {id, userID, status, title, countRecipients, countAnswers, endDate, created}
+                // Depending on status the survey is saved in the approriate index in the sortedSurveys-Array
+                for (var i = 0; i < $scope.surveys.length; i++) {
+                    var openSurvey = false;
+                    if(data.count.recipients[i] === 0){
+                        console.log(i + ': rec = 0');
+                        data.count.recipients[i] = data.count.answers[i];
+                        openSurvey = true;
+                    }
+                    var date = new Date($scope.surveys[i].created);
+                    $scope.surveys[i].start  = date.toLocaleDateString();
+                    date = new Date($scope.surveys[i].endDate);
+                    $scope.surveys[i].end = date.toLocaleDateString();
+
+                    // $scope.surveys[i].countOfAnswers = Surveys.getCountOfAnswers($scope.surveys[i].id);
+                    if ($scope.surveys[i].status == 'draft')
+                        $scope.sortedSurveys[0][1].push({
+                            data: $scope.surveys[i],
+                            isCollapsed: true,
+                        });
+                    else if ($scope.surveys[i].status == 'active'){
+                        $scope.sortedSurveys[1][1].push({
+                                data: $scope.surveys[i],
+                                isCollapsed: true,
+                                recipients: data.count.recipients[i],
+                                answers: data.count.answers[i],
+                                open : openSurvey
+                            });
+                        if((date > new Date(0) && date < new Date()) || (!openSurvey && (data.count.recipients[i] == data.count.answers[i]))){
+                            // close latest entry in sortedSurveys[1][1]
+                            $scope.close($scope.sortedSurveys[1][1].length-1);
+                        }
+                    } else if ($scope.surveys[i].status == 'closed')
+                        $scope.sortedSurveys[2][1].push({
+                            data: $scope.surveys[i],
+                            isCollapsed: true,
+                            recipients: data.count.recipients[i],
+                            answers: data.count.answers[i],
+                            open : openSurvey
+                        });
+                }
+            }).error(function (err) {
+                console.log(err);
+            });
+        };
+    */

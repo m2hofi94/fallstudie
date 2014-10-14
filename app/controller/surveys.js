@@ -50,9 +50,10 @@ module.exports = function () {
         },
 
         getSurveys: function (req, res) {
-            var count = {recipients : [], answers : []};
+            // var count = {recipients : [], answers : []};
             connection.query('SELECT * FROM surveys WHERE userID = ?', [req.user.id], function (err, rows, fields) {
                 if (err) throw err;
+                /*
                 var selStatementRec = '';
                 var selStatementAns = '';
                 // Need to do it this way, because when using mutliple single select statements in a for loop, response is sent before
@@ -94,9 +95,8 @@ module.exports = function () {
 
                     });
                 }
-
-
-                // res.jsonp({surveys : rows, count : count, multiple : false});
+                */
+                res.jsonp(rows);
             });
         },
         
@@ -149,7 +149,13 @@ module.exports = function () {
 
         createSurvey: function (req, res) {
             // Insert into table surveys, questions into table questions and then the recipients
-            var survey = {userID : req.user.id, title : req.body[0], status : req.body[2]};
+            // req.body[0] - title
+            // req.body[1] - questions
+            // req.body[2] - status
+            // req.body[3] - recipients
+            var rec = req.body[3] === null ? 0 : req.body[3].length;
+
+            var survey = {userID : req.user.id, title : req.body[0], status : req.body[2], countRecipients : rec};
             connection.query('INSERT INTO surveys SET ?', [survey], function(err, rows, fields) {
                 if (err) throw err;
                 var surveyId = rows.insertId;
