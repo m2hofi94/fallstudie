@@ -3,15 +3,8 @@
         <h1 class="page-header" style="text-align:center">Greifen Sie hier&uuml;ber auf ihren Link zu:</h1>
     </div>
     <div class="row col-md-6 col-md-offset-3">
-        <form class="input-group form-group">
-            <input class="form-control" type="text" style="cursor:text;" readonly
-                   select-on-click
-                   tooltip="Dr&uuml;cken Sie Strg + C zum kopieren"
-                   tooltip-trigger="focus"
-                   data-ng-model="tokenUrl" />
-            <span class="input-group-btn">
-                <button class="btn btn-default" type="submit" clip-copy="getTextToCopy()"><i class="fa fa-clipboard"></i></button>
-            </span>
+        <form class="form-group">
+            <public-link url="tokenUrl"></public-link>
         </form>
     </div>
 </div>

@@ -3,13 +3,12 @@
     </div>
 
     <div class="row col-md-10 col-md-offset-1 ">
-        <div id="questions">
+        <form id="questions" data-ng-submit="send()">
             <div ng-repeat="field in fields">
                 <ng-include src="'views/surveys/preview-field.html'"/>
             </div>
-        </div>
+        </form>
 
-        <button class="btn btn-success" data-ng-click="send()">Antwort abschicken</button>
-
+        <input form="questions" class="btn btn-success" type="submit" valie="Antwort abschicken" />
     </div>
 

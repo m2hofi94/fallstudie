@@ -3,7 +3,9 @@
 
 angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys', '$modal', '$http', '$location',
     function ($scope, Surveys, $modal, $http, $location) {
-        Surveys.idToEdit = -1;
+        $scope.baseUrl = $location.$$absUrl.replace('home', 'participate/');
+		console.log($scope.baseUrl);
+		Surveys.idToEdit = -1;
         $scope.activeSurvey = {
             isCollapsed: true
         };

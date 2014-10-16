@@ -57,9 +57,10 @@
                                     <button class="btn btn-info" ng-Click="activate($index)">Freischalten</button>
                                     <button class="btn btn-danger" ng-Click="delete(0, $index)">L&ouml;schen</button>
                               </span>
-                              <span ng-switch-when="Laufende Umfragen">
-                                    <button class="btn btn-default" ng-Click="close($index)">Beenden</button>
-                                    <button class="btn btn-danger" ng-Click="delete(1, $index)">L&ouml;schen</button>
+                              <span class="form-group form-inline" ng-switch-when="Laufende Umfragen">
+                                    <input type="button" class="btn btn-default" ng-Click="close($index)" value="Beenden" />
+                                    <input type="button" class="btn btn-danger" ng-Click="delete(1, $index)" value="Löschen" />
+								  	<public-link data-ng-show="survey.data.keepAfterUse" url="baseUrl + survey.data.token"></public-link>
                               </span>
                                 <span ng-switch-when="Beendete Umfragen">
                                     <button class="btn btn-default" ng-Click="viewResults($index)">Auswertung</button>

@@ -51,7 +51,8 @@ module.exports = function () {
 
         getSurveys: function (req, res) {
             // var count = {recipients : [], answers : []};
-            connection.query('SELECT * FROM surveys WHERE userID = ?', [req.user.id], function (err, rows, fields) {
+            connection.query('SELECT * FROM surveys JOIN tokens ON surveys.id = tokens.surveyID WHERE userID = ? GROUP BY surveys.id', [req.user.id], function (err, rows, fields) {
+				console.log(rows);
                 if (err) throw err;
                 /*
                 var selStatementRec = '';

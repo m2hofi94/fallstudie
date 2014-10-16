@@ -1,6 +1,15 @@
 .container {
     padding-top: 50px;
-    padding-bottom: 70px;
+	min-height: 100vh;
+	z-index: -5;
+	padding-bottom: 60px;
+}
+.navbar-bottom {
+	margin-top: -52px;
+	margin-bottom: 0;
+}
+.navbar-bottom > div {
+	float: none;
 }
 
 .afs-corner-btn{

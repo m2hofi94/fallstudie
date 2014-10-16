@@ -10,6 +10,7 @@ angular.module('afsApp', [
     'xeditable',
     'ngTagsInput',
     'nvd3ChartDirectives',
+	'Components',
 
     // Serivces
     'UserService',

@@ -121,24 +121,6 @@ angular.module('AnswerController', []).controller('AnswerCtrl', ['$scope', '$rou
 }]);
 
 
-angular.module('AnswerController').directive('selectOnClick', function () {
-    return {
-        restrict: 'A',
-        link: function (scope, element) {
-            var focusedElement;
-            element.on('click', function () {
-                if (focusedElement != this) {
-                    this.select();
-                    focusedElement = this;
-                }
-            });
-            element.on('blur', function () {
-                focusedElement = null;
-            });
-        }
-    };
-});
-
 angular.module('AnswerController').config(['ngClipProvider', function(ngClipProvider) {
     ngClipProvider.setPath("libs/zeroclipboard/dist/ZeroClipboard.swf");
 }]);

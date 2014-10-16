@@ -7,7 +7,7 @@
                   <!-- <p style="text-align:center;width:28%">^</p> -->
               </span>
               <span ng-switch-when="TextArea">
-                <textarea class="form-control" maxlength="1000" rows="5" style="width:100%;resize:vertical" ng-model="field.input"></textarea>
+                <textarea class="form-control" maxlength="1000" rows="5" style="width:100%;resize:vertical" ng-model="field.input" required></textarea>
                 {{1000 - field.input.length}} Zeichen verbleibend
               </span>
         </span>
