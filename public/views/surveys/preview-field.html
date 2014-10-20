@@ -3,8 +3,11 @@
     <div class="panel-body">
        <span ng-switch on="field.type">
               <span ng-switch-when="Slider">
-                  <rating class="fa-2x" ng-model="field.rate" max="10" style="color:#FFD755"></rating>
-                  <!-- <p style="text-align:center;width:28%">^</p> -->
+                  <div class="col-md-2" style="margin-top:-5px">Sehr schlecht</div>
+                  <div class="row col-md-5"><input type="range" name="rate" default="6" ng-model="field.rate" min="1" max="10" tooltip="Das neutrale Element ist 6, nicht 5" tooltip-trigger="focus"/></div>
+                  <div class="col-md-2" style="margin-top:-5px">Sehr gut</div>
+                  <div class="col-md-offset-2 col-md-1" style="margin-top:-5px;text-align:center;border:1px dotted black">{{field.rate}}</div>
+                  <!-- <rating class="fa-2x" ng-model="field.rate" max="10" style="color:#FFD755"></rating> -->
               </span>
               <span ng-switch-when="TextArea">
                 <textarea class="form-control" maxlength="1000" rows="5" style="width:100%;resize:vertical" ng-model="field.input" required></textarea>
