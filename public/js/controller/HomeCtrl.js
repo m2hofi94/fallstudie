@@ -22,8 +22,13 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
 				$timeout(function() {
 					$scope.activeSurvey.isCollapsed = !$scope.activeSurvey.isCollapsed;
 				},500);
-				$scope.oldSurvey.isCollapsed = !$scope.oldSurvey.isCollapsed;
-			}
+                if($scope.oldSurvey != null)
+				    $scope.oldSurvey.isCollapsed = !$scope.oldSurvey.isCollapsed;
+			} else {
+                $scope.activeSurvey.isCollapsed = true;
+                $scope.activeSurvey = null;
+                $scope.oldSurvey = null;
+            }
         };
 
         $scope.go = function (path) {

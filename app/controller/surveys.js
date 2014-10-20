@@ -51,52 +51,9 @@ module.exports = function () {
 
         getSurveys: function (req, res) {
             // var count = {recipients : [], answers : []};
-            connection.query('SELECT * FROM surveys JOIN tokens ON surveys.id = tokens.surveyID WHERE userID = ? GROUP BY surveys.id', [req.user.id], function (err, rows, fields) {
+            connection.query('SELECT surveys.*,token,keepAfterUse,valid,used FROM surveys Left JOIN tokens ON surveys.id = tokens.surveyID WHERE userID = ? GROUP BY surveys.id', [req.user.id], function (err, rows, fields) {
 				console.log(rows);
                 if (err) throw err;
-                /*
-                var selStatementRec = '';
-                var selStatementAns = '';
-                // Need to do it this way, because when using mutliple single select statements in a for loop, response is sent before
-                // every statement has been executed
-                if(rows.length > 0){
-                    for(var i = 0; i < rows.length; i++){
-                        selStatementRec = selStatementRec + 'SELECT * FROM recipients WHERE surveyID = ' + rows[i].id + ';';
-                        selStatementAns = selStatementAns + 'SELECT * FROM answers WHERE surveyID = ' + rows[i].id + ';';
-                    }
-                    connection.query(selStatementRec, function(err, rows2, fields){
-                        if (err) throw err;
-                        // if rows.length == 1 --> rows2 looks like [ .. ]
-                        // if rows.length >= 2 --> rows2 looks lkie [ [..],[..] ]
-
-                        // Get count of recipients // if 0 survey is open for everyone
-                        var rec = [];
-                        if(rows.length == 1)
-                            rows2 = [rows2];
-                        for(var j = 0; j < rows2.length; j++)
-                            rec[j] = rows2[j].length;
-
-                        connection.query(selStatementAns, function(err, rows3, fields){
-                            if (err) throw err;
-                            var ans = [];
-                            if(rows.length == 1)
-                                rows3 = [rows3];
-                            for(var j = 0; j < rows3.length; j++){
-                                // get count of answers divided by count of questions for this survey
-                                var count = [];
-                                for(var k = 0; k < rows3[j].length; k++){
-                                    if(!count.contains(rows3[j][k].questionID))
-                                       count.push(rows3[j][k].questionID);
-                                }
-                                ans[j] = rows3[j].length / count.length;
-                            }
-                            console.log(rec);
-                            res.jsonp({surveys : rows, count : {recipients : rec, answers : ans}});
-                        });
-
-                    });
-                }
-                */
 				res.jsonp(rows);
             });
         },
@@ -123,13 +80,16 @@ module.exports = function () {
         },
 
         changeStatus: function(req, res) {
+            console.log(req.body);
             connection.query('UPDATE surveys SET status = ? WHERE id= ?', [req.body[1], req.body[0]],function(err, rows, fields) {
                 if (err) return res.status(500);
-
+                console.log(req.body[0]);
                 if(req.body[1] == 'closed'){
                    connection.query('UPDATE surveys SET endDate = ? WHERE id= ?', [formatDate(new Date()), req.body[0]],function(err, rows, fields) {
                      connection.query('UPDATE tokens SET valid = false WHERE surveyId= ?', [req.body[0]],function(err, rows, fields) {
                          if (err) return res.status(500);
+                         console.log('--------------------------');
+                         console.log(rows);
                          res.jsonp(rows);
                      });
                 });
@@ -154,10 +114,12 @@ module.exports = function () {
             // req.body[1] - questions
             // req.body[2] - status
             // req.body[3] - recipients
+            console.log(req.body);
 			var rec = req.body[3] === null ? 0 : req.body[3].length;
 
             var survey = {userID : req.user.id, title : req.body[0], status : req.body[2], countRecipients : rec};
             connection.query('INSERT INTO surveys SET ?', [survey], function(err, rows, fields) {
+                console.log('Inserted');
                 if (err) throw err;
                 var surveyId = rows.insertId;
 				var qInsStatement = '';
