@@ -97,7 +97,7 @@ module.exports = function () {
                     });
                 }
                 */
-                res.jsonp(rows);
+				res.jsonp(rows);
             });
         },
         
@@ -154,7 +154,7 @@ module.exports = function () {
             // req.body[1] - questions
             // req.body[2] - status
             // req.body[3] - recipients
-            var rec = req.body[3] === null ? 0 : req.body[3].length;
+			var rec = req.body[3] === null ? 0 : req.body[3].length;
 
             var survey = {userID : req.user.id, title : req.body[0], status : req.body[2], countRecipients : rec};
             connection.query('INSERT INTO surveys SET ?', [survey], function(err, rows, fields) {
@@ -173,7 +173,9 @@ module.exports = function () {
 				}
 				var finalStatement = qInsStatement + rInsStatement;
 				connection.query(finalStatement, function(err, rows, fields){
-				   if(err) throw err;
+				   if(err) {
+					   console.log(err.errno);
+				   }
 
 					return res.status(200).jsonp({insertId: surveyId});
 				});

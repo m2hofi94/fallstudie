@@ -71,5 +71,8 @@ angular.module('afsApp').config(['$routeProvider',
             })
             .otherwise({
                 redirectTo: '/login'
+            })
+			.when('/error',{
+                templateUrl: 'views/error.html'
             });
 }]);

@@ -4,6 +4,7 @@
 angular.module('AnswerController', []).controller('AnswerCtrl', ['$scope', '$routeParams', 'Surveys', '$location', function ($scope, $routeParams, Surveys, $location) {
     $scope.token = $routeParams.token;
     $scope.tokenUrl = $location.$$absUrl.replace('publish', 'participate');
+	$scope.loading = false;
 
     if(typeof $routeParams.title !== 'undefined')
         $scope.title = $routeParams.title;
@@ -27,7 +28,8 @@ angular.module('AnswerController', []).controller('AnswerCtrl', ['$scope', '$rou
     };
 
     $scope.getQuestions = function (){
-         Surveys.getQuestionsWithToken($scope.token).success(function(data) {
+        $scope.loading = true;
+		Surveys.getQuestionsWithToken($scope.token).success(function(data) {
             console.log(data[1]);
             $scope.fields = data[1];
             $scope.surveyID = data[2];
@@ -43,7 +45,10 @@ angular.module('AnswerController', []).controller('AnswerCtrl', ['$scope', '$rou
         }).error(function(err) {
             console.log(err);
             $location.url('/noSurvey');
-        });
+        })
+		.finally(function() {
+			$scope.loading = false;
+		});
     };
 
     $scope.send = function() {
@@ -57,12 +62,6 @@ angular.module('AnswerController', []).controller('AnswerCtrl', ['$scope', '$rou
            });
         }
     };
-
-    $scope.getTextToCopy = function() {
-        console.log('copy');
-        return $scope.tokenUrl;
-    };
-
 
     $scope.evaluate = function(){
         $scope.ratingValues.sort(function(a,b){return a -b;});
@@ -118,9 +117,4 @@ angular.module('AnswerController', []).controller('AnswerCtrl', ['$scope', '$rou
     $scope.getQuestions();
     if($location.$$path.indexOf('result') != -1)
     $scope.getResults();
-}]);
-
-
-angular.module('AnswerController').config(['ngClipProvider', function(ngClipProvider) {
-    ngClipProvider.setPath("libs/zeroclipboard/dist/ZeroClipboard.swf");
 }]);

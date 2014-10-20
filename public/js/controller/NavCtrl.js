@@ -3,6 +3,7 @@
 
 angular.module('NavController', []).controller('NavCtrl', ['$scope', 'Users', '$location', 'Authentication', function($scope, Users, $location, Authentication) {
     $scope.isCollapsed = true;
+	$scope.loading = false;
 	var _user = null;
 
     $scope.$on('$routeChangeStart', function() {
@@ -35,6 +36,20 @@ angular.module('NavController', []).controller('NavCtrl', ['$scope', 'Users', '$
         _user = null;
 		Authentication.logout();
     };
+	console.log('loader started');
+	$scope.$on('requestStart', function(ev) {
+		$scope.loading = true;
+		console.log('STart recieved');
+	});
+	$scope.$on('requestEnd', function(ev) {
+		$scope.loading = false;
+		console.log('end recieved');
+	})
+
+	$scope.toggle = function() {
+		$scope.loading = !$scope.loading;
+		console.log('toggling');
+	}
 }]);
 
 angular.module('NavController').run(['$rootScope', '$location', 'Authentication', '$window', function($rootScope, $location, Authentication, $window) {
@@ -52,4 +67,34 @@ angular.module('NavController').run(['$rootScope', '$location', 'Authentication'
 			$location.url('/home');
 		}
 	});
+}]);
+
+angular.module('NavController').config(['$provide', '$httpProvider', function($provide, $httpProvider) {
+	$provide.factory('httpIntercept', ['$location', '$rootScope', function($location, $rootScope) {
+		return {
+			request: function(data) {
+				$rootScope.$broadcast('requestStart');
+				console.log('request');
+				return data;
+			},
+			response: function(data) {
+				$rootScope.$broadcast('requestEnd');
+				console.log('ended');
+				return data;
+			},
+			requestError: function(err) {
+				console.log(err);
+				$location.url('/error');
+				$rootScope.$broadcast('requestEnd');
+				return err;
+			},
+			responseError: function(err) {
+				console.log(err);
+				$location.url('/error');
+				$rootScope.$broadcast('requestEnd');
+				return err;
+			}
+		};
+	}]);
+	$httpProvider.interceptors.push('httpIntercept');
 }]);

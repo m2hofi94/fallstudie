@@ -1,25 +1,29 @@
 /*globals angular */
 'use strict';
 
-angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys', '$modal', '$http', '$location',
-    function ($scope, Surveys, $modal, $http, $location) {
+angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys', '$modal', '$http', '$location', '$timeout',
+    function ($scope, Surveys, $modal, $http, $location, $timeout) {
         $scope.baseUrl = $location.$$absUrl.replace('home', 'participate/');
 		console.log($scope.baseUrl);
 		Surveys.idToEdit = -1;
-        $scope.activeSurvey = {
-            isCollapsed: true
-        };
+		$scope.activeSurvey= {
+			isCollapsed: false
+		};
+		$scope.oldSurvey= {
+			isCollapsed: false
+		};
         // in [0] = Title of Table; [1] = survey + isCollapsed variable
         $scope.sortedSurveys = [['Entwurf', []], ['Laufende Umfragen', []], ['Beendete Umfragen', []]];
 
         $scope.toggleCollapse = function (survey) {
-            survey.isCollapsed = !survey.isCollapsed;
-            // If is needed because you may click on the same survey more often
-            // in this case the survey would be isCollapsed = true forever
-            if ($scope.activeSurvey != survey) {
-                $scope.activeSurvey.isCollapsed = true;
-                $scope.activeSurvey = survey;
-            }
+			if ($scope.activeSurvey != survey) {
+				$scope.oldSurvey = $scope.activeSurvey;
+				$scope.activeSurvey = survey;
+				$timeout(function() {
+					$scope.activeSurvey.isCollapsed = !$scope.activeSurvey.isCollapsed;
+				},500);
+				$scope.oldSurvey.isCollapsed = !$scope.oldSurvey.isCollapsed;
+			}
         };
 
         $scope.go = function (path) {
@@ -141,7 +145,8 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
         };
 
         $scope.delete = function (firstIndex, secondIndex) {
-            var modalInstance = $modal.open({
+		console.log('about to delete');
+			var modalInstance = $modal.open({
             template: '<div class="modal-body"><p>M&ouml;chten Sie die Umfrage endg&uuml;ltig l&ouml;schen?</p></div><div class="modal-footer"><button class="btn btn-default" ng-click="$dismiss()">Cancel</button><button class="btn btn-danger" ng-click="$close()">OK</button></div>',
             size: 'sm',
             scope: $scope

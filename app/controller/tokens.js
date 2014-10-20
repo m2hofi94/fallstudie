@@ -62,7 +62,10 @@ module.exports = function () {
                             sendMail(rows[i].email, hash, u, req.user.email, survey.title);
 
                             connection.query('INSERT INTO tokens SET surveyId = ?, token = ?', [req.params.id ,hash], function(err, rows, fields){
-                                if (err) throw err;
+                                if (err) {
+									console.log(err.errno);
+									return res.status(500);
+								}
                             });
                         }
                         res.jsonp(rows);

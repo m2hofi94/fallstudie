@@ -47,6 +47,7 @@
     <script src="js/controller/FormCtrl.js"></script>
     <script src="js/controller/HomeCtrl.js"></script>
     <script src="js/controller/AnswerCtrl.js"></script>
+	<script src="js/controller/Loader.js"></script>
 
     <script src="js/app.js"></script>
     <script src="js/routes.js"></script>
@@ -88,9 +89,11 @@
                 </ul>
             </div>
         </div>
+		<!--p data-collapse="!loading" class="text-center"><i class="fa fa-spinner fa-spin fa-2x"></i></p>
+		<button class="btn btn-default" data-ng-click="toggle()">haha</button-->
 	</nav>
+    <div class="container" controller="NavCtrl">
 
-    <div class="container">
         <div ng-view></div>
     </div>
 
