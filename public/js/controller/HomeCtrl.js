@@ -4,30 +4,29 @@
 angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys', '$modal', '$http', '$location', '$timeout',
     function ($scope, Surveys, $modal, $http, $location, $timeout) {
         $scope.baseUrl = $location.$$absUrl.replace('home', 'participate/');
-		console.log($scope.baseUrl);
+		//console.log($scope.baseUrl);
 		Surveys.idToEdit = -1;
 		$scope.activeSurvey= {
+            data : {id : 0},
 			isCollapsed: false
 		};
 		$scope.oldSurvey= {
 			isCollapsed: false
 		};
+
         // in [0] = Title of Table; [1] = survey + isCollapsed variable
         $scope.sortedSurveys = [['Entwurf', []], ['Laufende Umfragen', []], ['Beendete Umfragen', []]];
 
         $scope.toggleCollapse = function (survey) {
-			if ($scope.activeSurvey != survey) {
-				$scope.oldSurvey = $scope.activeSurvey;
+			if ($scope.activeSurvey.data.id != survey.data.id) {
+                $scope.activeSurvey.isCollapsed = true;
 				$scope.activeSurvey = survey;
 				$timeout(function() {
 					$scope.activeSurvey.isCollapsed = !$scope.activeSurvey.isCollapsed;
 				},500);
-                if($scope.oldSurvey != null)
-				    $scope.oldSurvey.isCollapsed = !$scope.oldSurvey.isCollapsed;
 			} else {
                 $scope.activeSurvey.isCollapsed = true;
-                $scope.activeSurvey = null;
-                $scope.oldSurvey = null;
+                $scope.activeSurvey = {data : {id:0}};
             }
         };
 
