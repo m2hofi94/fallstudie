@@ -1,5 +1,5 @@
 .container {
-    padding-top: 50px;
+	padding-top: 50px;
 	min-height: 100vh;
 	z-index: -5;
 	padding-bottom: 60px;
@@ -11,60 +11,104 @@
 .navbar-bottom > div {
 	float: none;
 }
-
-.afs-corner-btn{
-    border-bottom-right-radius: 0;
-    border-top-left-radius: 0;
-    
-    float:right;
+.afs-corner-btn {
+	border-bottom-right-radius: 0;
+	border-top-left-radius: 0;
+	float: right;
 }
-
 .progress {
-    margin-bottom: 0 !important;
+	margin-bottom: 0 !important;
 }
-
 .nv-bar {
-    fill: #428bca !important;
-    stroke: #428bca !important;
-    stroke-opacity: 1 !important;
+	fill: #428bca !important;
+	stroke: #428bca !important;
+	stroke-opacity: 1 !important;
 }
-
 .discreteBar {
- stroke-opacity: 1 !important;
+	stroke-opacity: 1 !important;
 }
 
-input[type='range'] {
-		-webkit-appearance: none;
-		border-radius: 5px;
-		box-shadow: inset 0 0 5px #333;
-		background-color: #999;
-		height: 10px;
-		vertical-align: middle;
-	}
-	input[type='range']::-moz-range-track {
-		-moz-appearance: none;
-		border-radius: 5px;
-		box-shadow: inset 0 0 5px #333;
-		background-color: #999;
-		height: 10px;
-	}
+/*********************************/
+/*******RANGE-STYLES**************/
+/*********************************/
+input[type="range"] {
+	-webkit-appearance: none;
+	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+	outline: none;
+	width: 100%;
+	height: 14px;
+	margin: 0;
 
-	input[type='range']::-webkit-slider-thumb {
-		-webkit-appearance: none !important;
-		border-radius: 20px;
-		background-color: #FFF;
-		box-shadow:inset 0 0 10px rgba(000,000,000,0.5);
-		border: 1px solid #999;
-		height: 20px;
-		width: 20px;
-	}
-	input[type='range']::-moz-range-thumb {
-		-moz-appearance: none;
-		border-radius: 15px;
-		background-color: #FFF;
-		box-shadow:inset 0 0 10px rgba(000,000,000,0.5);
-		border: 1px solid #999;
-		height: 15px;
-		width: 15px;
-	}
+	background: #dc6950;
+	/* Old browsers */
+	background-image: -moz-linear-gradient(left, #dc6950 0%, #dc6950 55%, #9bae5e 55%, #9bae5e 55%, #9bae5e 100%);
+	/* FF3.6+ */
+	background-image: -webkit-gradient(linear, left top, right top, color-stop(0%, #dc6950), color-stop(55%, #dc6950), color-stop(55%, #9bae5e), color-stop(55%, #9bae5e), color-stop(100%, #9bae5e));
+	/* Chrome,Safari4+ */
+	background-image: -webkit-linear-gradient(left, #dc6950 0%, #dc6950 55%, #9bae5e 55%, #9bae5e 55%, #9bae5e 100%);
+	/* Chrome10+,Safari5.1+ */
+	background-image: -o-linear-gradient(left, #dc6950 0%, #dc6950 55%, #9bae5e 55%, #9bae5e 55%, #9bae5e 100%);
+	/* Opera 11.10+ */
+	background-image: -ms-linear-gradient(left, #dc6950 0%, #dc6950 55%, #9bae5e 55%, #9bae5e 55%, #9bae5e 100%);
+	/* IE10+ */
+	background-image: linear-gradient(to right, #dc6950 0%, #dc6950 55%, #9bae5e 55%, #9bae5e 55%, #9bae5e 100%);
+	/* W3C */
+	filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#dc6950', endColorstr='#9bae5e', GradientType=1);
+	/* IE6-9 */
 
+	border-radius: 15px;
+}
+input[type="range"]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	border-radius: 50%;
+	background-color: #FFF;
+	box-shadow: none;
+	border: 5px solid #676767;
+	height: 25px;
+	width: 25px;
+}
+input[type="range"]::-moz-range-thumb {
+	border-radius: 50%;
+	background-color: #FFF;
+	box-shadow: none;
+	border: 5px solid #676767;
+	height: 19px;
+	width: 19px;
+}
+input[type="range"]::-ms-thumb {
+	border-radius: 50%;
+	background-color: #FFF;
+	box-shadow: none;
+	border: 5px solid #676767;
+	height: 10px;
+	width: 10px;
+}
+/*input[type="range"]::-webkit-slider-thumb::before {
+	content: "6";
+	display: block;
+	line-height: 100%;
+	text-align: center;
+	width: 14px;
+	height: 14px;
+}*/
+input[type=range]::-moz-focus-outer {
+    border: 0;
+}
+input[type="range"]::-moz-range-track {
+  border: inherit;
+  background: transparent;
+}
+input[type="range"]::-ms-track {
+  border: inherit;
+  color: transparent; /* don't drawn vertical reference line */
+  background: transparent;
+}
+
+input[type="range"]::-ms-fill-lower,
+input[type="range"]::-ms-fill-upper {
+  background: transparent;
+}
+
+input[type="range"]::-ms-tooltip {
+  display: none;
+}
