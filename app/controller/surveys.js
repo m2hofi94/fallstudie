@@ -28,7 +28,7 @@ module.exports = function () {
     return {
         getQuestionsWithToken: function (req, res) {
             connection.query('SELECT * FROM tokens WHERE token = ? AND valid = true AND used = false', [req.params.token], function (err, rows, fields) {
-                if (err) throw err;
+                // if (err) throw err;
                 if(rows.length > 0){
                     var result = rows[0];
                     connection.query('SELECT * FROM surveys WHERE id = ?', [result.surveyID], function (err, rows, fields) {
@@ -42,8 +42,7 @@ module.exports = function () {
                     });
 
                 }else{
-                    res.status(403);
-                    res.jsonp(rows);
+                    res.status(418).jsonp(rows);
                 }
                 // res.jsonp(rows);
             });

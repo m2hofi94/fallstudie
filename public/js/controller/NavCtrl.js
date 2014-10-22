@@ -83,14 +83,16 @@ angular.module('NavController').config(['$provide', '$httpProvider', function($p
 				return data;
 			},
 			requestError: function(err) {
-				console.log(err);
+				console.log(err.errno);
 				$location.url('/error');
 				$rootScope.$broadcast('requestEnd');
 				return err;
 			},
 			responseError: function(err) {
-				console.log(err);
-				$location.url('/error');
+				// console.log(err.errno);
+                // Error 418 is thrown if Survey is not available
+                if(err.status !== 418)
+				    $location.url('/error');
 				$rootScope.$broadcast('requestEnd');
 				return err;
 			}

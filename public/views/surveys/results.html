@@ -13,16 +13,16 @@
                         <ul class="list-group">
                             <li class="list-group-item">
                                 <nvd3-discrete-bar-chart
-                                    data="testData"
+                                    data="result.graphData"
                                     showXAxis="true"
                                     showYAxis="true"
                                     tooltips="true"
                                     interactive="true">
                                 </nvd3-discrete-bar-chart>
                             </li>
-                            <li class="list-group-item">Der <b>kleinste</b> Wert liegt bei {{minimum}}.</li>
-                            <li class="list-group-item">Der <b>durchschnittliche</b> Wert liegt bei {{average}}.</li>
-                            <li class="list-group-item">Der <b>gr&ouml;&szlig;te</b> Wert liegt bei {{maximum}}.</li>
+                            <li class="list-group-item">Der <b>kleinste</b> Wert liegt bei {{result.minimum}}.</li>
+                            <li class="list-group-item">Der <b>durchschnittliche</b> Wert liegt bei {{result.average}}.</li>
+                            <li class="list-group-item">Der <b>gr&ouml;&szlig;te</b> Wert liegt bei {{result.maximum}}.</li>
                         </ul>
                     </span>
                     <span ng-switch-when="TextArea">
@@ -37,7 +37,7 @@
 
     <div ng-hide="noAnswers">
         <p>
-            <span class="label label-primary">Die Umfrage hatte <b>{{ratingValues.length}}</b> Teilnehmer.</span>
+            <span class="label label-primary">Die Umfrage hatte <b>{{countOfAnswers}}</b> Teilnehmer.</span>
         </p>
     </div>
 

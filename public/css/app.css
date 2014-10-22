@@ -2,10 +2,10 @@
 	padding-top: 50px;
 	min-height: 100vh;
 	z-index: -5;
-	padding-bottom: 60px;
+	padding-bottom: 75px;
 }
 .navbar-bottom {
-	margin-top: -52px;
+	margin-top: -75px;
 	margin-bottom: 0;
 }
 .navbar-bottom > div {

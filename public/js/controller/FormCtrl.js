@@ -37,43 +37,12 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
             }
         ];
 
-			// Date Picker
-			$scope.date = [
-				{
-					value: new Date()
-				},
-				{
-					value: new Date()
-				}
-        ];
-			$scope.today();
-			$scope.toggleMin();
-
 			if (Surveys.idToEdit != -1) {
 				$scope.toEdit = true;
 				$scope.title = Surveys.tempTitle;
 				$scope.edit(Surveys.idToEdit);
 			} else {
 				$scope.fields = $scope.standardQuestions.slice();
-			}
-		};
-
-		$scope.today = function (date) {
-			date = new Date();
-		};
-
-		$scope.toggleMin = function () {
-			$scope.minDate = $scope.minDate ? null : new Date();
-		};
-
-		$scope.open = function ($event) {
-			$event.preventDefault();
-			$event.stopPropagation();
-
-			if ($event.target.id === 'btnStart') {
-				$scope.openedStart = !$scope.openedStart;
-			} else {
-				$scope.openedEnd = !$scope.openedEnd;
 			}
 		};
 
@@ -237,4 +206,38 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
        }, function () {
            console.log('Modal dismissed at: ' + new Date());
        });
+
+       DATEPICKER
+
+		$scope.today = function (date) {
+			date = new Date();
+		};
+
+		$scope.toggleMin = function () {
+			$scope.minDate = $scope.minDate ? null : new Date();
+		};
+
+		$scope.open = function ($event) {
+			$event.preventDefault();
+			$event.stopPropagation();
+
+			if ($event.target.id === 'btnStart') {
+				$scope.openedStart = !$scope.openedStart;
+			} else {
+				$scope.openedEnd = !$scope.openedEnd;
+			}
+		};
+
+        // Date Picker
+			$scope.date = [
+				{
+					value: new Date()
+				},
+				{
+					value: new Date()
+				}
+        ];
+			$scope.today();
+			$scope.toggleMin();
+
 */
