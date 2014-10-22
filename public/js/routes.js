@@ -1,6 +1,14 @@
 /*globals angular */
 'use strict';
 
+/**
+Routes each URL Request to a specific html page,
+each html page is connected to a specific controller which handles the logic
+
+protected: If page may only be shown if user is logged In
+hideIfLoggedIn: for Login/Signup pages -> May not be shown if user is logged In already
+
+*/
 
 angular.module('afsApp').config(['$routeProvider',
     function ($routeProvider) {
@@ -67,7 +75,8 @@ angular.module('afsApp').config(['$routeProvider',
             })
             .when('/results/:token/:title',{
                 templateUrl: 'views/surveys/results.html',
-                controller: 'AnswerCtrl'
+                controller: 'AnswerCtrl',
+                protected: true
             })
             .otherwise({
                 redirectTo: '/login'

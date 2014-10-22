@@ -10,7 +10,7 @@ module.exports = function () {
     var transporter = mailer.createTransport(mailSettings);
 
     var sendMail = function(recipient, token, user, email, title){
-        var body = 'Guten Tag,<br/><br/>' + user + ' hat Sie eingeladen, an der Umfrage ' + title + ' teilzunehmen.<br/><br/>Besuchen Sie zur Teilnahme die folgende Seite:<br><a href="http://afs.nunki.uberspace.de/#/participate/'+token+ '">http://afs.nunki.uberspace.de/#/participate/' +token+ '</a><br>Mit freundlichen Gr&uuml;&szlig;en ihr AnFeSys-Team.<br><br>AnFeSys: Ihr Partner für anonyme Umfragen. Noch nicht <a href="http://afs.nunki.uberspace.de/signup">registriert?</a>';
+        var body = 'Guten Tag,<br/><br/>' + user + ' hat Sie eingeladen, an der Umfrage "' + title + '" teilzunehmen.<br/><br/>Besuchen Sie zur Teilnahme die folgende Seite:<br><a href="http://afs.nunki.uberspace.de/#/participate/'+token+ '">http://afs.nunki.uberspace.de/#/participate/' +token+ '</a><br><br><br>Mit freundlichen Gr&uuml;&szlig;en ihr AnFeSys-Team.<br><br>AnFeSys: Ihr Partner für anonyme Umfragen.<br>Noch nicht <a href="http://afs.nunki.uberspace.de/signup">registriert?</a>';
 
         var mailOptions = {
             from: user  + ' via AnFeSys <' + email + '>',// sender address  'Hans Wurst via <AnFeSys@gmail.com>'
@@ -92,21 +92,21 @@ module.exports = function () {
                 connection.query('UPDATE tokens SET used = ? WHERE token = ? AND keepAfterUse = ?', [!keep, req.body.token, keep], function(err, rows, fields){     console.log(rows.changedRows);
                     if(rows.changedRows !== 0 || keep){
 
-                    connection.query('UPDATE surveys SET countAnswers=countAnswers+1 WHERE id = ?', [req.body.surveyID], function(err, rows, fields){
-                        if (err) throw err;
-                        console.log(rows);
+                        connection.query('UPDATE surveys SET countAnswers=countAnswers+1 WHERE id = ?', [req.body.surveyID], function(err, rows, fields){
+                            if (err) throw err;
+                            console.log(rows);
 
-                            for(var i = 0; i < req.body.answers.length; i++){
-                                var v = (req.body.answers[i].type === 'Slider') ? req.body.answers[i].rate : req.body.answers[i].input;
-                                var answer = {value : v, surveyID : req.body.surveyID, questionID : req.body.answers[i].id};
-                                connection.query('INSERT INTO answers SET ?', [answer], function(err, rows, fields){
-                                    if (err) throw err;
-                                });
-                            }
+                                for(var i = 0; i < req.body.answers.length; i++){
+                                    var v = (req.body.answers[i].type === 'Slider') ? req.body.answers[i].rate : req.body.answers[i].input;
+                                    var answer = {value : v, surveyID : req.body.surveyID, questionID : req.body.answers[i].id};
+                                    connection.query('INSERT INTO answers SET ?', [answer], function(err, rows, fields){
+                                        if (err) throw err;
+                                    });
+                                }
 
-                        res.jsonp(rows);
-                    });
-                        }
+                            res.jsonp(rows);
+                        });
+                    }
                 });
             });
         }

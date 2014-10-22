@@ -112,3 +112,12 @@ input[type="range"]::-ms-fill-upper {
 input[type="range"]::-ms-tooltip {
   display: none;
 }
+
+@media print {
+    /* Your styles here */
+    .page-header {
+        color:red;
+    }
+}
+
+
