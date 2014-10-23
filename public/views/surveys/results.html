@@ -12,14 +12,16 @@
 
                         <ul class="list-group">
                             <li class="list-group-item">
-                                <nvd3-discrete-bar-chart
-                                    data="result.graphData"
-                                    objectequality="true"
-                                    showXAxis="true"
-                                    showYAxis="true"
-                                    tooltips="true"
-                                    interactive="true">
-                                </nvd3-discrete-bar-chart>
+								<div class="chart">
+									<nvd3-discrete-bar-chart
+										data="result.graphData"
+										objectequality="true"
+										showXAxis="true"
+										showYAxis="true"
+										tooltips="true"
+										interactive="true">
+									</nvd3-discrete-bar-chart>
+								</div>
                             </li>
                             <li class="list-group-item">Der <b>kleinste</b> Wert liegt bei {{result.minimum}}.</li>
                             <li class="list-group-item">Der <b>durchschnittliche</b> Wert liegt bei {{result.average}}.</li>

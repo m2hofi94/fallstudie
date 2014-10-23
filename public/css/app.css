@@ -32,8 +32,16 @@
 /*******RANGE-STYLES**************/
 /*********************************/
 .range-number {
-	border: 1px dotted grey;
 	border-radius: 50%;
+	background-color: #FFF;
+	box-shadow: none;
+	border: 5px solid #676767;
+	height: 25px;
+	width: 25px;
+	color: #333;
+	text-align: center;
+	padding: 0;
+	padding-top: 2px;
 }
 input[type="range"] {
 	-webkit-appearance: none;
@@ -119,9 +127,14 @@ input[type="range"]::-ms-tooltip {
 
 @media print {
     /* Your styles here */
-    .page-header {
-        color:red;
+    .chart {
+        margin-left: -100px;
+		overflow: visible;
     }
+	svg {
+		overflow: visible !important;
+		transform: scaleX(0.7);
+	}
 }
 
 
