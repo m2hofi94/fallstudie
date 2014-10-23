@@ -3,10 +3,23 @@
     <div class="panel-body">
        <span ng-switch on="field.type">
               <span ng-switch-when="Slider">
-                  <div class="col-md-2" style="margin-top:-5px">Sehr schlecht</div>
-                  <div class="row col-md-5"><input type="range" name="rate" default="6" ng-model="field.rate" min="1" max="10"/></div>
-                  <div class="col-md-2" style="margin-top:-5px">Sehr gut</div>
-                  <div class="col-md-offset-2 col-md-1" style="margin-top:-5px;text-align:center;border:1px dotted black">{{field.rate}}</div>
+				  <span class="hidden-sm hidden-xs row">
+					  <div class="col-md-2 text-right">Sehr schlecht</div>
+					  <div class="col-md-6"><input type="range" name="rate" default="6" ng-model="field.rate" min="1" max="10"/></div>
+					  <div class="col-md-2">Sehr gut</div>
+					  <div class="col-md-2 text-center range-number">{{field.rate}}</div>
+				  </span>
+				  <span class="hidden-md hidden-lg row">
+					  <div class="row">
+					  	<div class="col-xs-5 text-left">Sehr schlecht</div>
+					  	<div class="col-xs-5 text-right">Sehr gut</div>
+					  </div>
+					  <div class="row">
+						  <div class="col-xs-10"><input type="range" name="rate" default="6" ng-model="field.rate" min="1" max="10"/></div>
+						  <div class="col-xs-2 text-center range-number">{{field.rate}}</div>
+					  </div>
+				  </span>
+
               </span>
               <span ng-switch-when="TextArea">
                 <textarea class="form-control" maxlength="1000" rows="5" style="width:100%;resize:vertical" ng-model="field.input" required></textarea>
