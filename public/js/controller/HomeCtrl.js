@@ -151,7 +151,7 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
         $scope.delete = function (firstIndex, secondIndex) {
 		console.log('about to delete');
 			var modalInstance = $modal.open({
-            template: '<div class="modal-body"><p>M&ouml;chten Sie die Umfrage endg&uuml;ltig l&ouml;schen?</p></div><div class="modal-footer"><button class="btn btn-default" ng-click="$dismiss()">Cancel</button><button class="btn btn-danger" ng-click="$close()">OK</button></div>',
+            template: '<div class="modal-body"><p>M&ouml;chten Sie die Umfrage endg&uuml;ltig l&ouml;schen?</p></div><div class="modal-footer"><button class="btn btn-default" ng-click="$dismiss()">Cancel</button><button class="btn btn-success" ng-click="$close()">OK</button></div>',
             size: 'sm',
             scope: $scope
         });

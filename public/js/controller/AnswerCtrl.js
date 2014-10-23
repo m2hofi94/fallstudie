@@ -93,16 +93,11 @@ angular.module('AnswerController', []).controller('AnswerCtrl', ['$scope', '$rou
             $scope.results[j].average = Math.round(sum / count * 100)/100;
             $scope.results[j].maximum = $scope.results[j].ratingData[count -1];
 
-			for (var k = 0; k < $scope.results[j].answers.length; k++) {
-				$scope.results[j].answers[k] = $scope.results[j].answers[k].replace(/(?:\r\n|\r|\n)/g, '<br />');
-			}
+            //for (var k = 0; k < $scope.results[j].answers.length; k++) {
+            //	$scope.results[j].answers[k] = $scope.results[j].answers[k].replace(/(?:\r\n|\r|\n)/g, '<br />');
+            //}
         }
     };
-
-    $interval(function() {
-        console.log('interval');
-        // $scope.results[0].graphData[0].values[0][1] = 1;
-    }, 1000, 1);
 
 
     /**
@@ -138,14 +133,15 @@ angular.module('AnswerController', []).controller('AnswerCtrl', ['$scope', '$rou
                                 if($scope.results[j].type == 'Slider'){
                                     $scope.results[j].ratingData.push(parseInt(data[i].value));
                                 } else {
-                                    data[i].value = data[i].value.replace(/<br \/>/g, '\r\n');
+                                   // data[i].value = data[i].value.replace(/<br \/>/g, '\r\n');
+                                    console.log(data[i].value);
                                     $scope.results[j].answers.push(data[i].value);
                                 }
                             }
                         }
                     }
                     $scope.evaluate();
-                    console.log($scope.results);
+                    // console.log($scope.results);
                 }
             }).error(function(err) {
                 console.log(err);

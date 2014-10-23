@@ -130,7 +130,7 @@ module.exports = function(passport) {
 
             for( var i=0; i < 10; i++ )
                 text += possible.charAt(Math.floor(Math.random() * possible.length));
-            var title = 'Ihr Passwort wurde zurückgesetzt';
+            var title = 'Ihr Passwort wurde zur&uuml;ckgesetzt';
             var body = 'Guten Tag,<br/><br/>Ihr Passwort f&uuml;r die Seite <a href="http://afs.nunki.uberspace.de">afs.nunki.uberspace.de</a> wurde erfolgreich zur&uuml;ckgesetzt.<br/>Sie k&ouml;nnen sich nun mit dem Passwort "' + text + '" anmelden.' ;
             var data = {password : passwordHash.generate(text)};
 
@@ -138,7 +138,7 @@ module.exports = function(passport) {
                 if(err) throw err;
 
                 if(rows.affectedRows !== 0){
-                    sendMail(req.body.email, body);
+                    sendMail(req.body.email, title, body);
                     res.status(200).jsonp(rows);
                 } else {
                     res.status(418).jsonp(rows);

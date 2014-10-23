@@ -59,7 +59,7 @@ create table answers(
   id int not null auto_increment primary key,
   surveyID int not null,
   questionID int not null,
-  value varchar(1000) not null,
+  value varchar(10000) not null,
   FOREIGN KEY (surveyID) REFERENCES surveys(id) ON DELETE CASCADE,
   FOREIGN KEY (questionID) REFERENCES questions(id) ON DELETE CASCADE
 );

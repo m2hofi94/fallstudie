@@ -158,8 +158,12 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', '$modal',
         $scope.resetPassword = function () {
             Users.resetPassword({email : $scope.emailPass}).success(function (data) {
                 console.log(data);
+                if(data.affectedRows === 0){
+                    $scope.result.message = 'Diese E-Mail-Adresse ist uns nicht bekannt';
+                } else {
                 $scope.result.message = 'Ihr Passwort wurde erfolgreich zurückgesetzt';
                 $scope.forgotPassword = false;
+                }
             }).error(function (err) {
                 $scope.result.message = 'Diese E-Mail-Adresse ist uns nicht bekannt';
             });

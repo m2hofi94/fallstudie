@@ -82,6 +82,7 @@ angular.module('afsApp').config(['$routeProvider',
                 redirectTo: '/login'
             })
 			.when('/error',{
-                templateUrl: 'views/error.html'
+                templateUrl: 'views/error.html',
+                controller: 'NavCtrl'
             });
 }]);

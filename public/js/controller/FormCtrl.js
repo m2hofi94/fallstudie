@@ -116,7 +116,7 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
 					console.log(status);
 					var later = status == 'draft' ? 'sp&auml;ter' : '';
 					var modalInstance = $modal.open({
-						template: '<div class="modal-body"><p>Es wurden keine Teilnehmer angegeben. Möchten Sie die Umfrage ' + later + ' für jeden freischalten?</p></div><div class="modal-footer"><button class="btn btn-default" ng-click="$dismiss()">Cancel</button><button class="btn btn-danger" ng-click="$close()">OK</button></div>',
+						template: '<div class="modal-body"><p>Es wurden keine Teilnehmer angegeben. M&ouml;chten Sie die Umfrage ' + later + ' f&uuml;r jeden freischalten?</p></div><div class="modal-footer"><button class="btn btn-default" ng-click="$dismiss()">Cancel</button><button class="btn btn-success" ng-click="$close()">OK</button></div>',
 						size: 'sm',
 						scope: $scope
 					});
