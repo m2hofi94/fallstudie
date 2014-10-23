@@ -92,6 +92,10 @@ angular.module('AnswerController', []).controller('AnswerCtrl', ['$scope', '$rou
             $scope.results[j].minimum = $scope.results[j].ratingData[0];
             $scope.results[j].average = Math.round(sum / count * 100)/100;
             $scope.results[j].maximum = $scope.results[j].ratingData[count -1];
+
+			for (var k = 0; k < $scope.results[j].answers.length; k++) {
+				$scope.results[j].answers[k] = $scope.results[j].answers[k].replace(/(?:\r\n|\r|\n)/g, '<br />');
+			}
         }
     };
 
@@ -141,7 +145,7 @@ angular.module('AnswerController', []).controller('AnswerCtrl', ['$scope', '$rou
                         }
                     }
                     $scope.evaluate();
-                    // console.log($scope.results);
+                    console.log($scope.results);
                 }
             }).error(function(err) {
                 console.log(err);

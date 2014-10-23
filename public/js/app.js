@@ -11,6 +11,7 @@ angular.module('afsApp', [
     'ngTagsInput',
     'nvd3ChartDirectives',
 	'Components',
+	'ngSanitize',
 
     // Serivces
     'UserService',

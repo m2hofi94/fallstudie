@@ -28,7 +28,7 @@
                     </span>
                     <span ng-switch-when="TextArea">
                         <ul class="list-group">
-                            <li ng-repeat="answer in result.answers track by $index" class="list-group-item">{{$index+1}}:&nbsp;{{answer}}</li>
+                            <li ng-repeat="answer in result.answers track by $index" class="list-group-item"><div class="row"><span class="col-xs-1">{{$index+1}}:</span><span class="col-xs-1" ng-bind-html="answer"></span></div></li>
                         </ul>
                     </span>
                 </span>
