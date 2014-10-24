@@ -20,7 +20,10 @@
 
     <div class="row col-md-10 col-md-offset-1">
         <h2>Empfänger</h2>
-        <textarea ng-model="emails" placeholder="E-Mail Adressen bitte durch Semikolon getrennt eingeben" rows="4" style="width:50%"></textarea>
+		<div class="form-group col-md-6 row">
+			<textarea ng-model="emails" placeholder="E-Mail Adressen bitte durch Semikolon getrennt eingeben" rows="4" class="form-control"></textarea>
+		</div>
+
     </div>
 
     <div class="row col-md-10 col-md-offset-1">
@@ -28,11 +31,27 @@
         <alert data-ng-show="checkMessage != ''" close="checkMessage = ''" style="padding:5px;width:50%">
             {{checkMessage}}
 		</alert>
-        <button class="btn btn-default" data-ng-click="cancel()">Abbrechen</button>
-        <button class="btn btn-default" data-ng-click="togglePreview()">Vorschau</button>
-        <button class="btn btn-success"  data-ng-click="submit('draft')">Entwurf speichern</button>
-        <button class="btn btn-info" data-ng-click="submit('active')">Freischalten</button>
-
+		<div class="row hidden-sm hidden-md hidden-lg">
+			<div class="col-xs-6">
+				<button class="form-control btn btn-default btn-block" data-ng-click="cancel()">Abbrechen</button>
+			</div>
+			<div class="col-xs-6">
+				<button class="form-control btn btn-default btn-block" data-ng-click="togglePreview()">Vorschau</button>
+			</div>
+			<hr class="visible-xs-block">
+			<div class="col-xs-6">
+				<button class="form-control btn btn-success btn-block"  data-ng-click="submit('draft')">Entwurf speichern</button>
+			</div>
+			<div class="col-xs-6">
+				<button class="form-control btn btn-info btn-block" data-ng-click="submit('active')">Freischalten</button>
+			</div>
+		</div>
+		<div class="hidden-xs">
+			<button class="btn btn-default" data-ng-click="cancel()">Abbrechen</button>
+			<button class="btn btn-default" data-ng-click="togglePreview()">Vorschau</button>
+			<button class="btn btn-success"  data-ng-click="submit('draft')">Entwurf speichern</button>
+			<button class="btn btn-info" data-ng-click="submit('active')">Freischalten</button>
+		</div>
     </div>
 </div>
 
