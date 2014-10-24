@@ -54,7 +54,7 @@ angular.module('afsApp').config(['$routeProvider',
             })
             .when('/main', {
                 templateUrl: 'views/main.html',
-                // controller: 'MainCtrl'
+                controller: 'MainCtrl'
             })
             .when('/profile', {
                 templateUrl: 'views/profile.html',
