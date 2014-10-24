@@ -2,57 +2,61 @@
     <div class="row col-md-10 col-md-offset-1">
         <h1 class="page-header" ng-show="toEdit">Umfrage bearbeiten</h1>
         <h1 class="page-header" ng-hide="toEdit">Neue Umfrage erstellen</h1>
+		<p data-ng-hide="!loading" class="text-center"><i class="fa fa-spinner fa-spin fa-2x"></i></p>
     </div>
 
-    <div class="row col-md-10 col-md-offset-1">
-        <input maxlength="100" class="form-control text-center" type="text" data-ng-model="title" placeholder="Unbenannte Umfrage"/>
-    </div>
-
-    <div class="row col-md-10 col-md-offset-1">
-        <h2>Fragen</h2>
-        <div id="questions">
-            <div ng-repeat="field in fields">
-                <ng-include src="'views/surveys/question-field.html'" />
-            </div>
-        </div>
-        <button class="btn btn-primary" data-ng-click="addQuestion()"><i class="fa fa-plus"></i>&nbsp;Neue Frage hinzufügen</button>
-    </div>
-
-    <div class="row col-md-10 col-md-offset-1">
-        <h2>Empfänger</h2>
-		<div class="form-group col-md-6 row">
-			<textarea ng-model="emails" placeholder="E-Mail Adressen bitte durch Semikolon getrennt eingeben" rows="4" class="form-control"></textarea>
+	<div data-ng-hide="loading">
+		<div class="row col-md-10 col-md-offset-1">
+			<input maxlength="100" class="form-control text-center" type="text" data-ng-model="title" placeholder="Unbenannte Umfrage"/>
 		</div>
 
-    </div>
+		<div class="row col-md-10 col-md-offset-1">
+			<h2>Fragen</h2>
+			<div id="questions">
+				<div ng-repeat="field in fields">
+					<ng-include src="'views/surveys/question-field.html'" />
+				</div>
+			</div>
+			<button class="btn btn-primary" data-ng-click="addQuestion()"><i class="fa fa-plus"></i>&nbsp;Neue Frage hinzufügen</button>
+		</div>
 
-    <div class="row col-md-10 col-md-offset-1">
-        <h2>Optionen</h2>
-        <alert data-ng-show="checkMessage != ''" close="checkMessage = ''" style="padding:5px;width:50%">
-            {{checkMessage}}
-		</alert>
-		<div class="row hidden-sm hidden-md hidden-lg">
-			<div class="col-xs-6">
-				<button class="form-control btn btn-default btn-block" data-ng-click="cancel()">Abbrechen</button>
+		<div class="row col-md-10 col-md-offset-1">
+			<h2>Empfänger</h2>
+			<div class="form-group col-md-6 row">
+				<textarea ng-model="emails" placeholder="E-Mail Adressen bitte durch Semikolon getrennt eingeben" rows="4" class="form-control"></textarea>
 			</div>
-			<div class="col-xs-6">
-				<button class="form-control btn btn-default btn-block" data-ng-click="togglePreview()">Vorschau</button>
+
+		</div>
+
+		<div class="row col-md-10 col-md-offset-1">
+			<h2>Optionen</h2>
+			<alert data-ng-show="checkMessage != ''" close="checkMessage = ''" style="padding:5px;width:50%">
+				{{checkMessage}}
+			</alert>
+			<div class="row hidden-sm hidden-md hidden-lg">
+				<div class="col-xs-6">
+					<button class="form-control btn btn-default btn-block" data-ng-click="cancel()">Abbrechen</button>
+				</div>
+				<div class="col-xs-6">
+					<button class="form-control btn btn-default btn-block" data-ng-click="togglePreview()">Vorschau</button>
+				</div>
+				<hr class="visible-xs-block">
+				<div class="col-xs-6">
+					<button class="form-control btn btn-success btn-block"  data-ng-click="submit('draft')">Entwurf speichern</button>
+				</div>
+				<div class="col-xs-6">
+					<button class="form-control btn btn-info btn-block" data-ng-click="submit('active')">Freischalten</button>
+				</div>
 			</div>
-			<hr class="visible-xs-block">
-			<div class="col-xs-6">
-				<button class="form-control btn btn-success btn-block"  data-ng-click="submit('draft')">Entwurf speichern</button>
-			</div>
-			<div class="col-xs-6">
-				<button class="form-control btn btn-info btn-block" data-ng-click="submit('active')">Freischalten</button>
+			<div class="hidden-xs">
+				<button class="btn btn-default" data-ng-click="cancel()">Abbrechen</button>
+				<button class="btn btn-default" data-ng-click="togglePreview()">Vorschau</button>
+				<button class="btn btn-success"  data-ng-click="submit('draft')">Entwurf speichern</button>
+				<button class="btn btn-info" data-ng-click="submit('active')">Freischalten</button>
 			</div>
 		</div>
-		<div class="hidden-xs">
-			<button class="btn btn-default" data-ng-click="cancel()">Abbrechen</button>
-			<button class="btn btn-default" data-ng-click="togglePreview()">Vorschau</button>
-			<button class="btn btn-success"  data-ng-click="submit('draft')">Entwurf speichern</button>
-			<button class="btn btn-info" data-ng-click="submit('active')">Freischalten</button>
-		</div>
-    </div>
+	</div>
+
 </div>
 
 <div ng-show="preview">

@@ -1,9 +1,10 @@
 <!-- is called after click on "Auswertung ansehen" in "Abgeschlossene Umfragen" -->
 
 <div class="row col-md-10 col-md-offset-1">
-    <h2 class="page-header">{{title}}</h2>
+    <h2 class="page-header" data-ng-bind="title"></h2>
+	<p data-ng-hide="!loading || noAnswers" class="text-center"><i class="fa fa-spinner fa-spin fa-2x"></i></p>
 
-    <div ng-repeat="result in results" ng-hide="noAnswers">
+    <div ng-repeat="result in results" ng-hide="noAnswers || loading">
         <div class="panel panel-default">
             <div class="panel-heading"><b>{{result.title}}</b></div>
             <div class="panel-body">
@@ -38,7 +39,7 @@
         </div>
     </div>
 
-    <div ng-hide="noAnswers">
+    <div ng-hide="noAnswers||loading">
         <p>
             <span class="label label-primary">Die Umfrage hatte <b>{{countOfAnswers}}</b> Teilnehmer.</span>
         </p>

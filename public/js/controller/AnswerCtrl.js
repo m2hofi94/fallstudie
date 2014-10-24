@@ -92,7 +92,7 @@ angular.module('AnswerController', []).controller('AnswerCtrl', ['$scope', '$rou
             $scope.results[j].minimum = $scope.results[j].ratingData[0];
             $scope.results[j].average = Math.round(sum / count * 100)/100;
             $scope.results[j].maximum = $scope.results[j].ratingData[count -1];
-
+			$scope.loading = false;
             //for (var k = 0; k < $scope.results[j].answers.length; k++) {
             //	$scope.results[j].answers[k] = $scope.results[j].answers[k].replace(/(?:\r\n|\r|\n)/g, '<br />');
             //}
@@ -109,6 +109,7 @@ angular.module('AnswerController', []).controller('AnswerCtrl', ['$scope', '$rou
     */
     $scope.getResults = function() {
         // $scope.token is survey id from url
+		$scope.loading = true;
         Surveys.getQuestions($scope.token).success(function(data) {
             // data = { created, id, surveyID, title, type }
             for(var i = 0; i < data.length; i++){

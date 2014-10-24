@@ -60,6 +60,7 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
 		};
 
 		$scope.edit = function (id) {
+			$scope.loading = true;
 			Surveys.getQuestions(id)
 				.success(function (data) {
 					$scope.fields = data;
@@ -74,6 +75,7 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
 							for (var i = 0; i < mail.length; i++) {
 								$scope.emails += mail[i].email + ';';
 							}
+							$scope.loading = false;
 
 						}).error(function (err) {
 							console.log(err);

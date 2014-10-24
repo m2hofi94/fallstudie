@@ -36,6 +36,7 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
 
         $scope.getSurveys = function () {
             // Get all Surveys for specific user
+			$scope.loading = true;
             Surveys.getSurveys().success(function (data) {
                 // console.log(data);
                 //$scope.surveys = data.surveys;
@@ -71,9 +72,11 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
                             isCollapsed: true,
                             open : openSurvey
                         });
+					$scope.loading = false;
                 }
             }).error(function (err) {
                 console.log(err);
+				$scope.loading = true;
             });
         };
         $scope.getSurveys();

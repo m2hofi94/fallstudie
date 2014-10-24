@@ -3,76 +3,79 @@
     <alert data-ng-show="alert" close="alert=''">
 			<p>{{alert}}</p>
     </alert>
+	<p data-ng-hide="!loading" class="text-center"><i class="fa fa-spinner fa-spin fa-2x"></i></p>
 </div>
+<div data-ng-hide="loading">
+	<div class="row col-md-10 col-md-offset-1">
+		<p><button class="btn btn-primary" ng-click="go('/newSurvey')" >Neue Umfrage erstellen</button></p>
+	</div>
+	<!-- sortedSurveys got 3 entries ( one for each status ) -->
+	<div class="row col-md-10 col-md-offset-1" ng-repeat="s in sortedSurveys">
+		<div class="panel panel-default">
+		<!-- Default panel contents -->
+		<div class="panel-heading"><b>{{s[0]}} </b><span class="badge pull-right">{{s[1].length}}</span></div>
 
-<div class="row col-md-10 col-md-offset-1">
-    <p><button class="btn btn-primary" ng-click="go('/newSurvey')" >Neue Umfrage erstellen</button></p>
-</div>
-<!-- sortedSurveys got 3 entries ( one for each status ) -->
-<div class="row col-md-10 col-md-offset-1" ng-repeat="s in sortedSurveys">
-    <div class="panel panel-default">
-    <!-- Default panel contents -->
-    <div class="panel-heading"><b>{{s[0]}} </b><span class="badge pull-right">{{s[1].length}}</span></div>
+		<!--Table -->
 
-    <!--Table -->
+		<p style="margin:15px" ng-hide="s[1].length != 0">Keine Umfragen vorhanden</p>
+		<div class="table-responsive">
+		<table class="table table-hover" ng-show="s[1].length != 0">
+			<thead style="cursor:default">
+				<tr>
 
-    <p style="margin:15px" ng-hide="s[1].length != 0">Keine Umfragen vorhanden</p>
-	<div class="table-responsive">
-	<table class="table table-hover" ng-show="s[1].length != 0">
-        <thead style="cursor:default">
-            <tr>
+					<th width="15%">
+						<span ng-switch on="s[0]">
+							<span ng-switch-when="Entwurf">Letzte &Auml;nderung</span>
+							<span ng-switch-when="Laufende Umfragen">Start</span>
+							<span ng-switch-when="Beendete Umfragen">Start</span>
+						</span>
+					</th>
+					<th width="15%" ng-hide="s[0] == 'Beendete Umfragen'"></th>
+					<th width="15%" ng-show="s[0] == 'Beendete Umfragen'">Ende</th>
+					<th>Titel</th>
+					<th width="25%" ng-show="s[0] == 'Entwurf'"></th>
+					<th width="25%" ng-hide="s[0] == 'Entwurf'">Teilnahme</th>
+				</tr>
+			</thead>
+			<!-- for each survey in the sortedSurveys[x] - Array one tbody element -->
+			<tbody style="cursor:pointer" ng-repeat="survey in s[1] track by $index">
+					<tr ng-click="toggleCollapse(survey)">
+						<td>{{survey.data.start}}</td>
+						<td ng-hide="s[0] == 'Beendete Umfragen'"></td>
+						<td ng-show="s[0] == 'Beendete Umfragen'">{{survey.data.end}}</td>
+						<td>{{survey.data.title}}</td>
+						<td ng-show="s[0] == 'Entwurf'"></td>
+						<td ng-hide="s[0] == 'Entwurf'">
+							<progressbar max="!survey.open ? survey.data.countRecipients : survey.data.countAnswers " value="survey.data.countAnswers" style="text-color:black"><span style="color:black;font-weight:bold; white-space:nowrap;">{{survey.data.countAnswers}} {{survey.open ? '' : ' / ' + survey.data.countRecipients}}</span></progressbar>
+						</td>
+					</tr>
+					<tr collapse="survey.isCollapsed">
+						<td colspan="4" style="border:0px">
+							<!-- Depending on status there are different buttons -->
+							<span ng-switch on="s[0]">
+								  <span ng-switch-when="Entwurf">
+										<button class="btn btn-default" ng-Click="edit($index)">Bearbeiten</button>
+										<button class="btn btn-info" ng-Click="activate($index)">Freischalten</button>
+										<button class="btn btn-danger" ng-Click="delete(0, $index)">L&ouml;schen</button>
+								  </span>
+								  <span class="form-group form-inline" ng-switch-when="Laufende Umfragen">
+										<input type="button" class="btn btn-default" ng-Click="close($index)" value="Beenden" />
+										<input type="button" class="btn btn-danger" ng-Click="delete(1, $index)" value="Löschen" />
+										<public-link data-ng-show="survey.data.keepAfterUse" url="baseUrl + survey.data.token"></public-link>
+								  </span>
+									<span ng-switch-when="Beendete Umfragen">
+										<button class="btn btn-default" ng-Click="viewResults($index)">Auswertung</button>
+										<button class="btn btn-success" ng-Click="restart($index)">Wiederverwenden</button>
+										<button class="btn btn-danger" ng-Click="delete(2, $index)">L&ouml;schen</button>
+								  </span>
+							</span>
 
-                <th width="15%">
-                    <span ng-switch on="s[0]">
-                        <span ng-switch-when="Entwurf">Letzte &Auml;nderung</span>
-                        <span ng-switch-when="Laufende Umfragen">Start</span>
-                        <span ng-switch-when="Beendete Umfragen">Start</span>
-                    </span>
-                </th>
-                <th width="15%" ng-hide="s[0] == 'Beendete Umfragen'"></th>
-                <th width="15%" ng-show="s[0] == 'Beendete Umfragen'">Ende</th>
-                <th>Titel</th>
-                <th width="25%" ng-show="s[0] == 'Entwurf'"></th>
-                <th width="25%" ng-hide="s[0] == 'Entwurf'">Teilnahme</th>
-            </tr>
-        </thead>
-        <!-- for each survey in the sortedSurveys[x] - Array one tbody element -->
-        <tbody style="cursor:pointer" ng-repeat="survey in s[1] track by $index">
-                <tr ng-click="toggleCollapse(survey)">
-                    <td>{{survey.data.start}}</td>
-                    <td ng-hide="s[0] == 'Beendete Umfragen'"></td>
-                    <td ng-show="s[0] == 'Beendete Umfragen'">{{survey.data.end}}</td>
-                    <td>{{survey.data.title}}</td>
-                    <td ng-show="s[0] == 'Entwurf'"></td>
-                    <td ng-hide="s[0] == 'Entwurf'">
-                        <progressbar max="!survey.open ? survey.data.countRecipients : survey.data.countAnswers " value="survey.data.countAnswers" style="text-color:black"><span style="color:black;font-weight:bold; white-space:nowrap;">{{survey.data.countAnswers}} {{survey.open ? '' : ' / ' + survey.data.countRecipients}}</span></progressbar>
-                    </td>
-                </tr>
-                <tr collapse="survey.isCollapsed">
-                    <td colspan="4" style="border:0px">
-                        <!-- Depending on status there are different buttons -->
-                        <span ng-switch on="s[0]">
-                              <span ng-switch-when="Entwurf">
-                                    <button class="btn btn-default" ng-Click="edit($index)">Bearbeiten</button>
-                                    <button class="btn btn-info" ng-Click="activate($index)">Freischalten</button>
-                                    <button class="btn btn-danger" ng-Click="delete(0, $index)">L&ouml;schen</button>
-                              </span>
-                              <span class="form-group form-inline" ng-switch-when="Laufende Umfragen">
-                                    <input type="button" class="btn btn-default" ng-Click="close($index)" value="Beenden" />
-                                    <input type="button" class="btn btn-danger" ng-Click="delete(1, $index)" value="Löschen" />
-								  	<public-link data-ng-show="survey.data.keepAfterUse" url="baseUrl + survey.data.token"></public-link>
-                              </span>
-                                <span ng-switch-when="Beendete Umfragen">
-                                    <button class="btn btn-default" ng-Click="viewResults($index)">Auswertung</button>
-                                    <button class="btn btn-success" ng-Click="restart($index)">Wiederverwenden</button>
-                                    <button class="btn btn-danger" ng-Click="delete(2, $index)">L&ouml;schen</button>
-                              </span>
-                        </span>
+						</td>
+					</tr>
+			</tbody>
+		</table>
+		</div>
 
-                    </td>
-                </tr>
-        </tbody>
-    </table>
 	</div>
 
 </div>
