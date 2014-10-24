@@ -107,8 +107,8 @@ module.exports = function(passport) {
                 if (! user) {
                   return res.send({ success : false, message : req.signUpMessage });
                 }
-                var text = 'Guten Tag,<br/><br/>Sie wurden erfolgreich f&uuml;r die Seite afs.nunki.uberspace.de registriert.<br/>Sie k&ouml;nnen sich nun <a href="http://afs.nunki.uberspace.de">hier</a> anmelden.<br><br>Vielen Dank f&uuml;r die Registrierung<br>Ihr AnFeSys-Team';
-                var title = 'Registrierung f&uuml;r AnFeSys';
+                var text = 'Guten Tag,<br/><br/>Sie wurden erfolgreich auf der Seite afs.nunki.uberspace.de registriert.<br/>Sie k&ouml;nnen sich nun <a href="http://afs.nunki.uberspace.de">hier</a> anmelden.<br><br>Vielen Dank f&uuml;r die Registrierung<br>Ihr AnFeSys-Team';
+                var title = 'Registrierung bei AnFeSys';
                 sendMail(req.body.email, title ,text);
 
                 //success, log-in user
