@@ -2,8 +2,8 @@
 'use strict';
 
 
-angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys', 'Authentication', '$modal', '$location',
-	function ($scope, Surveys, Authentication, $modal, $location) {
+angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys', 'Authentication', '$modal', '$location', '$window',
+	function ($scope, Surveys, Authentication, $modal, $location, $window) {
 		$scope.init = function () {
 			$scope.checkMessage = '';
 			$scope.authentication = Authentication;
@@ -166,8 +166,10 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
 		};
 
 		$scope.togglePreview = function () {
-			if ($scope.checkFields())
+			if ($scope.checkFields()) {
 				$scope.preview = !$scope.preview;
+				$window.scrollTo(0,0);
+			}
 
 		};
 

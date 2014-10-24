@@ -7,6 +7,7 @@
 
 	<div data-ng-hide="loading">
 		<div class="row col-md-10 col-md-offset-1">
+			<h2>Titel</h2>
 			<input maxlength="100" class="form-control text-center" type="text" data-ng-model="title" placeholder="Unbenannte Umfrage"/>
 		</div>
 
@@ -29,7 +30,6 @@
 		</div>
 
 		<div class="row col-md-10 col-md-offset-1">
-			<h2>Optionen</h2>
 			<alert data-ng-show="checkMessage != ''" close="checkMessage = ''" style="padding:5px;width:50%">
 				{{checkMessage}}
 			</alert>
@@ -73,7 +73,6 @@
     </div>
 
     <div class="row col-md-10 col-md-offset-1">
-        <h2>Optionen</h2>
         <button class="btn btn-default" data-ng-click="togglePreview()">Zurück</button>
         <button class="btn btn-success" data-ng-click="submit('draft')">Entwurf speichern</button>
         <button class="btn btn-info" data-ng-click="submit('active')">Umfrage freischalten</button>
