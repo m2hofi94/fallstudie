@@ -4,7 +4,7 @@
     <h2 class="page-header" data-ng-bind="title"></h2>
 	<p data-ng-hide="!loading || noAnswers" class="text-center"><i class="fa fa-spinner fa-spin fa-2x"></i></p>
 
-    <div ng-repeat="result in results" ng-hide="noAnswers || loading">
+    <div ng-repeat="result in results" ng-hide="noAnswers">
         <div class="panel panel-default">
             <div class="panel-heading"><b>{{result.title}}</b></div>
             <div class="panel-body">
@@ -20,7 +20,9 @@
 										showXAxis="true"
 										showYAxis="true"
 										tooltips="true"
-										interactive="true">
+										interactive="true"
+										noData="Konnte Daten leider nicht laden.">
+										<svg></svg>
 									</nvd3-discrete-bar-chart>
 								</div>
                             </li>
