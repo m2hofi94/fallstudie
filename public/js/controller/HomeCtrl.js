@@ -124,7 +124,7 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
 					// Save surveyID in table tokens and return token ( in this case the ID )
 					Surveys.publishSurvey(surveys[index].data.id).success(function (data) {
 						console.log(data);
-						if (data === '"No Recipients"') {
+						if (data === 'No Recipients') {
 							Surveys.publishSurveyOpen(surveys[index].data.id).success(function (data) {
 								console.log(data);
 								data = data.replace('"', '');

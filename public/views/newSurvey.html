@@ -30,9 +30,11 @@
 		</div>
 
 		<div class="row col-md-10 col-md-offset-1">
-			<alert data-ng-show="checkMessage != ''" close="checkMessage = ''" style="padding:5px;width:50%">
-				{{checkMessage}}
-			</alert>
+			<div class="form-group col-md-6 row">
+				<alert data-ng-show="checkMessage != ''" close="checkMessage = ''">
+					{{checkMessage}}
+				</alert>
+			</div>
 			<div class="row hidden-sm hidden-md hidden-lg">
 				<div class="col-xs-6">
 					<button class="form-control btn btn-default btn-block" data-ng-click="cancel()">Abbrechen</button>
@@ -72,7 +74,19 @@
         </div>
     </div>
 
-    <div class="row col-md-10 col-md-offset-1">
+    <div class="row hidden-sm hidden-md hidden-lg">
+		<div class="col-xs-12">
+			<button class="btn btn-default" data-ng-click="togglePreview()">Zurück</button>
+		</div>
+		<hr>
+		<div class="col-xs-6">
+        	<button class="btn btn-success btn-block" data-ng-click="submit('draft')">Entwurf speichern</button>
+		</div>
+		<div class="col-xs-6">
+        	<button class="btn btn-info btn-block" data-ng-click="submit('active')">Umfrage freischalten</button>
+		</div>
+    </div>
+	<div class="row col-md-10 col-md-offset-1 hidden-xs">
         <button class="btn btn-default" data-ng-click="togglePreview()">Zurück</button>
         <button class="btn btn-success" data-ng-click="submit('draft')">Entwurf speichern</button>
         <button class="btn btn-info" data-ng-click="submit('active')">Umfrage freischalten</button>
