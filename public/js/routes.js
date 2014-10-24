@@ -49,7 +49,7 @@ angular.module('afsApp').config(['$routeProvider',
 			})
             .when('/publish/:token', {
                 templateUrl: 'views/publish.html',
-                controller: 'AnswerCtrl',
+                controller: 'PublishCtrl',
                 protected: true
             })
             .when('/main', {
