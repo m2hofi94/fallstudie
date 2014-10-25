@@ -1,12 +1,12 @@
 <div class="row col-md-4 col-md-offset-4">
     <br/>
     <alert data-ng-show="result.message" close="result.message=''">
-            <p>{{result.message}}</p>
+        <p>{{result.message}}</p>
     </alert>
     <div ng-hide="forgotPassword">
         <h1 class="page-header">Login</h1>
         <form data-ng-submit="login()">
-			
+
             <div class="form-group">
                 <label>E-Mail:</label>
                 <input class="form-control" maxlength="100" type="email" placeholder="Geben Sie ihre E-Mail-Adresse ein" data-ng-model="loginData.email" required />
@@ -16,24 +16,24 @@
                 <input class="form-control" maxlength="100" type="password" placeholder="Passwort" data-ng-model="loginData.password" required />
             </div>
             <div class="form-group text-center">
-                <input class="btn btn-primary" type="submit" value="Einloggen"> oder <a href="#/signup">registrieren.</a>
+                <input class="btn btn-primary" type="submit" value="Einloggen">oder <a href="#/signup">registrieren.</a>
             </div>
             <div class="form-group text-center">
                 <span class="label label-default" ng-click="forgotPassword = true" style="cursor:pointer">Passwort vergessen?</span>
             </div>
-		</form>
+        </form>
     </div>
     <div ng-show="forgotPassword" class="row col-md-12">
         <h1 class="page-header">Passwort&nbsp;zurücksetzen</h1>
         <form data-ng-submit="resetPassword()">
-			<div class="form-group">
-					<label>E-Mail:</label>
-					<input class="form-control" maxlength="100" placeholder="Geben Sie ihre E-Mail-Adresse ein" ng-model="emailPass"/>
-			</div>
-			<div class="form-group text-center">
-				<input class="btn btn-default" type="button" ng-click="forgotPassword = false" value="Zurück">
-				<input class="btn btn-primary" type="submit" value="Zurücksetzen">
-			</div>
-		</form>
+            <div class="form-group">
+                <label>E-Mail:</label>
+                <input class="form-control" maxlength="100" placeholder="Geben Sie ihre E-Mail-Adresse ein" ng-model="emailPass" />
+            </div>
+            <div class="form-group text-center">
+                <input class="btn btn-default" type="button" ng-click="forgotPassword = false" value="Zurück">
+                <input class="btn btn-primary" type="submit" value="Zurücksetzen">
+            </div>
+        </form>
     </div>
 </div>

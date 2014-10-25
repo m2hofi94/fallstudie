@@ -1,6 +1,11 @@
 /*globals angular */
 'use strict';
 
+/**
+Necessary for surveys that are published for everyone.
+Generates Link and may copy it to clipboard
+*/
+
 angular.module('Components', [])
 
 .config(['ngClipProvider', function(ngClipProvider) {
@@ -35,8 +40,6 @@ angular.module('Components', [])
 		},
 		controller: ['$scope', function($scope) {
 			$scope.getTextToCopy = function() {
-				console.log('hi');
-				console.log($scope.url);
 				return $scope.url;
 			};
 		}]

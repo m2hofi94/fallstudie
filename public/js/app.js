@@ -23,7 +23,7 @@ angular.module('afsApp', [
     'FormController',
     'UserController',
     'HomeController',
-	'MainController',
+	'UrlController',
     'AnswerController',
 	'Loader'
 ]);

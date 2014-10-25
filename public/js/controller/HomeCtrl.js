@@ -1,11 +1,17 @@
 /*globals angular */
 'use strict';
 
+/**
+Controller is used for the '/home' view
+Is responsible for listing and editing the status of the surveys
+*/
+
 angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys', '$modal', '$http', '$location', '$timeout',
     function ($scope, Surveys, $modal, $http, $location, $timeout) {
 		$scope.baseUrl = $location.$$absUrl.replace('home', 'participate/');
-		//console.log($scope.baseUrl);
 		Surveys.idToEdit = -1;
+
+        // Every listed survey gets an "isCollapsed"-Boolean variable which handles the visibility of the menubar
 		$scope.activeSurvey = {
 			data: {
 				id: 0
@@ -36,25 +42,25 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
 			}
 		};
 
+        // Used for clicks on buttons which need to load another page
 		$scope.go = function (path) {
 			$location.url(path);
 		};
 
+        // Get all Surveys for specific user
 		$scope.getSurveys = function () {
-			// Get all Surveys for specific user
+
 			$scope.loading = true;
 			Surveys.getSurveys().success(function (data) {
-				// console.log(data);
-				//$scope.surveys = data.surveys;
 				$scope.surveys = data; // {id, userID, status, title, countRecipients, countAnswers, endDate, created}
 				// Depending on status the survey is saved in the approriate index in the sortedSurveys-Array
 				for (var i = 0; i < $scope.surveys.length; i++) {
 					var openSurvey = $scope.surveys[i].countRecipients === 0 ? true : false;
 
+                    // Format start and end Date string
 					$scope.surveys[i].start = new Date($scope.surveys[i].created).toLocaleDateString();
 					$scope.surveys[i].end = new Date($scope.surveys[i].endDate).toLocaleDateString();
 
-					// $scope.surveys[i].countOfAnswers = Surveys.getCountOfAnswers($scope.surveys[i].id);
 					if ($scope.surveys[i].status == 'draft')
 						$scope.sortedSurveys[0][1].push({
 							data: $scope.surveys[i],
@@ -66,9 +72,8 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
 							isCollapsed: true,
 							open: openSurvey
 						});
-						if (($scope.surveys[i].end > new Date(0) && $scope.surveys[i].end < new Date()) || (!openSurvey && ($scope.surveys[i].countRecipients == $scope.surveys[i].countAnswers))) {
-							console.log(data);
-							console.log("close " + openSurvey + ' . ' + $scope.surveys[i].countRecipients);
+                        // If an active Survey has no more recipients left who didn't take part yet the survey is closed
+						if (!openSurvey && ($scope.surveys[i].countRecipients == $scope.surveys[i].countAnswers)) {
 							// close latest entry in sortedSurveys[1][1]
 							$scope.close($scope.sortedSurveys[1][1].length - 1);
 						}
@@ -87,6 +92,7 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
 		};
 		$scope.getSurveys();
 
+        // Edit a draft survey and redirect to '/newSurvey' view
 		$scope.edit = function (index) {
 			var surveys = $scope.sortedSurveys[0][1];
 			Surveys.idToEdit = surveys[index].data.id;
@@ -94,50 +100,55 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
 			$location.url('/newSurvey');
 		};
 
+        // View survey results of selected survey
 		$scope.viewResults = function (index) {
 			var surveys = $scope.sortedSurveys[2][1];
 			$location.url('/results/' + surveys[index].data.id + '/' + surveys[index].data.title);
 		};
 
+        // Update field status in table surveys
 		$scope.close = function (index) {
-			// Update field status in table surveys
 			var surveys = $scope.sortedSurveys[1][1];
 
 			Surveys.changeStatus(surveys[index].data.id, 'closed')
 				.success(function (data) {
+                    // End date is current Date
 					surveys[index].data.end = new Date().toLocaleDateString();
+                    // survey is now listed as 'closed'
 					$scope.sortedSurveys[2][1].push(surveys[index]);
-					surveys[index].isCollapsed = true;
 					$scope.sortedSurveys[1][1].splice(index, 1);
-					// Later Function "close" may be integrated in viewResults (or vice versa)
-					// View Results
+
+                    // Collapse menubar
+                    surveys[index].isCollapsed = true;
+                    $scope.activeSurvey.isCollapsed = true;
+                    $scope.activeSurvey = {
+                        data: {
+                            id: 0
+                        }
+                    };
 				}).error(function (err) {
 					console.log(err);
 				});
 		};
 
+        // Change Status from 'draft' to 'acitve'
 		$scope.activate = function (index) {
-			// Update field status in table surveys
 			var surveys = $scope.sortedSurveys[0][1];
+
 			Surveys.changeStatus(surveys[index].data.id, 'active')
 				.success(function (data) {
 					// Save surveyID in table tokens and return token ( in this case the ID )
 					Surveys.publishSurvey(surveys[index].data.id).success(function (data) {
-						console.log(data);
+                        // If there are no recipients, survey is published to everyone, otherwise E-Mails are sent
 						if (data === 'No Recipients') {
 							Surveys.publishSurveyOpen(surveys[index].data.id).success(function (data) {
-								console.log(data);
-								data = data.replace('"', '');
-								data = data.replace('"', '');
 								$location.url('/publish/' + data);
 							}).error(function (err) {
 								console.log(err);
 							});
 						} else {
-							//   /* If publishing to e-Mails
 							$scope.sortedSurveys[1][1].push(surveys[index]);
 							surveys[index].isCollapsed = true;
-							//    */
 						}
 						$scope.sortedSurveys[0][1].splice(index, 1);
 					}).error(function (err) {
@@ -149,14 +160,17 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
 				});
 		};
 
+        // Restarte closed survey, load '/newSurvey' view with old questions and recipients
 		$scope.restart = function (index) {
 			Surveys.restart = true;
 			var surveys = $scope.sortedSurveys[2][1];
+            // Surveys-Service is used to transfer data between two different controller without having to use a http request
 			Surveys.idToEdit = surveys[index].data.id;
 			Surveys.tempTitle = surveys[index].data.title;
 			$location.url('/newSurvey');
 		};
 
+        // Delete survey, but ask if user is really sure about it
 		$scope.delete = function (firstIndex, secondIndex) {
 			console.log('about to delete');
 			var modalInstance = $modal.open({

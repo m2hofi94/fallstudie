@@ -3,33 +3,24 @@
 
 var connection = require('./../config/db.js')(100);
 
-var formatDate = function(date) {
-	date = date.getUTCFullYear() + '-' +
-    ('00' + (date.getUTCMonth()+1)).slice(-2) + '-' +
-    ('00' + date.getUTCDate()).slice(-2) + ' ' +
-    ('00' + date.getUTCHours()).slice(-2) + ':' +
-    ('00' + date.getUTCMinutes()).slice(-2) + ':' +
-    ('00' + date.getUTCSeconds()).slice(-2);
-console.log(date);
-	return date;
+var formatDate = function (date) {
+    date = date.getUTCFullYear() + '-' +
+        ('00' + (date.getUTCMonth() + 1)).slice(-2) + '-' +
+        ('00' + date.getUTCDate()).slice(-2) + ' ' +
+        ('00' + date.getUTCHours()).slice(-2) + ':' +
+        ('00' + date.getUTCMinutes()).slice(-2) + ':' +
+        ('00' + date.getUTCSeconds()).slice(-2);
+    return date;
 };
 
 module.exports = function () {
-    Array.prototype.contains = function(obj) {
-        var i = this.length;
-        while (i--) {
-            if (this[i] === obj) {
-                return true;
-            }
-        }
-        return false;
-    };
-
     return {
         getQuestionsWithToken: function (req, res) {
+            // See if the token is valid and not already used
             connection.query('SELECT * FROM tokens WHERE token = ? AND valid = true AND used = false', [req.params.token], function (err, rows, fields) {
                 // if (err) throw err;
-                if(rows.length > 0){
+                if (rows.length > 0) {
+                    // Get the survey and the questions which are connected to this token
                     var result = rows[0];
                     connection.query('SELECT * FROM surveys WHERE id = ?', [result.surveyID], function (err, rows, fields) {
                         if (err) throw err;
@@ -41,7 +32,7 @@ module.exports = function () {
                         });
                     });
 
-                }else{
+                } else {
                     res.status(418).jsonp(rows);
                 }
                 // res.jsonp(rows);
@@ -50,58 +41,57 @@ module.exports = function () {
 
         getSurveys: function (req, res) {
             // var count = {recipients : [], answers : []};
+            // Get information about the survey and the token (needed for public surveys)
             connection.query('SELECT surveys.*,token,keepAfterUse,valid,used FROM surveys Left JOIN tokens ON surveys.id = tokens.surveyID WHERE userID = ? GROUP BY surveys.id', [req.user.id], function (err, rows, fields) {
-				console.log(rows);
+                console.log(rows);
                 if (err) throw err;
-				res.jsonp(rows);
+                res.jsonp(rows);
             });
         },
-        
-        getQuestions : function (req, res) {
+
+        getQuestions: function (req, res) {
             connection.query('SELECT * FROM questions WHERE surveyID = ?', [req.params.id], function (err, rows, fields) {
                 if (err) throw err;
                 res.jsonp(rows);
             });
         },
 
-        getAnswers : function (req, res) {
+        getAnswers: function (req, res) {
             connection.query('SELECT * FROM answers WHERE surveyID = ?', [req.params.id], function (err, rows, fields) {
                 if (err) throw err;
                 res.jsonp(rows);
             });
         },
 
-        getRecipients : function (req, res) {
+        getRecipients: function (req, res) {
             connection.query('SELECT * FROM recipients WHERE surveyID = ?', [req.params.id], function (err, rows, fields) {
                 if (err) throw err;
                 res.jsonp(rows);
             });
         },
 
-        changeStatus: function(req, res) {
-            console.log(req.body);
-            connection.query('UPDATE surveys SET status = ? WHERE id= ?', [req.body[1], req.body[0]],function(err, rows, fields) {
+        changeStatus: function (req, res) {
+            // Update status of survey. if status == 'closed' set endDate and mark every token for this survey as invalid
+            connection.query('UPDATE surveys SET status = ? WHERE id= ?', [req.body[1], req.body[0]], function (err, rows, fields) {
                 if (err) return res.status(500);
-                console.log(req.body[0]);
-                if(req.body[1] == 'closed'){
-                   connection.query('UPDATE surveys SET endDate = ? WHERE id= ?', [formatDate(new Date()), req.body[0]],function(err, rows, fields) {
-                     connection.query('UPDATE tokens SET valid = false WHERE surveyId= ?', [req.body[0]],function(err, rows, fields) {
-                         if (err) return res.status(500);
-                         console.log('--------------------------');
-                         console.log(rows);
-                         res.jsonp(rows);
-                     });
-                });
-                }else{
+                if (req.body[1] == 'closed') {
+                    connection.query('UPDATE surveys SET endDate = ? WHERE id= ?', [formatDate(new Date()), req.body[0]], function (err, rows, fields) {
+                        connection.query('UPDATE tokens SET valid = false WHERE surveyId= ?', [req.body[0]], function (err, rows, fields) {
+                            if (err) return res.status(500);
+                            res.jsonp(rows);
+                        });
+                    });
+                } else {
                     res.jsonp(rows);
                 }
             });
         },
 
-        deleteSurvey: function(req, res) {
-            connection.query('DELETE FROM surveys WHERE id = ?', [req.params.id],function(err, rows, fields) {
+        deleteSurvey: function (req, res) {
+            // If a survey is deleted, every answer/question is deleted because of the Foreign-Key Reference
+            connection.query('DELETE FROM surveys WHERE id = ?', [req.params.id], function (err, rows, fields) {
                 if (err) return res.status(500);
-                connection.query('UPDATE tokens SET valid = 0 WHERE surveyID = ?', [req.params.id], function(err, rows, fields){
+                connection.query('UPDATE tokens SET valid = 0 WHERE surveyID = ?', [req.params.id], function (err, rows, fields) {
                     res.jsonp(rows);
                 });
             });
@@ -113,68 +103,41 @@ module.exports = function () {
             // req.body[1] - questions
             // req.body[2] - status
             // req.body[3] - recipients
-            console.log(req.body);
-			var rec = req.body[3] === null ? 0 : req.body[3].length;
+            var rec = req.body[3] === null ? 0 : req.body[3].length;
 
-            var survey = {userID : req.user.id, title : req.body[0], status : req.body[2], countRecipients : rec};
-            connection.query('INSERT INTO surveys SET ?', [survey], function(err, rows, fields) {
-                console.log('Inserted');
+            var survey = {
+                userID: req.user.id,
+                title: req.body[0],
+                status: req.body[2],
+                countRecipients: rec
+            };
+            connection.query('INSERT INTO surveys SET ?', [survey], function (err, rows, fields) {
                 if (err) throw err;
                 var surveyId = rows.insertId;
-				var qInsStatement = '';
-				for(var i = 0; i < req.body[1].length; i++){
+                // Insert questions and recipients into DB
+                var qInsStatement = '';
+                for (var i = 0; i < req.body[1].length; i++) {
                     qInsStatement = qInsStatement + 'INSERT INTO questions SET surveyID=' + rows.insertId + ',title="' + req.body[1][i].title + '",type="' + req.body[1][i].type + '";';
                 }
-				var rInsStatement = '';
-				if(req.body[3] !== null){
-					rInsStatement = '';
-					for(var j = 0; j < req.body[3].length; j++){
-						rInsStatement = rInsStatement + 'INSERT INTO recipients SET email="' + req.body[3][j] + '",surveyId=' + rows.insertId + ';';
-					}
-				}
-				var finalStatement = qInsStatement + rInsStatement;
-				connection.query(finalStatement, function(err, rows, fields){
-				   if(err) {
-					   console.log(err.errno);
-				   }
+                var rInsStatement = '';
+                if (req.body[3] !== null) {
+                    rInsStatement = '';
+                    for (var j = 0; j < req.body[3].length; j++) {
+                        rInsStatement = rInsStatement + 'INSERT INTO recipients SET email="' + req.body[3][j] + '",surveyId=' + rows.insertId + ';';
+                    }
+                }
+                var finalStatement = qInsStatement + rInsStatement;
+                connection.query(finalStatement, function (err, rows, fields) {
+                    if (err) {
+                        console.log(err.errno);
+                    }
 
-					return res.status(200).jsonp({insertId: surveyId});
-				});
+                    return res.status(200).jsonp({
+                        insertId: surveyId
+                    });
+                });
             });
         }
 
     };
 };
-
-/*
-                var selStatement = '';
-
-                // Need to do it this way, because when using mutliple single select statements in a for loop, response is sent before
-                // every statement has been executed
-                if(rows.length > 0){
-                    for(var i = 0; i < rows.length; i++){
-                        selStatement = selStatement + 'SELECT * FROM tokens WHERE surveyID = ' + rows[i].id + ';';
-                    }
-                    connection.query(selStatement, function(err, rows2, fields){
-                        if (err) throw err;
-                        console.log(rows2);
-                        var multiple = false;
-                        // if only one token in db, rows2 looks [..], otherwise it is multidimensional [ [..], [..] ]
-                        if(rows2.length == 1){
-                            multiple = rows2[0].keepAfterUse;
-                            rows2 = [rows2];
-                        }
-                        for(var j = 0; j < rows2.length; j++){
-                            count.answers[j] = 0;
-                            for(var k = 0; k < rows2[j].length; k++){
-                                if(rows2[j][k].used)
-                                 count.answers[j]++;
-                            }
-                            count.recipients[j] = rows2[j].length;
-
-                        }
-                        console.log(count);
-                        res.jsonp({surveys : rows, count : count, multiple : multiple});
-                     });
-                 }
-*/

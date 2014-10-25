@@ -1,6 +1,8 @@
 /*globals angular */
 'use strict';
-
+/**
+Controller is used to create a new survey, restart an old one and edit questions of the survey
+*/
 
 angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys', 'Authentication', '$modal', '$location', '$window',
 	function ($scope, Surveys, Authentication, $modal, $location, $window) {
@@ -37,6 +39,9 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
             }
         ];
 
+            // Check if the current survey is already one which is saved as 'draft' or if it is a new one
+            // draft => (idToEdit != -1) == true;
+            // If it is a new one, the standardQuestions are loaded
 			if (Surveys.idToEdit != -1) {
 				$scope.toEdit = true;
 				$scope.title = Surveys.tempTitle;
@@ -59,12 +64,14 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
 			$scope.fields.splice(index, 1);
 		};
 
+        // If user wants to edit a survey, the questions are loaded from the DB
 		$scope.edit = function (id) {
 			$scope.loading = true;
 			Surveys.getQuestions(id)
 				.success(function (data) {
 					$scope.fields = data;
 					for (var i = 0; i < $scope.fields; i++) {
+                        // Set standard value for Slider-Fields (used in preview-view)
 						if ($scope.fields[i].type === 'Slider') {
 							$scope.fields[i].rate = 6;
 						}
@@ -86,12 +93,15 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
 				});
 		};
 
+        // Submit the survey and send E-Mails
 		$scope.submit = function (status) {
 			if ($scope.checkFields()) {
+                // Send E-Mails if there are recipients, or publish for everyone
 				if ($scope.emails !== '') {
 					$scope.recipient = $scope.emails.split(';');
 					$scope.deletedEmails = [];
 					for (var i = 0; i < $scope.recipient.length; i++) {
+                        // Remove spaces and verify inserted E-Mail Adresses with RegEx
 						$scope.recipient[i] = $scope.recipient[i].replace(/(^\s+|\s+$)/g, '');
 						if (!$scope.recipient[i].match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
 							$scope.deletedEmails.push($scope.recipient.splice(i, 1));
@@ -99,7 +109,9 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
 						}
 
 					}
-					var tmp = [];
+
+                    // Check for duplicate E-Mail entries
+                    var tmp = [];
 					for (i=0; i<$scope.recipient.length; i++) {
 						var unique = true;
 						for (var j=i+1; j<$scope.recipient.length; j++) {
@@ -115,7 +127,6 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
 
 					$scope.submitToDb(status);
 				} else {
-					console.log(status);
 					var later = status == 'draft' ? 'sp&auml;ter' : '';
 					var modalInstance = $modal.open({
 						template: '<div class="modal-body"><p>Es wurden keine Teilnehmer angegeben. M&ouml;chten Sie die Umfrage ' + later + ' f&uuml;r jeden freischalten?</p></div><div class="modal-footer"><button class="btn btn-default" ng-click="$dismiss()">Cancel</button><button class="btn btn-success" ng-click="$close()">OK</button></div>',
@@ -132,13 +143,17 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
 			}
 		};
 
+        // Called from submit() after checking inputs and recipients
 		$scope.submitToDb = function (status) {
+            // if survey used to be in draft status, delete old survey, and create new one with updated questions and status
 			if (Surveys.idToEdit != -1 && !Surveys.restart) {
 				Surveys.deleteSurvey(Surveys.idToEdit).success(function (data) {}).error(function (data) {});
 				Surveys.idToEdit = -1;
 			}
+
 			Surveys.restart = false;
 			$scope.survey = [$scope.title, $scope.fields, status, $scope.recipient];
+            // Create and (if necessary) publish survey
 			Surveys.createSurvey($scope.survey).success(function (data) {
 				if (status == 'draft') {
 					$location.url('/home');
@@ -151,8 +166,6 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
 						});
 					} else {
 						Surveys.publishSurveyOpen(data.insertId).success(function (data) {
-							data = data.replace('"', '');
-							data = data.replace('"', '');
 							$location.url('/publish/' + data);
 						}).error(function (err) {
 							console.log(err);
@@ -165,6 +178,7 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
 			});
 		};
 
+        // Click on Preview / Back button
 		$scope.togglePreview = function () {
 			if ($scope.checkFields()) {
 				$scope.preview = !$scope.preview;
@@ -173,6 +187,7 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
 
 		};
 
+        // Check if survey has a title, and at least one question
 		$scope.checkFields = function () {
 			if ($scope.title === '') {
 				$scope.checkMessage = 'Titel der Umfrage darf nicht leer sein';
@@ -191,6 +206,7 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
 			}
 		};
 
+        // Cancel transaction, do not transmit any changes
 		$scope.cancel = function () {
 			Surveys.idToEdit = -1;
 			$location.url('/home');
@@ -200,18 +216,10 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
 }]);
 
 
-/* var modalInstance = $modal.open({
-            template: '<div class="modal-body"><p>Sind sie sicher?</p></div><div class="modal-footer"><button class="btn btn-default" ng-click="$dismiss()">Cancel</button><button class="btn btn-warning" ng-click="$close()">OK</button></div>',
-            size: 'sm',
-            scope: $scope
-        });
-        modalInstance.result.then(function () {
-           $location.url('/home');
-       }, function () {
-           console.log('Modal dismissed at: ' + new Date());
-       });
+/*     // In a future state one could implement the funcionality to start/end a survey on a specific date
+       // This code may be useful
 
-       DATEPICKER
+       // DATEPICKER
 
 		$scope.today = function (date) {
 			date = new Date();
@@ -232,8 +240,7 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
 			}
 		};
 
-        // Date Picker
-			$scope.date = [
+        $scope.date = [
 				{
 					value: new Date()
 				},

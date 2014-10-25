@@ -114,7 +114,6 @@ input[type="range"]::-ms-tooltip {
 }
 
 @media print {
-    /* Your styles here */
     .chart {
         margin-left: -100px;
 		overflow: visible;

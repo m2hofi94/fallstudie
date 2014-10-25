@@ -6,7 +6,7 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', '$modal',
         $scope.result = {};
         // Set boolean ChangedUserAlert -> after click on "submit new user Data" to show alert
         // the page reload because of updating the navbar deletes $scope.
-        if(Users.changedUserAlert){
+        if (Users.changedUserAlert) {
             $scope.result.message = 'Änderungen erfolgreich';
             Users.changedUserAlert = false;
         }
@@ -25,7 +25,6 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', '$modal',
 
         // Use name / value pairs because "Kein Titel" needs empty String as value in Database
         $scope.titles = [
-        // {name : 'Kein Titel' , value : ''},
             {
                 name: 'Prof.',
                 value: 'Prof.'
@@ -39,14 +38,13 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', '$modal',
                 value: 'Prof. Dr.'
             }];
 
-        //************************Signup**************************
+        // Signup
         // redirects to users module on success
         // writes messages to $scope.result.message
         // server always returns 200, so data.success is required
         $scope.signUp = function () {
             if (typeof $scope.user.title == 'undefined' || $scope.user.title === null)
                 $scope.user.title = '';
-            console.log($scope.user);
             if ($scope.user.password == $scope.passwordCheck) {
                 Authentication.signup($scope.user).success(function (data) {
                     if (data.success) {
@@ -65,8 +63,8 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', '$modal',
 
         };
 
-        //************************Login***************************
-        //See above
+        // Login
+        // See above
         $scope.login = function () {
             Authentication.login($scope.loginData).success(function (data) {
                 if (data.success) {
@@ -83,7 +81,7 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', '$modal',
             });
         };
 
-        //************************CRUD-Example********************
+        // CRUD-Example
 
         $scope.list = function () {
             Users.list().success(function (data) {
@@ -141,28 +139,30 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', '$modal',
 
         $scope.deleteUser = function () {
             var modalInstance = $modal.open({
-            template: '<div class="modal-body"><p>M&ouml;chten Sie Ihren Account endg&uuml;ltig l&ouml;schen?</p></div><div class="modal-footer"><button class="btn btn-default" ng-click="$dismiss()">Cancel</button><button class="btn btn-danger" ng-click="$close()">OK</button></div>',
-            size: 'sm',
-            scope: $scope
-        });
+                template: '<div class="modal-body"><p>M&ouml;chten Sie Ihren Account endg&uuml;ltig l&ouml;schen?</p></div><div class="modal-footer"><button class="btn btn-default" ng-click="$dismiss()">Cancel</button><button class="btn btn-danger" ng-click="$close()">OK</button></div>',
+                size: 'sm',
+                scope: $scope
+            });
 
-        modalInstance.result.then(function () {
-            Authentication.deleteUser($scope.user.id);
-            $location.url('/deleteUser');
-       }, function () {
-           console.log('Modal dismissed at: ' + new Date());
-       });
-    };
+            modalInstance.result.then(function () {
+                Authentication.deleteUser($scope.user.id);
+                $location.url('/deleteUser');
+            }, function () {
+                console.log('Modal dismissed at: ' + new Date());
+            });
+        };
 
         $scope.emailPass = '';
         $scope.resetPassword = function () {
-            Users.resetPassword({email : $scope.emailPass}).success(function (data) {
+            Users.resetPassword({
+                email: $scope.emailPass
+            }).success(function (data) {
                 console.log(data);
-                if(data.affectedRows === 0){
+                if (data.affectedRows === 0) {
                     $scope.result.message = 'Diese E-Mail-Adresse ist uns nicht bekannt';
                 } else {
-                $scope.result.message = 'Ihr Passwort wurde erfolgreich zurückgesetzt';
-                $scope.forgotPassword = false;
+                    $scope.result.message = 'Ihr Passwort wurde erfolgreich zurückgesetzt';
+                    $scope.forgotPassword = false;
                 }
             }).error(function (err) {
                 $scope.result.message = 'Diese E-Mail-Adresse ist uns nicht bekannt';

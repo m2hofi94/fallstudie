@@ -1,7 +1,12 @@
 /*globals angular */
 'use strict';
 
-angular.module('MainController', []).controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
+/**
+Could be used to shorten the generated URL for an open survey
+At the moment this functionality is not used
+*/
+
+angular.module('UrlController', []).controller('UrlCtrl', ['$scope', '$http', function($scope, $http) {
 
     $scope.longUrl = '';
     $scope.shortUrl = 'http://bit.ly/1r31Vnc';

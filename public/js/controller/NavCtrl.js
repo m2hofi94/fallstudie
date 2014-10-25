@@ -6,7 +6,7 @@ angular.module('NavController', []).controller('NavCtrl', ['$scope', 'Users', '$
 	$scope.loading = false;
 	var _user = null;
 
-
+    // Used for Facebook "Like / Share" Element in Footer
     (function(d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0];
       if (d.getElementById(id)) return;
@@ -45,19 +45,16 @@ angular.module('NavController', []).controller('NavCtrl', ['$scope', 'Users', '$
         _user = null;
 		Authentication.logout();
     };
-	// console.log('loader started');
+
 	$scope.$on('requestStart', function(ev) {
 		$scope.loading = true;
-		// console.log('STart recieved');
 	});
 	$scope.$on('requestEnd', function(ev) {
 		$scope.loading = false;
-		// console.log('end recieved');
 	})
 
 	$scope.toggle = function() {
 		$scope.loading = !$scope.loading;
-		// console.log('toggling');
 	}
 }]);
 
@@ -83,22 +80,18 @@ angular.module('NavController').config(['$provide', '$httpProvider', function($p
 		return {
 			request: function(data) {
 				$rootScope.$broadcast('requestStart');
-				// console.log('request');
 				return data;
 			},
 			response: function(data) {
 				$rootScope.$broadcast('requestEnd');
-				// console.log('ended');
 				return data;
 			},
 			requestError: function(err) {
-				console.log(err.errno);
 				$location.url('/error');
 				$rootScope.$broadcast('requestEnd');
 				return err;
 			},
 			responseError: function(err) {
-				// console.log(err.errno);
                 // Error 418 is thrown if Survey is not available
                 if(err.status !== 418)
 				    $location.url('/error');
