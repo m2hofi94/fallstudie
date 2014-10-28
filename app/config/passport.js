@@ -1,6 +1,11 @@
 /*jslint node:true */
 'use strict';
 
+/**
+ * Passport.js config file, heavily inspired by
+ * http://scotch.io/tutorials/javascript/easy-node-authentication-setup-and-local
+ */
+
 var LocalStrategy = require('passport-local').Strategy,
     passwordHash = require('password-hash'),
     connection = require('./../config/db.js')(10);

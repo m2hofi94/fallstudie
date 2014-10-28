@@ -3,6 +3,11 @@
 
 var connection = require('./../config/db.js')(100);
 
+
+/**
+ * Javascripts Date() function format is not compatible with the date datatype of mysql
+ * hence the conversion, inspired by this answer: http://stackoverflow.com/a/11150727
+ */
 var formatDate = function (date) {
     date = date.getUTCFullYear() + '-' +
         ('00' + (date.getUTCMonth() + 1)).slice(-2) + '-' +
@@ -18,16 +23,16 @@ module.exports = function () {
         getQuestionsWithToken: function (req, res) {
             // See if the token is valid and not already used
             connection.query('SELECT * FROM tokens WHERE token = ? AND valid = true AND used = false', [req.params.token], function (err, rows, fields) {
-                // if (err) throw err;
+                if (err) return res.status(500);
                 if (rows.length > 0) {
                     // Get the survey and the questions which are connected to this token
                     var result = rows[0];
                     connection.query('SELECT * FROM surveys WHERE id = ?', [result.surveyID], function (err, rows, fields) {
-                        if (err) throw err;
+                        if (err) return res.status(500);
                         var title = rows[0].title;
 
                         connection.query('SELECT * FROM questions WHERE surveyID = ?', [result.surveyID], function (err, rows, fields) {
-                            if (err) throw err;
+                            if (err) return res.status(500);
                             res.jsonp([title, rows, result.surveyID]);
                         });
                     });
@@ -35,7 +40,6 @@ module.exports = function () {
                 } else {
                     res.status(418).jsonp(rows);
                 }
-                // res.jsonp(rows);
             });
         },
 
@@ -43,29 +47,28 @@ module.exports = function () {
             // var count = {recipients : [], answers : []};
             // Get information about the survey and the token (needed for public surveys)
             connection.query('SELECT surveys.*,token,keepAfterUse,valid,used FROM surveys Left JOIN tokens ON surveys.id = tokens.surveyID WHERE userID = ? GROUP BY surveys.id', [req.user.id], function (err, rows, fields) {
-                console.log(rows);
-                if (err) throw err;
+                if (err) return res.status(500);
                 res.jsonp(rows);
             });
         },
 
         getQuestions: function (req, res) {
             connection.query('SELECT * FROM questions WHERE surveyID = ?', [req.params.id], function (err, rows, fields) {
-                if (err) throw err;
+                if (err) return res.status(500);
                 res.jsonp(rows);
             });
         },
 
         getAnswers: function (req, res) {
             connection.query('SELECT * FROM answers WHERE surveyID = ?', [req.params.id], function (err, rows, fields) {
-                if (err) throw err;
+                if (err) return res.status(500);
                 res.jsonp(rows);
             });
         },
 
         getRecipients: function (req, res) {
             connection.query('SELECT * FROM recipients WHERE surveyID = ?', [req.params.id], function (err, rows, fields) {
-                if (err) throw err;
+                if (err) return res.status(500);
                 res.jsonp(rows);
             });
         },
@@ -112,7 +115,7 @@ module.exports = function () {
                 countRecipients: rec
             };
             connection.query('INSERT INTO surveys SET ?', [survey], function (err, rows, fields) {
-                if (err) throw err;
+                if (err) return res.status(500);
                 var surveyId = rows.insertId;
                 // Insert questions and recipients into DB
                 var qInsStatement = '';
@@ -128,9 +131,7 @@ module.exports = function () {
                 }
                 var finalStatement = qInsStatement + rInsStatement;
                 connection.query(finalStatement, function (err, rows, fields) {
-                    if (err) {
-                        console.log(err.errno);
-                    }
+                    if (err) return res.status(500);
 
                     return res.status(200).jsonp({
                         insertId: surveyId

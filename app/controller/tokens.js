@@ -27,8 +27,6 @@ module.exports = function () {
         transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
                 console.log(error);
-            } else {
-                console.log('Message sent: ' + info.response);
             }
         });
     };
@@ -38,7 +36,7 @@ module.exports = function () {
             // Hash the surveyID and save token in DB, keepAfterUse has to be true
             var hash = md5(req.params.id);
             connection.query('INSERT INTO tokens SET surveyId = ?, token = ?, keepAfterUse = ?', [req.params.id, hash, true], function (err, rows, fields) {
-                if (err) throw err;
+                if (err) return res.status(500);
                 res.jsonp(hash);
             });
         },
@@ -47,10 +45,11 @@ module.exports = function () {
             // req.params.id -> surveyID
             // Get E-Mails which are assigned to this survey
             connection.query('SELECT * FROM surveys WHERE id = ?', [req.params.id], function (err, rows, fields) {
-                var survey = rows[0];
+                if (err) return res.status(500);
+				var survey = rows[0];
 
                 connection.query('SELECT * FROM recipients WHERE surveyID = ?', [req.params.id], function (err, rows, fields) {
-                    if (err) throw err;
+                    if (err) return res.status(500);
 
                     if (rows.length === 0) {
                         res.jsonp('No Recipients');
@@ -63,9 +62,7 @@ module.exports = function () {
                             sendMail(rows[i].email, hash, u, req.user.email, survey.title);
                             // Save each generated token in DB
                             connection.query('INSERT INTO tokens SET surveyId = ?, token = ?', [req.params.id, hash], function (err, rows, fields) {
-                                if (err) {
-                                    return res.status(500);
-                                }
+                                if (err) return res.status(500);
                             });
                         }
                         res.jsonp(rows);
@@ -78,21 +75,23 @@ module.exports = function () {
         takePart: function (req, res) {
             // May only be possible if user edits the request to the server manually
             if (req.body.answers === null) {
-                return;
+                return res.status(420);
             }
 
             // Need keep and keepValid to decide if token can only be used once (then recipients contains at least one email)
             // or multiple times (recipients contains no email for this survey) -> keep = true, keepValid = true
             connection.query('SELECT * FROM surveys WHERE id = ?', [req.body.surveyID], function (err, rows, fields) {
-                var keep = false;
-                if (rows[0].countRecipients == 0) {
+                if (err) return res.status(500);
+				var keep = false;
+                if (rows[0].countRecipients === 0) {
                     keep = true;
                 }
                 connection.query('UPDATE tokens SET used = ? WHERE token = ? AND keepAfterUse = ?', [!keep, req.body.token, keep], function (err, rows, fields) {
-                    if (rows.changedRows !== 0 || keep) {
+                    if (err) return res.status(500);
+					if (rows.changedRows !== 0 || keep) {
                         // To keep track of how many people took part already
                         connection.query('UPDATE surveys SET countAnswers=countAnswers+1 WHERE id = ?', [req.body.surveyID], function (err, rows, fields) {
-                            if (err) throw err;
+                            if (err) return res.status(500);
                             // Save every answer in the DB
                             for (var i = 0; i < req.body.answers.length; i++) {
                                 var v = (req.body.answers[i].type === 'Slider') ? req.body.answers[i].rate : req.body.answers[i].savedInput;
@@ -102,7 +101,7 @@ module.exports = function () {
                                     questionID: req.body.answers[i].id
                                 };
                                 connection.query('INSERT INTO answers SET ?', [answer], function (err, rows, fields) {
-                                    if (err) throw err;
+                                    if (err) return res.status(500);
                                 });
                             }
 

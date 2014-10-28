@@ -1,6 +1,10 @@
 /*jslint node:true */
 'use strict';
 
+/**
+ * users.js is used to handle users, e.g. creating, setting passwords... etc.
+ */
+
 var passwordHash = require('password-hash');
 var connection = require('./../config/db.js')(100);
 var mailer = require('nodemailer');
@@ -107,7 +111,7 @@ module.exports = function (passport) {
                 connection.query('DELETE FROM users WHERE id = ?', [req.params.userId], function (err, rows, fields) {
                     if (err) return res.status(500);
                 });
-                // res.send({success: true});
+                res.status(200);
             });
         },
 
@@ -157,7 +161,7 @@ module.exports = function (passport) {
 
             // Update password in DB abd send mail to user
             connection.query('UPDATE users SET ? WHERE email = ?', [data, req.body.email], function (err, rows, fields) {
-                if (err) throw err;
+                if (err) return res.status(500);
 
                 if (rows.affectedRows !== 0) {
                     sendMail(req.body.email, title, body);
