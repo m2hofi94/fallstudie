@@ -47,7 +47,14 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
 			$location.url(path);
 		};
 
+<<<<<<< HEAD
         // Get all Surveys for specific user
+=======
+		$scope.gotoLinks = function(token) {
+			$location.url('publish/'+token);
+		};
+
+>>>>>>> publish
 		$scope.getSurveys = function () {
 
 			$scope.loading = true;

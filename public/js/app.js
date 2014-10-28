@@ -25,6 +25,7 @@ angular.module('afsApp', [
     'HomeController',
 	'UrlController',
     'AnswerController',
+	'PublishController',
 	'Loader'
 ]);
 
