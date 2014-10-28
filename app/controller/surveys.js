@@ -120,13 +120,29 @@ module.exports = function () {
                 // Insert questions and recipients into DB
                 var qInsStatement = '';
                 for (var i = 0; i < req.body[1].length; i++) {
-                    qInsStatement = qInsStatement + 'INSERT INTO questions SET surveyID=' + rows.insertId + ',title="' + req.body[1][i].title + '",type="' + req.body[1][i].type + '";';
+
+					/*
+                     * usually using the '?' safely escapes user input, since we create our own (lengthy)
+                     * statement as a string before, we have to do it 'manually'
+                     */
+					qInsStatement = qInsStatement +
+						'INSERT INTO questions SET surveyID=' +
+						connection.escape(rows.insertId) +
+						',title=' +
+						connection.escape(req.body[1][i].title) +
+						',type=' +
+						connection.escape(req.body[1][i].type) + ';';
                 }
+				console.log(qInsStatement)
                 var rInsStatement = '';
                 if (req.body[3] !== null) {
                     rInsStatement = '';
                     for (var j = 0; j < req.body[3].length; j++) {
-                        rInsStatement = rInsStatement + 'INSERT INTO recipients SET email="' + req.body[3][j] + '",surveyId=' + rows.insertId + ';';
+                        rInsStatement = rInsStatement +
+							'INSERT INTO recipients SET email=' +
+							connection.escape(req.body[3][j]) +
+							',surveyId=' +
+							connection.escape(rows.insertId) + ';';
                     }
                 }
                 var finalStatement = qInsStatement + rInsStatement;
