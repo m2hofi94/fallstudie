@@ -27,5 +27,10 @@ angular.module('PublishController', []).controller('PublishCtrl', ['$scope', '$l
             $scope.bitRes = data;
         });
     };
+
+	$scope.go = function(path) {
+		$location.url(path);
+	};
+
 	$scope.shorten();
 }]);
