@@ -47,14 +47,12 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
 			$location.url(path);
 		};
 
-<<<<<<< HEAD
-        // Get all Surveys for specific user
-=======
+		//used to get bit.ly-link and qr-code
 		$scope.gotoLinks = function(token) {
 			$location.url('publish/'+token);
 		};
 
->>>>>>> publish
+		// Get all Surveys for specific user
 		$scope.getSurveys = function () {
 
 			$scope.loading = true;
