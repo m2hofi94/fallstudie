@@ -40,6 +40,10 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
 			$location.url(path);
 		};
 
+		$scope.gotoLinks = function(token) {
+			$location.url('publish/'+token);
+		};
+
 		$scope.getSurveys = function () {
 			// Get all Surveys for specific user
 			$scope.loading = true;
