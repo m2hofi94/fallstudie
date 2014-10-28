@@ -3,6 +3,8 @@
 
 angular.module('PublishController', []).controller('PublishCtrl', ['$scope', '$location', '$http', function ($scope, $location, $http) {
 	 $scope.tokenUrl = $location.$$absUrl.replace('publish', 'participate');
+	//required for local testing
+	//$scope.tokenUrl = $location.$$absUrl.replace('localhost', 'afs.nunki.uberspace.de');
 
 	$scope.shorten = function() {
         $http({
@@ -16,25 +18,10 @@ angular.module('PublishController', []).controller('PublishCtrl', ['$scope', '$l
             }
         }).success(function(data) {
             $scope.shortUrl = data.data.url;
-			$scope.getQrCode();
+			$scope.hash = data.data.hash;
         }).error(function(data) {
             $scope.bitRes = data;
         });
     };
-	$scope.getQrCode = function() {
-		$http({
-			method: 'GET',
-			url: 'http://api.qrserver.com/v1/create-qr-code/',
-			params: {
-				size: '200x200',
-				data: $scope.shortUrl
-			}
-		}).success(function(data) {
-			console.log(data);
-		}).error(function(data) {
-
-		});
-	};
-
 	$scope.shorten();
 }]);

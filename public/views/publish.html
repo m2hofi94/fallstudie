@@ -10,7 +10,9 @@
 		<form class="form-group">
 			<public-link url="shortUrl"></public-link>
 		</form>
+		<img class="img-responsive center-block" ng-src="{{'https://api.qrserver.com/v1/create-qr-code/?data=http:%2F%2Fbit.ly%2F'+hash+'&size=200x200'}}" />
     </div>
+	<hr>
     <div>
         <button class="btn btn-default" ng-click="go('/home')">Zu meinen Umfragen</button>
     </div>
