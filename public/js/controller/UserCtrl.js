@@ -1,11 +1,16 @@
 /*globals angular */
 'use strict';
 
+/**
+ * handles everything user-related
+ */
+
 angular.module('UserController', []).controller('UserCtrl', ['$scope', '$modal', 'Users', '$location', 'Authentication',
     function ($scope, $modal, Users, $location, Authentication) {
         $scope.result = {};
-        // Set boolean ChangedUserAlert -> after click on "submit new user Data" to show alert
-        // the page reload because of updating the navbar deletes $scope.
+        /* Set boolean ChangedUserAlert -> after click on "submit new user Data" to show alert
+         * the page reload because of updating the navbar deletes $scope.
+         */
         if (Users.changedUserAlert) {
             $scope.result.message = 'Änderungen erfolgreich';
             Users.changedUserAlert = false;
@@ -38,10 +43,11 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', '$modal',
                 value: 'Prof. Dr.'
             }];
 
-        // Signup
-        // redirects to users module on success
-        // writes messages to $scope.result.message
-        // server always returns 200, so data.success is required
+        /* Signup
+         * redirects to users module on success
+         * writes messages to $scope.result.message
+         * server always returns 200, so data.success is required
+         */
         $scope.signUp = function () {
             if (typeof $scope.user.title == 'undefined' || $scope.user.title === null)
                 $scope.user.title = '';
@@ -63,8 +69,7 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', '$modal',
 
         };
 
-        // Login
-        // See above
+        // Login, See above
         $scope.login = function () {
             Authentication.login($scope.loginData).success(function (data) {
                 if (data.success) {
@@ -81,41 +86,10 @@ angular.module('UserController', []).controller('UserCtrl', ['$scope', '$modal',
             });
         };
 
-        // CRUD-Example
-
-        $scope.list = function () {
-            Users.list().success(function (data) {
-                console.log(data);
-                $scope.result = data;
-            }).error(function (err) {
-                console.log(err);
-                $scope.result = err;
-            });
-        };
-
-        $scope.create = function () {
-            Users.create($scope.createData).success(function (data) {
-                console.log(data);
-                $scope.result = data;
-            }).error(function (err) {
-                console.log(err);
-                $scope.result = err;
-            });
-        };
-
-        $scope.read = function () {
-            Users.read($scope.readData.id).success(function (data) {
-                console.log(data);
-                $scope.result = data;
-            }).error(function (err) {
-                console.log(err);
-                $scope.result = err;
-            });
-        };
-
         $scope.update = function () {
-            if (typeof $scope.updatedUser.title == 'undefined' || $scope.updatedUser.title === null)
+            if (typeof $scope.updatedUser.title == 'undefined' || $scope.updatedUser.title === null) {
                 $scope.updatedUser.title = '';
+			}
 
             if ($scope.updatedUser.passwordToChange == $scope.passwordCheck) {
                 Users.update($scope.updatedUser).success(function (data) {

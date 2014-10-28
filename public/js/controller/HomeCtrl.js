@@ -2,9 +2,9 @@
 'use strict';
 
 /**
-Controller is used for the '/home' view
-Is responsible for listing and editing the status of the surveys
-*/
+ * Controller is used for the '/home' view
+ * Is responsible for listing and editing the status of the surveys
+ */
 
 angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys', '$modal', '$http', '$location', '$timeout',
     function ($scope, Surveys, $modal, $http, $location, $timeout) {
@@ -54,8 +54,8 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
 
 		// Get all Surveys for specific user
 		$scope.getSurveys = function () {
-
 			$scope.loading = true;
+
 			Surveys.getSurveys().success(function (data) {
 				$scope.surveys = data; // {id, userID, status, title, countRecipients, countAnswers, endDate, created}
 				// Depending on status the survey is saved in the approriate index in the sortedSurveys-Array
@@ -92,7 +92,7 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
 				$scope.loading = false;
 			}).error(function (err) {
 				console.log(err);
-				$scope.loading = true;
+				$scope.loading = false;
 			});
 		};
 		$scope.getSurveys();
@@ -156,12 +156,7 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
 							surveys[index].isCollapsed = true;
 						}
 						$scope.sortedSurveys[0][1].splice(index, 1);
-					}).error(function (err) {
-
 					});
-
-				}).error(function (err) {
-					console.log(err);
 				});
 		};
 
@@ -186,17 +181,15 @@ angular.module('HomeController', []).controller('HomeCtrl', ['$scope', 'Surveys'
 
 			modalInstance.result.then(function () {
 				var surveys = $scope.sortedSurveys[firstIndex][1];
-				Surveys.deleteSurvey(surveys[secondIndex].data.id)
-					.success(function (data) {
-						console.log("Delete");
-						$scope.alert = 'Die Umfrage wurde erfolgreich gelöscht';
-						$scope.sortedSurveys[firstIndex][1].splice(secondIndex, 1);
-					}).error(function (err) {
-						console.log(err);
-					});
+				Surveys.deleteSurvey(surveys[secondIndex].data.id).success(function (data) {
+					console.log("Delete");
+					$scope.alert = 'Die Umfrage wurde erfolgreich gelöscht';
+					$scope.sortedSurveys[firstIndex][1].splice(secondIndex, 1);
+				}).error(function (err) {
+					console.log(err);
+				});
 			}, function () {
 				console.log('Modal dismissed at: ' + new Date());
 			});
 		};
-
 }]);

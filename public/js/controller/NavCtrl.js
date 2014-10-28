@@ -1,6 +1,10 @@
 /*globals angular */
 'use strict';
 
+/**
+ * The NavController handles everything related to navigation and the navbar
+ */
+
 angular.module('NavController', []).controller('NavCtrl', ['$scope', 'Users', '$location', 'Authentication', function($scope, Users, $location, Authentication) {
     $scope.isCollapsed = true;
 	$scope.loading = false;
@@ -26,13 +30,16 @@ angular.module('NavController', []).controller('NavCtrl', ['$scope', 'Users', '$
             _user = Authentication.user();         
         }
         
+		//collapses navbar on mobile devices
        $scope.isCollapsed = true;
     });
 
+	//function used in the navbar to decide wether or not to display certain elements
 	$scope.loggedIn = function() {
 		return _user;
 	};
 
+	// retrieves the user object from the UserService or returns the local one
     $scope.user = function() {
         if (!_user) {
 			_user = Authentication.user();
@@ -46,6 +53,9 @@ angular.module('NavController', []).controller('NavCtrl', ['$scope', 'Users', '$
 		Authentication.logout();
     };
 
+	/**
+	 * Attempts at a site-wide loader
+	 */
 	$scope.$on('requestStart', function(ev) {
 		$scope.loading = true;
 	});
@@ -60,8 +70,10 @@ angular.module('NavController', []).controller('NavCtrl', ['$scope', 'Users', '$
 
 angular.module('NavController').run(['$rootScope', '$location', 'Authentication', '$window', function($rootScope, $location, Authentication, $window) {
 	$rootScope.$on('$routeChangeStart', function(event, next, current) {
+		//scroll to top (especially useful for long surveys etc.)
 		$window.scrollTo(0,0);
 
+		//protect urls and redirect to login if necessary
 		if (next.protected && !Authentication.user()) {
 			event.preventDefault();
 			$location.url('/login');
@@ -75,6 +87,10 @@ angular.module('NavController').run(['$rootScope', '$location', 'Authentication'
 	});
 }]);
 
+/**
+ * The httpInterceptor can intercept every request (response) made to the server
+ * it is used to display the error page
+ */
 angular.module('NavController').config(['$provide', '$httpProvider', function($provide, $httpProvider) {
 	$provide.factory('httpIntercept', ['$location', '$rootScope', function($location, $rootScope) {
 		return {

@@ -1,8 +1,9 @@
 /*globals angular */
 'use strict';
+
 /**
-Controller is used to create a new survey, restart an old one and edit questions of the survey
-*/
+ * Controller is used to create a new survey, restart an old one and edit questions of the survey
+ */
 
 angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys', 'Authentication', '$modal', '$location', '$window',
 	function ($scope, Surveys, Authentication, $modal, $location, $window) {
@@ -19,29 +20,29 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
 					type: 'Slider',
 					rate: 6,
 					input: ''
-            },
+            	},
 				{
 					title: 'Bitte begründen Sie Ihre Antwort',
 					type: 'TextArea',
 					rate: 6,
 					input: ''
-            }
-        ];
+            	}
+        	];
 
 			$scope.options = [
 				{
 					type: 'Slider',
 					value: 'Skala'
-            },
+            	},
 				{
 					type: 'TextArea',
 					value: 'Textfeld'
-            }
-        ];
+            	}
+        	];
 
-            // Check if the current survey is already one which is saved as 'draft' or if it is a new one
-            // draft => (idToEdit != -1) == true;
-            // If it is a new one, the standardQuestions are loaded
+			// Check if the current survey is already one which is saved as 'draft' or if it is a new one
+			// draft => (idToEdit != -1) == true;
+			// If it is a new one, the standardQuestions are loaded
 			if (Surveys.idToEdit != -1) {
 				$scope.toEdit = true;
 				$scope.title = Surveys.tempTitle;
@@ -64,57 +65,54 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
 			$scope.fields.splice(index, 1);
 		};
 
-        // If user wants to edit a survey, the questions are loaded from the DB
+		// If user wants to edit a survey, the questions are loaded from the DB
 		$scope.edit = function (id) {
 			$scope.loading = true;
-			Surveys.getQuestions(id)
-				.success(function (data) {
-					$scope.fields = data;
-					for (var i = 0; i < $scope.fields; i++) {
-                        // Set standard value for Slider-Fields (used in preview-view)
-						if ($scope.fields[i].type === 'Slider') {
-							$scope.fields[i].rate = 6;
-						}
+			Surveys.getQuestions(id).success(function (data) {
+				$scope.fields = data;
+				for (var i = 0; i < $scope.fields; i++) {
+					// Set standard value for Slider-Fields (used in preview-view)
+					if ($scope.fields[i].type === 'Slider') {
+						$scope.fields[i].rate = 6;
 					}
-					Surveys.getRecipients(id)
-						.success(function (data) {
-							var mail = data;
-							for (var i = 0; i < mail.length; i++) {
-								$scope.emails += mail[i].email + ';';
-							}
-							$scope.loading = false;
-
-						}).error(function (err) {
-							console.log(err);
-						});
+				}
+				Surveys.getRecipients(id).success(function (data) {
+					var mail = data;
+					for (var i = 0; i < mail.length; i++) {
+						$scope.emails += mail[i].email + ';';
+					}
+					$scope.loading = false;
 
 				}).error(function (err) {
 					console.log(err);
 				});
+
+			}).error(function (err) {
+				console.log(err);
+			});
 		};
 
-        // Submit the survey and send E-Mails
+		// Submit the survey and send E-Mails
 		$scope.submit = function (status) {
 			if ($scope.checkFields()) {
-                // Send E-Mails if there are recipients, or publish for everyone
+				// Send E-Mails if there are recipients, or publish for everyone
 				if ($scope.emails !== '') {
 					$scope.recipient = $scope.emails.split(';');
 					$scope.deletedEmails = [];
 					for (var i = 0; i < $scope.recipient.length; i++) {
-                        // Remove spaces and verify inserted E-Mail Adresses with RegEx
+						// Remove spaces and verify inserted E-Mail Adresses with RegEx
 						$scope.recipient[i] = $scope.recipient[i].replace(/(^\s+|\s+$)/g, '');
 						if (!$scope.recipient[i].match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
 							$scope.deletedEmails.push($scope.recipient.splice(i, 1));
 							i--;
 						}
-
 					}
 
-                    // Check for duplicate E-Mail entries
-                    var tmp = [];
-					for (i=0; i<$scope.recipient.length; i++) {
+					// Check for duplicate E-Mail entries
+					var tmp = [];
+					for (i = 0; i < $scope.recipient.length; i++) {
 						var unique = true;
-						for (var j=i+1; j<$scope.recipient.length; j++) {
+						for (var j = i + 1; j < $scope.recipient.length; j++) {
 							if ($scope.recipient[i] == $scope.recipient[j]) {
 								unique = false;
 							}
@@ -143,9 +141,9 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
 			}
 		};
 
-        // Called from submit() after checking inputs and recipients
+		// Called from submit() after checking inputs and recipients
 		$scope.submitToDb = function (status) {
-            // if survey used to be in draft status, delete old survey, and create new one with updated questions and status
+			// if survey used to be in draft status, delete old survey, and create new one with updated questions and status
 			if (Surveys.idToEdit != -1 && !Surveys.restart) {
 				Surveys.deleteSurvey(Surveys.idToEdit).success(function (data) {}).error(function (data) {});
 				Surveys.idToEdit = -1;
@@ -153,7 +151,7 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
 
 			Surveys.restart = false;
 			$scope.survey = [$scope.title, $scope.fields, status, $scope.recipient];
-            // Create and (if necessary) publish survey
+			// Create and (if necessary) publish survey
 			Surveys.createSurvey($scope.survey).success(function (data) {
 				if (status == 'draft') {
 					$location.url('/home');
@@ -173,21 +171,19 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
 					}
 
 				}
-			}).error(function (err) {
-
 			});
 		};
 
-        // Click on Preview / Back button
+		// Click on Preview / Back button
 		$scope.togglePreview = function () {
 			if ($scope.checkFields()) {
 				$scope.preview = !$scope.preview;
-				$window.scrollTo(0,0);
+				$window.scrollTo(0, 0);
 			}
 
 		};
 
-        // Check if survey has a title, and at least one question
+		// Check if survey has a title, and at least one question
 		$scope.checkFields = function () {
 			if ($scope.title === '') {
 				$scope.checkMessage = 'Titel der Umfrage darf nicht leer sein';
@@ -206,7 +202,7 @@ angular.module('FormController', []).controller('FormCtrl', ['$scope', 'Surveys'
 			}
 		};
 
-        // Cancel transaction, do not transmit any changes
+		// Cancel transaction, do not transmit any changes
 		$scope.cancel = function () {
 			Surveys.idToEdit = -1;
 			$location.url('/home');

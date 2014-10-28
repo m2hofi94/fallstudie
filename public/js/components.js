@@ -2,9 +2,9 @@
 'use strict';
 
 /**
-Necessary for surveys that are published for everyone.
-Generates Link and may copy it to clipboard
-*/
+ * Necessary for surveys that are published for everyone.
+ * Generates Link and may copy it to clipboard
+ */
 
 angular.module('Components', [])
 
@@ -12,6 +12,10 @@ angular.module('Components', [])
     ngClipProvider.setPath("libs/zeroclipboard/dist/ZeroClipboard.swf");
 }])
 
+/**
+ * selects the text on an input field
+ * usage: <input select-on-click />
+ */
 .directive('selectOnClick', function () {
 	return {
 		restrict: 'A',
@@ -30,6 +34,10 @@ angular.module('Components', [])
 	};
 })
 
+/**
+ * input element with copy-to-clipboard button
+ * usage: <public-link url="http://google.de"></public-link>
+ */
 .directive('publicLink', function () {
 	return {
 		restrict: 'E',

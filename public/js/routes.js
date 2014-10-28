@@ -2,13 +2,12 @@
 'use strict';
 
 /**
-Routes each URL Request to a specific html page,
-each html page is connected to a specific controller which handles the logic
-
-protected: If page may only be shown if user is logged In
-hideIfLoggedIn: for Login/Signup pages -> May not be shown if user is logged In already
-
-*/
+ * Routes each URL Request to a specific html page,
+ * each html page is connected to a specific controller which handles the logic
+ *
+ * protected: If page may only be shown if user is logged In
+ * hideIfLoggedIn: for Login/Signup pages -> May not be shown if user is logged In already
+ */
 
 angular.module('afsApp').config(['$routeProvider',
     function ($routeProvider) {
@@ -28,11 +27,6 @@ angular.module('afsApp').config(['$routeProvider',
                 controller: 'UserCtrl',
                 hideIfLoggedIn: true
             })
-            .when('/users', {
-                templateUrl: 'views/users.html',
-                controller: 'UserCtrl',
-				protected: true
-            })
 			.when('/newSurvey', {
 				templateUrl: 'views/newSurvey.html',
                 controller: 'FormCtrl',
@@ -51,10 +45,6 @@ angular.module('afsApp').config(['$routeProvider',
                 templateUrl: 'views/publish.html',
                 controller: 'PublishCtrl',
                 protected: true
-            })
-            .when('/main', {
-                templateUrl: 'views/main.html',
-                controller: 'UrlCtrl'
             })
             .when('/profile', {
                 templateUrl: 'views/profile.html',
@@ -78,11 +68,11 @@ angular.module('afsApp').config(['$routeProvider',
                 controller: 'AnswerCtrl',
                 protected: true
             })
-            .otherwise({
-                redirectTo: '/login'
-            })
 			.when('/error',{
                 templateUrl: 'views/error.html',
                 controller: 'NavCtrl'
+            })
+		 	.otherwise({
+                redirectTo: '/login'
             });
 }]);
