@@ -2,8 +2,8 @@
 'use strict';
 
 /**
-Tokens.js is used to publish the survey and send E-Mails as well as to save the answers if a user takes part on a survey
-*/
+ * Tokens.js is used to publish the survey and send E-Mails as well as to save the answers if a user takes part on a survey
+ */
 
 var connection = require('./../config/db.js')(100);
 var md5 = require('MD5');
